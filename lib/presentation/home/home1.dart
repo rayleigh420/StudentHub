@@ -23,53 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: _buildAppBar(),
-      body: Container(
-        padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 30),
-              child: const Text(
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                  "Build your product with high-skilled student"),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 30),
-              child: const Text(
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
-                  textAlign: TextAlign.center,
-                  "Find and onboard best-skilled student for your product. Student works to gain experience & skills from real-world projects"),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 30),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                  onPressed: () {},
-                  child: const Text(style: TextStyle(fontSize: 16), "Company")),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 15),
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                  onPressed: () {},
-                  child: const Text(style: TextStyle(fontSize: 16), "Student")),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 30),
-              child: const Text(
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                  textAlign: TextAlign.center,
-                  "StudentHub is university market place to connect high-skilled student and company on a real-world project"),
-            )
-          ],
-        ),
-      ),
+      appBar: _buildAppBar(),
+      body: PostListScreen(),
     );
   }
 
