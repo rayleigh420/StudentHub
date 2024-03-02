@@ -40,8 +40,13 @@ class AppThemeData {
       primaryColor: Color(0xFF4285F4), // Màu chủ đạo của Google
       appBarTheme: AppBarTheme(
         backgroundColor: colorScheme.background,
-        elevation: 0,
+        elevation: 0.25,
         iconTheme: IconThemeData(color: colorScheme.primary),
+        shape: Border(bottom: BorderSide(width: 0.25)),
+        titleTextStyle: TextStyle(
+            color: colorScheme.onBackground,
+            fontSize: 19,
+            fontWeight: FontWeight.bold),
       ),
       iconTheme: IconThemeData(color: colorScheme.onPrimary),
       canvasColor: colorScheme.background,
