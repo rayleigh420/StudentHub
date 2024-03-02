@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,9 +19,21 @@ class _InputLoginState extends State<InputLogin> {
   bool _showPassword = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  //------
+  final ThemeStore _themeStore = getIt<ThemeStore>();
+
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _themeStore.changeBrightnessToDark(true);
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(_themeStore.darkMode);
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20.0),
@@ -35,13 +49,14 @@ class _InputLoginState extends State<InputLogin> {
                   fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 17.0),
-            const Text(
+            Text(
               'Add your email and password',
               // textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 16,
                   //fontFamily: "GGX88Reg_Light",
-                  color: Color(0xFF707070)),
+                  color:
+                      _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)),
             ),
             const SizedBox(height: 17.0),
             const SizedBox(height: 17.0),
@@ -67,17 +82,22 @@ class _InputLoginState extends State<InputLogin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
+            Text(
               'YOUR EMAIL',
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   //fontFamily: "GGX88Reg_Light",
-                  color: Color(0xFF6e6e6e)),
+                  color:
+                      _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)),
             ),
             TextFormField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
+              style: TextStyle(
+                //fontFamily: "GGX88Reg_Light",
+                color: Color(0xFF6e6e6e),
+              ),
               decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -103,17 +123,22 @@ class _InputLoginState extends State<InputLogin> {
               },
             ),
             const SizedBox(height: 16.0),
-            const Text(
+            Text(
               'YOUR PASSWORD',
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
                   // //fontFamily: "GGX88Reg_Light",
-                  color: Color(0xFF6e6e6e)),
+                  color:
+                      _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)),
             ),
             TextFormField(
               controller: _passwordController,
               obscureText: !_showPassword,
+              style: TextStyle(
+                //fontFamily: "GGX88Reg_Light",
+                color: Color(0xFF6e6e6e),
+              ),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -124,6 +149,7 @@ class _InputLoginState extends State<InputLogin> {
                   color: Color(0xFFc6c6c6),
                 ),
                 suffixIcon: IconButton(
+                  color: Color(0xFFc6c6c6),
                   icon: Icon(
                     _showPassword ? Icons.visibility_off : Icons.visibility,
                   ),
@@ -156,6 +182,7 @@ class _InputLoginState extends State<InputLogin> {
         alignment: Alignment.center,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+            backgroundColor: _themeStore.darkMode ? Colors.white : null,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
