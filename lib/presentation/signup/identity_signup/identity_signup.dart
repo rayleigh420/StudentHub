@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +44,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               style: TextStyle(
                   fontSize: 16,
                   //fontFamily: "GGX88Reg_Light",
-                  color: Color(0xFF707070)),
+                  // color: Color(0xFF707070)
+                  ),
             ),
             const SizedBox(height: 17.0),
             const SizedBox(height: 17.0),
@@ -100,9 +99,9 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
-            backgroundColor: const Color(0xFFD74638),
-            minimumSize: Size(MediaQuery.of(context).size.width * 0.5,
-                MediaQuery.of(context).size.height * 0.1),
+            // backgroundColor: const Color(0xFFD74638),
+            minimumSize: Size(MediaQuery.of(context).size.width * 1,
+                MediaQuery.of(context).size.height * 0.06),
           ),
           onPressed: (selected == 0) ? null : onPress,
           child: const Text(
@@ -111,7 +110,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               fontSize: 16,
               //fontFamily: "GGX88Reg",
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              // color: Colors.white,
             ),
           ),
         ));
@@ -136,7 +135,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             child: const Text(
               "Login",
               style: TextStyle(
-                color: Color(0xFFD74638),
+                color: Color(0xFF4285F4),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -168,8 +167,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           border: Border.all(
-            color: (selected == boxValue)!
-                ? const Color(0xFFD74638)
+            color: (selected == boxValue)
+                ? const Color(0xFF4285F4)
                 : const Color(0XFFd2d2d2), // Màu của border
             width: 2.0, // Độ dày của border
           ),
@@ -214,7 +213,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
               child: Checkbox(
-                activeColor: const Color(0xFFD74638),
+                activeColor: const Color(0xFF4285F4),
                 checkColor: Colors.white,
                 value: selected == boxValue,
                 shape: RoundedRectangleBorder(

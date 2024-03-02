@@ -44,9 +44,10 @@ class _InputSignUpState extends State<InputSignUp> {
               'Sign up as ${(widget.type == 1) ? 'Company' : 'Student'}',
               // textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 16,
-                  //fontFamily: "GGX88Reg_Light",
-                  color: Color(0xFF626262)),
+                fontSize: 16,
+                //fontFamily: "GGX88Reg_Light",
+                // color: Color(0xFF626262)
+              ),
             ),
             const SizedBox(height: 17.0),
             const SizedBox(height: 17.0),
@@ -92,13 +93,13 @@ class _InputSignUpState extends State<InputSignUp> {
           ),
         ),
         const SizedBox(height: 16.0),
-        const Text(
+        Text(
           'YOUR WORK EMAIL',
           style: TextStyle(
-              fontSize: 1,
+              fontSize: 16,
               fontWeight: FontWeight.normal,
               //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFF6e6e6e)),
+              color: textColor),
         ),
         const SizedBox(
           height: 5,
@@ -118,13 +119,13 @@ class _InputSignUpState extends State<InputSignUp> {
           ),
         ),
         const SizedBox(height: 16.0),
-        const Text(
+        Text(
           'YOUR PASSWORD',
           style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.normal,
               //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFF6e6e6e)),
+              color: textColor),
         ),
         TextField(
           controller: _passwordController,
@@ -161,7 +162,7 @@ class _InputSignUpState extends State<InputSignUp> {
             children: [
               Checkbox(
                 value: _agreeToApply,
-                activeColor: const Color(0xFFD74638),
+                activeColor: const Color(0xFF4285F4),
                 checkColor: Colors.white,
                 onChanged: (value) {
                   setState(() {
@@ -193,9 +194,9 @@ class _InputSignUpState extends State<InputSignUp> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
-            backgroundColor: const Color(0xFFD74638),
+            // backgroundColor: const Color(0xFF4285F4),
             minimumSize: Size(MediaQuery.of(context).size.width * 1,
-                MediaQuery.of(context).size.height * 0.08),
+                MediaQuery.of(context).size.height * 0.06),
           ),
           onPressed: () {
             onPress();
@@ -206,7 +207,7 @@ class _InputSignUpState extends State<InputSignUp> {
               fontSize: 16,
               //fontFamily: "GGX88Reg",
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              // color: Colors.white,
             ),
           ),
         ));
@@ -233,7 +234,7 @@ class _InputSignUpState extends State<InputSignUp> {
             child: Text(
               " Apply as ${(widget.type == 1) ? 'Student' : 'Company'}",
               style: const TextStyle(
-                color: Color(0xFFD74638),
+                color: Color(0xFF4285F4),
                 fontWeight: FontWeight.bold,
               ),
             ),
