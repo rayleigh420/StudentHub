@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
+import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +17,7 @@ class _InputLoginState extends State<InputLogin> {
   bool _showPassword = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +48,11 @@ class _InputLoginState extends State<InputLogin> {
             buildForm(context),
             const SizedBox(height: 30),
             buildLaunchButton(context, () {
-              log('Login pressed');
+              if (_formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+              }
             }),
             buildSignupSection(context)
           ],
@@ -56,62 +62,93 @@ class _InputLoginState extends State<InputLogin> {
   }
 
   Widget buildForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text(
-          'YOUR EMAIL',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-              //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFF6e6e6e)),
-        ),
-        TextField(
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Enter your email',
-            hintStyle: TextStyle(
-              // //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFFc6c6c6),
+    return Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'YOUR EMAIL',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  //fontFamily: "GGX88Reg_Light",
+                  color: Color(0xFF6e6e6e)),
             ),
-          ),
-        ),
-        const SizedBox(height: 16.0),
-        const Text(
-          'YOUR PASSWORD',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-              // //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFF6e6e6e)),
-        ),
-        TextField(
-          controller: _passwordController,
-          obscureText: !_showPassword,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: 'Enter your password',
-            hintStyle: const TextStyle(
-              //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFFc6c6c6),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                _showPassword ? Icons.visibility_off : Icons.visibility,
+            TextFormField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: const OutlineInputBorder(borderSide: BorderSide.none),
+                hintText: 'Enter your email',
+                hintStyle: TextStyle(
+                  // //fontFamily: "GGX88Reg_Light",
+                  color: Color(0xFFc6c6c6),
+                ),
+                errorStyle: TextStyle(
+                  // fontFamily: "GGX88Reg_Light",
+                  fontSize: 14,
+                  color: Color(0xFFD74638),
+                ),
               ),
-              onPressed: () {
-                setState(() {
-                  _showPassword = !_showPassword;
-                });
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                } else if (!EmailValidate.isEmail(value)) {
+                  return 'Please enter a valid email';
+                }
+                return null;
               },
             ),
-          ),
-        ),
-      ],
-    );
+            const SizedBox(height: 16.0),
+            const Text(
+              'YOUR PASSWORD',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  // //fontFamily: "GGX88Reg_Light",
+                  color: Color(0xFF6e6e6e)),
+            ),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: !_showPassword,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: const OutlineInputBorder(borderSide: BorderSide.none),
+                hintText: 'Enter your password',
+                hintStyle: const TextStyle(
+                  //fontFamily: "GGX88Reg_Light",
+                  color: Color(0xFFc6c6c6),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _showPassword ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _showPassword = !_showPassword;
+                    });
+                  },
+                ),
+                errorStyle: const TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFFD74638),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some text';
+                } else if (value.length < 8) {
+                  return 'Password must be at least 8 characters';
+                }
+                return null;
+              },
+            ),
+          ],
+        ));
   }
 
   Widget buildLaunchButton(BuildContext context, VoidCallback onPress) {
@@ -122,9 +159,9 @@ class _InputLoginState extends State<InputLogin> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
-            backgroundColor: const Color(0xFFD74638),
-            minimumSize: Size(MediaQuery.of(context).size.width * 0.5,
-                MediaQuery.of(context).size.height * 0.08),
+            // backgroundColor: const Color(0xFFD74638),
+            minimumSize: Size(MediaQuery.of(context).size.width * 1,
+                MediaQuery.of(context).size.height * 0.06),
           ),
           onPressed: () {
             onPress();
@@ -135,7 +172,7 @@ class _InputLoginState extends State<InputLogin> {
               fontSize: 16,
               //fontFamily: "GGX88Reg",
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              // color: Colors.black,
             ),
           ),
         ));
@@ -152,14 +189,15 @@ class _InputLoginState extends State<InputLogin> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+              Navigator.of(context)
+                  .pushReplacement(MaterialPageRoute(builder: (context) {
                 return const SignUpIdentity();
               }));
             },
             child: const Text(
               "Sign Up",
               style: TextStyle(
-                color: Color(0xFFD74638),
+                color: Color(0xFF4285F4),
                 fontWeight: FontWeight.bold,
               ),
             ),
