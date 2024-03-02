@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:flutter/material.dart';
 
 class InputSignUp extends StatefulWidget {
@@ -15,18 +17,22 @@ class _InputSignUpState extends State<InputSignUp> {
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final textColor = const Color(0xFF6C6C6C);
+  Color textColor = Color(0xFF6C6C6C);
+  Color textFieldColor = Color(0xFF6C6C6C);
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   void initState() {
     super.initState();
+    _themeStore.changeBrightnessToDark(true);
+    textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(color: Color(0xFFF6F6F6)),
+        // decoration: const BoxDecoration(color: Color(0xFFF6F6F6)),
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,6 +87,9 @@ class _InputSignUpState extends State<InputSignUp> {
         TextField(
           controller: _fullNameController,
           keyboardType: TextInputType.name,
+          style: TextStyle(
+            color: textFieldColor,
+          ),
           decoration: const InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -88,6 +97,7 @@ class _InputSignUpState extends State<InputSignUp> {
             hintText: 'Enter your email',
             hintStyle: TextStyle(
               //fontFamily: "GGX88Reg_Light",
+
               color: Color(0xFFc6c6c6),
             ),
           ),
@@ -107,6 +117,9 @@ class _InputSignUpState extends State<InputSignUp> {
         TextField(
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
+          style: TextStyle(
+            color: textFieldColor,
+          ),
           decoration: const InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -130,6 +143,9 @@ class _InputSignUpState extends State<InputSignUp> {
         TextField(
           controller: _passwordController,
           obscureText: !_showPassword,
+          style: TextStyle(
+            color: textFieldColor,
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -170,13 +186,13 @@ class _InputSignUpState extends State<InputSignUp> {
                   });
                 },
               ),
-              const Text(
+               Text(
                 'Yes, I understand and agree to StudentHub',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.normal,
                   //fontFamily: "GGX88Reg_Light",
-                  color: Color(0xFF6e6e6e),
+                  color: textColor,
                 ),
               ),
             ],
@@ -194,7 +210,7 @@ class _InputSignUpState extends State<InputSignUp> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
-            // backgroundColor: const Color(0xFF4285F4),
+            backgroundColor: _themeStore.darkMode ? Colors.white : null,
             minimumSize: Size(MediaQuery.of(context).size.width * 1,
                 MediaQuery.of(context).size.height * 0.06),
           ),

@@ -1,3 +1,5 @@
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +15,12 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
   int selected = 0;
   late double x;
   late double y;
+  final ThemeStore _themeStore = getIt<ThemeStore>();
 
   @override
   void initState() {
     super.initState();
+    _themeStore.changeBrightnessToDark(true);
     x = 50;
     y = 50;
   }
@@ -42,10 +46,10 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               'Join us as company or student',
               // textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 16,
-                  //fontFamily: "GGX88Reg_Light",
-                  // color: Color(0xFF707070)
-                  ),
+                fontSize: 16,
+                //fontFamily: "GGX88Reg_Light",
+                // color: Color(0xFF707070)
+              ),
             ),
             const SizedBox(height: 17.0),
             const SizedBox(height: 17.0),
@@ -96,6 +100,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
         alignment: Alignment.center,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+            backgroundColor: _themeStore.darkMode ? Colors.white : null,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
@@ -192,12 +197,14 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
                     maxLines: 1,
                     softWrap: false,
                     overflow: TextOverflow.clip,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.normal,
 
                         //fontFamily: "GGX88Reg_Light",
-                        color: Color(0xFF6e6e6e)),
+                        color: _themeStore.darkMode
+                            ? Colors.white
+                            : Color(0xFF6e6e6e)),
                   ))
                   // Text(text,
                   //     overflow: TextOverflow.fade,
