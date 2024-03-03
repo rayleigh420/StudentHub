@@ -20,7 +20,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
   @override
   void initState() {
     super.initState();
-    _themeStore.changeBrightnessToDark(true);
+    // _themeStore.changeBrightnessToDark(true);
     x = 50;
     y = 50;
   }
