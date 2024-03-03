@@ -24,7 +24,7 @@ class _InputSignUpState extends State<InputSignUp> {
   @override
   void initState() {
     super.initState();
-    _themeStore.changeBrightnessToDark(true);
+    // _themeStore.changeBrightnessToDark(true);
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e);
   }
 

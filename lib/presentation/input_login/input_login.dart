@@ -25,11 +25,11 @@ class _InputLoginState extends State<InputLogin> {
 
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    _themeStore.changeBrightnessToDark(true);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _themeStore.changeBrightnessToDark(true);
+  // }
 
   @override
   Widget build(BuildContext context) {
