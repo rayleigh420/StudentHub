@@ -1,6 +1,10 @@
+import 'package:boilerplate/presentation/alert/alert.dart';
 import 'package:boilerplate/presentation/dashboard/dashboard.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/login/login.dart';
+import 'package:boilerplate/presentation/message/message.dart';
+import 'package:boilerplate/presentation/profile/profile.dart';
+import 'package:boilerplate/presentation/project/project.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -10,11 +14,14 @@ class AppBottomNavigationBar extends StatefulWidget {
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 4;
 
   static List<Widget> _widgetOptions = <Widget>[
+    ProjectScreen(),
+    MessageScreen(),
     DashBoardScreen(),
-    LoginScreen()
+    AlerttScreen(),
+    ProfileScreen()
     // DashboardScreen(),
     // ProfileScreen(),
     // HomeScreen(),
@@ -41,12 +48,24 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            icon: Icon(Icons.file_copy),
+            label: 'Project',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Message',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.login),
-            label: 'Login',
+            icon: Icon(Icons.notifications),
+            label: 'Alert',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.supervisor_account_outlined),
+            label: 'Profile',
           ),
         ],
         currentIndex: _selectedIndex,

@@ -38,21 +38,13 @@ class AppThemeData {
       textTheme: _textTheme,
       // Matches manifest.json colors and background color.
       primaryColor: Color(0xFF4285F4), // Màu chủ đạo của Google
-      appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.background,
-        elevation: 0.25,
-        iconTheme: IconThemeData(color: colorScheme.primary),
-        shape: Border(bottom: BorderSide(width: 0.25)),
-        titleTextStyle: TextStyle(
-            color: colorScheme.onBackground,
-            fontSize: 19,
-            fontWeight: FontWeight.bold),
-      ),
+      appBarTheme: _appBarTheme(colorScheme),
       iconTheme: IconThemeData(color: colorScheme.onPrimary),
       canvasColor: colorScheme.background,
       scaffoldBackgroundColor: colorScheme.background,
       highlightColor: Colors.transparent,
       focusColor: focusColor,
+      bottomNavigationBarTheme: _bottomNavigationBarTheme(colorScheme),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: Color.alphaBlend(
@@ -62,6 +54,38 @@ class AppThemeData {
         contentTextStyle: _textTheme.subtitle1!.apply(color: _darkFillColor),
       ),
       // buttonTheme: ButtonThemeData(buttonColor: colorScheme.brightness == Brightness.dark ? '0xFF22272e' : )
+    );
+  }
+
+  static AppBarTheme _appBarTheme(ColorScheme colorScheme) {
+    return AppBarTheme(
+      backgroundColor: colorScheme.background,
+      elevation: 0.25,
+      iconTheme: IconThemeData(color: colorScheme.primary),
+      shape: Border(
+          bottom: BorderSide(
+              width: 0.2,
+              color: colorScheme.brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.3))),
+      titleTextStyle: TextStyle(
+          color: colorScheme.brightness == Brightness.light
+              ? colorScheme.onBackground
+              : Colors.white,
+          fontSize: 19,
+          fontWeight: FontWeight.bold),
+      // Các thiết lập khác cho AppBar ở đây...
+    );
+  }
+
+  static BottomNavigationBarThemeData _bottomNavigationBarTheme(
+      ColorScheme colorScheme) {
+    return BottomNavigationBarThemeData(
+      backgroundColor: colorScheme.background,
+      selectedItemColor: colorScheme.primary,
+      unselectedItemColor: colorScheme.onBackground.withOpacity(0.6),
+      elevation: 0.25,
+      type: BottomNavigationBarType.fixed,
     );
   }
 
