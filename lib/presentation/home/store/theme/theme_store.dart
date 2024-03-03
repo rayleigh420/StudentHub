@@ -18,7 +18,7 @@ abstract class _ThemeStore with Store {
 
   // store variables:-----------------------------------------------------------
   @observable
-  bool _darkMode = true;
+  bool _darkMode = false;
 
   // getters:-------------------------------------------------------------------
   bool get darkMode => _darkMode;
