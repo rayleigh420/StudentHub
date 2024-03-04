@@ -37,26 +37,25 @@ class _InputSignUpState extends State<InputSignUp> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'StudentHub',
-              // textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 24,
-                  //fontFamily: "GGX88HV",
-                  fontWeight: FontWeight.bold),
-            ),
+            // const Text(
+            //   'StudentHub',
+            //   // textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //       fontSize: 24,
+            //       //fontFamily: "GGX88HV",
+            //       fontWeight: FontWeight.bold),
+            // ),
             const SizedBox(height: 17.0),
             Text(
               'Sign up as ${(widget.type == 1) ? 'Company' : 'Student'}',
               // textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                //fontFamily: "GGX88Reg_Light",
-                // color: Color(0xFF626262)
-              ),
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold
+                  //fontFamily: "GGX88Reg_Light",
+                  // color: Color(0xFF626262)
+                  ),
             ),
-            const SizedBox(height: 17.0),
-            const SizedBox(height: 17.0),
+            const SizedBox(height: 20.0),
+            // const SizedBox(height: 17.0),
             buildForm(context),
             const SizedBox(height: 30),
             buildLaunchButton(context, () {
@@ -73,13 +72,16 @@ class _InputSignUpState extends State<InputSignUp> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'YOUR FULL NAME',
-          style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.normal,
-              //fontFamily: "GGX88Reg_Light",
-              color: textColor),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+          child: Text(
+            'Full name',
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                //fontFamily: "GGX88Reg_Light",
+                color: textColor),
+          ),
         ),
         const SizedBox(
           height: 5,
@@ -93,6 +95,16 @@ class _InputSignUpState extends State<InputSignUp> {
           decoration: const InputDecoration(
             filled: true,
             fillColor: Colors.white,
+            contentPadding: EdgeInsets.all(16),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 0.0),
+            ),
             border: OutlineInputBorder(borderSide: BorderSide.none),
             hintText: 'Enter your email',
             hintStyle: TextStyle(
@@ -103,13 +115,16 @@ class _InputSignUpState extends State<InputSignUp> {
           ),
         ),
         const SizedBox(height: 16.0),
-        Text(
-          'YOUR WORK EMAIL',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-              //fontFamily: "GGX88Reg_Light",
-              color: textColor),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+          child: Text(
+            'Email',
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                //fontFamily: "GGX88Reg_Light",
+                color: textColor),
+          ),
         ),
         const SizedBox(
           height: 5,
@@ -123,6 +138,16 @@ class _InputSignUpState extends State<InputSignUp> {
           decoration: const InputDecoration(
             filled: true,
             fillColor: Colors.white,
+            contentPadding: EdgeInsets.all(16),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 0.0),
+            ),
             border: OutlineInputBorder(borderSide: BorderSide.none),
             hintText: 'Enter your email',
             hintStyle: TextStyle(
@@ -132,13 +157,16 @@ class _InputSignUpState extends State<InputSignUp> {
           ),
         ),
         const SizedBox(height: 16.0),
-        Text(
-          'YOUR PASSWORD',
-          style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.normal,
-              //fontFamily: "GGX88Reg_Light",
-              color: textColor),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+          child: Text(
+            'Password',
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                //fontFamily: "GGX88Reg_Light",
+                color: textColor),
+          ),
         ),
         TextField(
           controller: _passwordController,
@@ -149,6 +177,16 @@ class _InputSignUpState extends State<InputSignUp> {
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
+            contentPadding: EdgeInsets.all(16),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red, width: 0.0),
+            ),
             border: const OutlineInputBorder(borderSide: BorderSide.none),
             hintText: 'Enter your password (8 or more characters)',
             hintStyle: const TextStyle(
@@ -186,7 +224,7 @@ class _InputSignUpState extends State<InputSignUp> {
                   });
                 },
               ),
-               Text(
+              Text(
                 'Yes, I understand and agree to StudentHub',
                 style: TextStyle(
                   fontSize: 15,
