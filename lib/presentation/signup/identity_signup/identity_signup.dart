@@ -33,26 +33,27 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'StudentHub',
-              // textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 24,
-                  //fontFamily: "GGX88HV",
-                  fontWeight: FontWeight.bold),
-            ),
+            // const Text(
+            //   'StudentHub',
+            //   // textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //       fontSize: 24,
+            //       //fontFamily: "GGX88HV",
+            //       fontWeight: FontWeight.bold),
+            // ),
             const SizedBox(height: 17.0),
             const Text(
               'Join us as company or student',
               // textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
                 //fontFamily: "GGX88Reg_Light",
                 // color: Color(0xFF707070)
               ),
             ),
-            const SizedBox(height: 17.0),
-            const SizedBox(height: 17.0),
+            const SizedBox(height: 20.0),
+            // const SizedBox(height: 17.0),
             buildForm(context),
             const SizedBox(height: 30),
             buildLaunchButton(
