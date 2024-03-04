@@ -7,6 +7,7 @@ import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 class InputLogin extends StatefulWidget {
   const InputLogin({super.key});
@@ -28,7 +29,7 @@ class _InputLoginState extends State<InputLogin> {
   // @override
   // void initState() {
   //   super.initState();
-  //   _themeStore.changeBrightnessToDark(true);
+  //   _themeStore.changeBrightnessToDark(false);
   // }
 
   @override
@@ -40,26 +41,27 @@ class _InputLoginState extends State<InputLogin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'StudentHub',
-              // textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 24,
-                  //fontFamily: "GGX88HV",
-                  fontWeight: FontWeight.bold),
-            ),
+            // const Text(
+            //   'StudentHub',
+            //   // textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //       fontSize: 24,
+            //       //fontFamily: "GGX88HV",
+            //       fontWeight: FontWeight.bold),
+            // ),
             const SizedBox(height: 17.0),
             Text(
               'Add your email and password',
               // textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
                   //fontFamily: "GGX88Reg_Light",
                   color:
                       _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)),
             ),
-            const SizedBox(height: 17.0),
-            const SizedBox(height: 17.0),
+            const SizedBox(height: 20.0),
+            // const SizedBox(height: 17.0),
             buildForm(context),
             const SizedBox(height: 30),
             buildLaunchButton(context, () {
@@ -82,14 +84,18 @@ class _InputLoginState extends State<InputLogin> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'YOUR EMAIL',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  //fontFamily: "GGX88Reg_Light",
-                  color:
-                      _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+              child: Text(
+                'Email',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    // //fontFamily: "GGX88Reg_Light",
+                    color: _themeStore.darkMode
+                        ? Colors.white
+                        : Color(0xFF6e6e6e)),
+              ),
             ),
             TextFormField(
               controller: _emailController,
@@ -98,10 +104,23 @@ class _InputLoginState extends State<InputLogin> {
                 //fontFamily: "GGX88Reg_Light",
                 color: Color(0xFF6e6e6e),
               ),
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
-                border: const OutlineInputBorder(borderSide: BorderSide.none),
+                contentPadding: EdgeInsets.all(16.0),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                errorBorder: const OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 0.0),
+                ),
+                // border: _themeStore.darkMode == false
+                //     ? OutlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.red))
+                //     : OutlineInputBorder(borderSide: BorderSide.none),
                 hintText: 'Enter your email',
                 hintStyle: TextStyle(
                   // //fontFamily: "GGX88Reg_Light",
@@ -122,15 +141,19 @@ class _InputLoginState extends State<InputLogin> {
                 return null;
               },
             ),
-            const SizedBox(height: 16.0),
-            Text(
-              'YOUR PASSWORD',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  // //fontFamily: "GGX88Reg_Light",
-                  color:
-                      _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)),
+            const SizedBox(height: 20.0),
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+              child: Text(
+                'Password',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    // //fontFamily: "GGX88Reg_Light",
+                    color: _themeStore.darkMode
+                        ? Colors.white
+                        : Color(0xFF6e6e6e)),
+              ),
             ),
             TextFormField(
               controller: _passwordController,
@@ -143,13 +166,24 @@ class _InputLoginState extends State<InputLogin> {
                 filled: true,
                 fillColor: Colors.white,
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
+                contentPadding: EdgeInsets.all(16.0),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+                ),
+                errorBorder: const OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.red, width: 0.0),
+                ),
                 hintText: 'Enter your password',
                 hintStyle: const TextStyle(
                   //fontFamily: "GGX88Reg_Light",
+
                   color: Color(0xFFc6c6c6),
                 ),
                 suffixIcon: IconButton(
-                  color: Color(0xFFc6c6c6),
+                  // color: Color(0xFFc6c6c6),
                   icon: Icon(
                     _showPassword ? Icons.visibility_off : Icons.visibility,
                   ),
