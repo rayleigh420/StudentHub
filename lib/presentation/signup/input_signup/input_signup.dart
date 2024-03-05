@@ -77,10 +77,11 @@ class _InputSignUpState extends State<InputSignUp> {
           child: Text(
             'Full name',
             style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                //fontFamily: "GGX88Reg_Light",
-                color: textColor),
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              //fontFamily: "GGX88Reg_Light",
+              // color: textColor
+            ),
           ),
         ),
         const SizedBox(
@@ -120,10 +121,11 @@ class _InputSignUpState extends State<InputSignUp> {
           child: Text(
             'Email',
             style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                //fontFamily: "GGX88Reg_Light",
-                color: textColor),
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              //fontFamily: "GGX88Reg_Light",
+              // color: textColor
+            ),
           ),
         ),
         const SizedBox(
@@ -162,10 +164,11 @@ class _InputSignUpState extends State<InputSignUp> {
           child: Text(
             'Password',
             style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                //fontFamily: "GGX88Reg_Light",
-                color: textColor),
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              //fontFamily: "GGX88Reg_Light",
+              // color: textColor
+            ),
           ),
         ),
         TextField(
