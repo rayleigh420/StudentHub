@@ -2,7 +2,6 @@ import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/language/language_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/post/post_list.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -29,21 +28,29 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 30),
+              margin: const EdgeInsets.only(top: 50),
               child: const Text(
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                   "Build your product with high-skilled student"),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 30),
+              margin: const EdgeInsets.only(top: 40),
               child: const Text(
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.normal),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.center,
                   "Find and onboard best-skilled student for your product. Student works to gain experience & skills from real-world projects"),
             ),
+            // Container(
+            //   margin: const EdgeInsets.only(top: 30),
+            //   child: Image.asset(
+            //     'assets/images/logo.jpg', // Đường dẫn của file logo
+            //     width: 150, // Điều chỉnh kích thước logo tùy ý
+            //   ),
+            // ),
             Container(
-              margin: const EdgeInsets.only(top: 30),
+              width: double.infinity,
+              margin: const EdgeInsets.only(top: 40),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -52,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const Text(style: TextStyle(fontSize: 16), "Company")),
             ),
             Container(
+              width: double.infinity,
               margin: const EdgeInsets.only(top: 15),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -61,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const Text(style: TextStyle(fontSize: 16), "Student")),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 30),
+              margin: const EdgeInsets.only(top: 40),
               child: const Text(
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
                   textAlign: TextAlign.center,
