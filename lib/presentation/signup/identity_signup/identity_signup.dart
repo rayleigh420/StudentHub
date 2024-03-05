@@ -2,6 +2,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignUpIdentity extends StatefulWidget {
@@ -73,12 +74,13 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
   }
 
   Widget buildForm(BuildContext context) {
+    const platformImage = kIsWeb ? 'images/' : 'assets/images/';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         checkBoxItem(
             image: Image.asset(
-              '/images/playstore.png',
+              '${platformImage}/student.png',
               height: x,
               width: y,
             ),
@@ -86,7 +88,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             text: "I am a company, find engineer for project"),
         checkBoxItem(
             image: Image.asset(
-              '/images/playstore.png',
+              '${platformImage}/company.png',
               height: x,
               width: y,
             ),
@@ -170,7 +172,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8.0),
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
         decoration: BoxDecoration(
           border: Border.all(
             color: (selected == boxValue)
@@ -190,7 +192,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  image,
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0), child: image),
                   const SizedBox(height: 10.0),
                   Container(
                       child: Text(
