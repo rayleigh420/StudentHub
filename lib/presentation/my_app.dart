@@ -7,6 +7,8 @@ import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/login/login.dart';
 import 'package:boilerplate/presentation/login/store/login_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
+import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
+import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           // theme: AppThemeData.darkThemeData,
-          theme: _themeStore.darkMode
+          theme: !_themeStore.darkMode
               ? AppThemeData.darkThemeData
               : AppThemeData.lightThemeData,
           routes: Routes.routes,
@@ -49,7 +51,7 @@ class MyApp extends StatelessWidget {
             // Built-in localization of basic text for Cupertino widgets
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: InputLogin(),
+          home: AppBottomNavigationBar(),
         );
       },
     );
