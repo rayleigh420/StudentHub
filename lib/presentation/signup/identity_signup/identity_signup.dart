@@ -199,13 +199,14 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
                     softWrap: false,
                     overflow: TextOverflow.clip,
                     style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal,
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
 
-                        //fontFamily: "GGX88Reg_Light",
-                        color: _themeStore.darkMode
-                            ? Colors.white
-                            : Color(0xFF6e6e6e)),
+                      //fontFamily: "GGX88Reg_Light",
+                      // color: _themeStore.darkMode
+                      //     ? Colors.white
+                      //     : Color(0xFF6e6e6e)
+                    ),
                   ))
                   // Text(text,
                   //     overflow: TextOverflow.fade,

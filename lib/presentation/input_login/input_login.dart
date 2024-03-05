@@ -54,11 +54,12 @@ class _InputLoginState extends State<InputLogin> {
               'Add your email and password',
               // textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  //fontFamily: "GGX88Reg_Light",
-                  color:
-                      _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)),
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                //fontFamily: "GGX88Reg_Light",
+                // color:
+                //     _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)
+              ),
             ),
             const SizedBox(height: 20.0),
             // const SizedBox(height: 17.0),
@@ -89,12 +90,13 @@ class _InputLoginState extends State<InputLogin> {
               child: Text(
                 'Email',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    // //fontFamily: "GGX88Reg_Light",
-                    color: _themeStore.darkMode
-                        ? Colors.white
-                        : Color(0xFF6e6e6e)),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  //fontFamily: "GGX88Reg_Light",
+                  // color: _themeStore.darkMode
+                  //     ? Colors.white
+                  //     : Color(0xFF6e6e6e)
+                ),
               ),
             ),
             TextFormField(
@@ -147,12 +149,13 @@ class _InputLoginState extends State<InputLogin> {
               child: Text(
                 'Password',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    // //fontFamily: "GGX88Reg_Light",
-                    color: _themeStore.darkMode
-                        ? Colors.white
-                        : Color(0xFF6e6e6e)),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  // //fontFamily: "GGX88Reg_Light",
+                  // color: _themeStore.darkMode
+                  //     ? Colors.white
+                  //     : Color(0xFF6e6e6e)
+                ),
               ),
             ),
             TextFormField(
