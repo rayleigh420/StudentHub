@@ -16,6 +16,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../di/service_locator.dart';
+import 'package:boilerplate/presentation/profile/profile_company_input.dart';
+import 'package:boilerplate/presentation/welcome/welcome_company.dart';
+import  'package:boilerplate/presentation/profile/profile_company_input_account.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -51,7 +54,7 @@ class MyApp extends StatelessWidget {
             // Built-in localization of basic text for Cupertino widgets
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: InputLogin(),
+          home: ProfileCompanyInputAccount(),
         );
       },
     );
