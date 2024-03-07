@@ -29,7 +29,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+        body: SafeArea(
+      child: Container(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -70,7 +71,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
