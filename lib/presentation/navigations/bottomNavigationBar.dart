@@ -14,11 +14,11 @@ class AppBottomNavigationBar extends StatefulWidget {
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-  int _selectedIndex = 4;
+  int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
     ProjectScreen(
-      isNew: true,
+      isNew: false,
     ),
     MessageScreen(),
     DashBoardScreen(),
