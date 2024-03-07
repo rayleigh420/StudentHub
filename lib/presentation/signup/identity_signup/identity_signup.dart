@@ -28,7 +28,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -70,7 +71,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
