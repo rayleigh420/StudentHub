@@ -30,7 +30,9 @@ class _InputSignUpState extends State<InputSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
           // decoration: const BoxDecoration(color: Color(0xFFF6F6F6)),
@@ -67,7 +69,7 @@ class _InputSignUpState extends State<InputSignUp> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
@@ -90,6 +92,9 @@ class _InputSignUpState extends State<InputSignUp> {
           height: 5,
         ),
         TextField(
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           controller: _fullNameController,
           keyboardType: TextInputType.name,
           style: TextStyle(
@@ -134,6 +139,9 @@ class _InputSignUpState extends State<InputSignUp> {
           height: 5,
         ),
         TextField(
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           style: TextStyle(
@@ -174,6 +182,9 @@ class _InputSignUpState extends State<InputSignUp> {
           ),
         ),
         TextField(
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           controller: _passwordController,
           obscureText: !_showPassword,
           style: TextStyle(

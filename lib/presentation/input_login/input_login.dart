@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -34,8 +36,10 @@ class _InputLoginState extends State<InputLogin> {
 
   @override
   Widget build(BuildContext context) {
-    print(_themeStore.darkMode);
-    return Scaffold(
+    // print(_themeStore.darkMode);
+    return SafeArea(
+        child: Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -72,11 +76,21 @@ class _InputLoginState extends State<InputLogin> {
                 );
               }
             }),
-            buildSignupSection(context)
+            const SizedBox(height: 30),
+            // Container(
+            //   height: 500,
+            //   decoration: BoxDecoration(
+            //     border: Border.all(
+            //       color: Colors.grey,
+            //       width: 2,
+            //     ),
+            //   ),
+            // ),
+            buildSignupSection(context),
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
@@ -100,6 +114,9 @@ class _InputLoginState extends State<InputLogin> {
               ),
             ),
             TextFormField(
+              onTapOutside: (event) {
+                FocusScope.of(context).unfocus();
+              },
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(
@@ -159,6 +176,9 @@ class _InputLoginState extends State<InputLogin> {
               ),
             ),
             TextFormField(
+              onTapOutside: (event) {
+                FocusScope.of(context).unfocus();
+              },
               controller: _passwordController,
               obscureText: !_showPassword,
               style: TextStyle(
@@ -244,6 +264,8 @@ class _InputLoginState extends State<InputLogin> {
 
   Widget buildSignupSection(BuildContext context) {
     return Expanded(
+      // alignment: Alignment.bottomCenter,
+      // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
