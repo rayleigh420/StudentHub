@@ -17,7 +17,9 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 4;
 
   static List<Widget> _widgetOptions = <Widget>[
-    ProjectScreen(),
+    ProjectScreen(
+      isNew: true,
+    ),
     MessageScreen(),
     DashBoardScreen(),
     AlerttScreen(),
