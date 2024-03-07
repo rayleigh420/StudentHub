@@ -31,7 +31,8 @@ class _InputSignUpState extends State<InputSignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+        body: SafeArea(
+      child: Container(
         // decoration: const BoxDecoration(color: Color(0xFFF6F6F6)),
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -65,7 +66,7 @@ class _InputSignUpState extends State<InputSignUp> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
