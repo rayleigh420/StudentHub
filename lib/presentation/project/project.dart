@@ -42,8 +42,10 @@ class _ProjectScreenState extends State<ProjectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SafeArea(
+        child: Scaffold(
+            body: Center(
       child: const Text("ProjectScreen"),
-    );
+    )));
   }
 }
