@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       primary: true,
       appBar: EmptyAppBar(),
-      body: _buildBody(),
+      body: SafeArea(child: _buildBody()),
     );
   }
 
