@@ -1,3 +1,4 @@
+import 'package:boilerplate/presentation/welcome/welcome_company.dart';
 import 'package:flutter/material.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/di/service_locator.dart';
@@ -254,7 +255,12 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (context) {
+                              return const WelcomeCompany();
+                            }));
+                          },
                           child: const Text(
                               style: TextStyle(fontSize: 16), "Continue")),
                     ),
