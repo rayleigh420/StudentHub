@@ -26,9 +26,11 @@ dependencies:
   cupertino_icons: ^1.0.5
   # D
   dio: ^5.1.1
+  dotted_border: ^2.1.0
   # E
   event_bus: ^2.0.0
   # F
+  file_picker: ^6.2.0
   flutter_mobx: ^2.0.6+5
   # G
   get_it: ^7.2.0
