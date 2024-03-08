@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -34,6 +36,60 @@ class _InputLoginState extends State<InputLogin> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+    // print(_themeStore.darkMode);
+    return SafeArea(
+        child: Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: Container(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // const Text(
+            //   'StudentHub',
+            //   // textAlign: TextAlign.center,
+            //   style: TextStyle(
+            //       fontSize: 24,
+            //       //fontFamily: "GGX88HV",
+            //       fontWeight: FontWeight.bold),
+            // ),
+            const SizedBox(height: 17.0),
+            Text(
+              'Add your email and password',
+              // textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                //fontFamily: "GGX88Reg_Light",
+                // color:
+                //     _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            // const SizedBox(height: 17.0),
+            buildForm(context),
+            const SizedBox(height: 30),
+            buildLaunchButton(context, () {
+              if (_formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Processing Data')),
+                );
+              }
+            }),
+            const SizedBox(height: 30),
+            // Container(
+            //   height: 500,
+            //   decoration: BoxDecoration(
+            //     border: Border.all(
+            //       color: Colors.grey,
+            //       width: 2,
+            //     ),
+            //   ),
+            // ),
+            buildSignupSection(context),
+          ],
+=======
     print(_themeStore.darkMode);
     return Scaffold(
       body: SafeArea(
@@ -76,9 +132,10 @@ class _InputLoginState extends State<InputLogin> {
               buildSignupSection(context)
             ],
           ),
+>>>>>>> dev
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
@@ -102,6 +159,9 @@ class _InputLoginState extends State<InputLogin> {
               ),
             ),
             TextFormField(
+              onTapOutside: (event) {
+                FocusScope.of(context).unfocus();
+              },
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(
@@ -161,6 +221,9 @@ class _InputLoginState extends State<InputLogin> {
               ),
             ),
             TextFormField(
+              onTapOutside: (event) {
+                FocusScope.of(context).unfocus();
+              },
               controller: _passwordController,
               obscureText: !_showPassword,
               style: TextStyle(
@@ -246,6 +309,8 @@ class _InputLoginState extends State<InputLogin> {
 
   Widget buildSignupSection(BuildContext context) {
     return Expanded(
+      // alignment: Alignment.bottomCenter,
+      // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
