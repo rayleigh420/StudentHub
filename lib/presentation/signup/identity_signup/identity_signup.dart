@@ -28,7 +28,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: Container(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -70,7 +71,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
@@ -80,7 +81,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
       children: [
         checkBoxItem(
             image: Image.asset(
-              '${platformImage}/student.png',
+              '${platformImage}student.png',
               height: x,
               width: y,
             ),
@@ -88,7 +89,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             text: "I am a company, find engineer for project"),
         checkBoxItem(
             image: Image.asset(
-              '${platformImage}/company.png',
+              '${platformImage}company.png',
               height: x,
               width: y,
             ),
@@ -223,6 +224,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               ),
             ),
             Container(
+              width: MediaQuery.of(context).size.width * 0.1,
               padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
               child: Checkbox(
                 activeColor: const Color(0xFF4285F4),
