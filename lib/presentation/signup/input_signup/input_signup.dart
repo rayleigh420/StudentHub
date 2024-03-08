@@ -30,42 +30,46 @@ class _InputSignUpState extends State<InputSignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        // decoration: const BoxDecoration(color: Color(0xFFF6F6F6)),
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // const Text(
-            //   'StudentHub',
-            //   // textAlign: TextAlign.center,
-            //   style: TextStyle(
-            //       fontSize: 24,
-            //       //fontFamily: "GGX88HV",
-            //       fontWeight: FontWeight.bold),
-            // ),
-            const SizedBox(height: 17.0),
-            Text(
-              'Sign up as ${(widget.type == 1) ? 'Company' : 'Student'}',
-              // textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold
-                  //fontFamily: "GGX88Reg_Light",
-                  // color: Color(0xFF626262)
-                  ),
-            ),
-            const SizedBox(height: 20.0),
-            // const SizedBox(height: 17.0),
-            buildForm(context),
-            const SizedBox(height: 30),
-            buildLaunchButton(context, () {
-              log('Login pressed');
-            }),
-            buildSignupSection(context)
-          ],
+    return SafeArea(
+        child: Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Container(
+          // decoration: const BoxDecoration(color: Color(0xFFF6F6F6)),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // const Text(
+              //   'StudentHub',
+              //   // textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //       fontSize: 24,
+              //       //fontFamily: "GGX88HV",
+              //       fontWeight: FontWeight.bold),
+              // ),
+              const SizedBox(height: 17.0),
+              Text(
+                'Sign up as ${(widget.type == 1) ? 'Company' : 'Student'}',
+                // textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold
+                    //fontFamily: "GGX88Reg_Light",
+                    // color: Color(0xFF626262)
+                    ),
+              ),
+              const SizedBox(height: 20.0),
+              // const SizedBox(height: 17.0),
+              buildForm(context),
+              const SizedBox(height: 30),
+              buildLaunchButton(context, () {
+                log('Login pressed');
+              }),
+              // buildSignupSection(context)
+            ],
+          ),
         ),
       ),
-    );
+    ));
   }
 
   Widget buildForm(BuildContext context) {
@@ -88,6 +92,9 @@ class _InputSignUpState extends State<InputSignUp> {
           height: 5,
         ),
         TextField(
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           controller: _fullNameController,
           keyboardType: TextInputType.name,
           style: TextStyle(
@@ -132,6 +139,9 @@ class _InputSignUpState extends State<InputSignUp> {
           height: 5,
         ),
         TextField(
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           style: TextStyle(
@@ -172,6 +182,9 @@ class _InputSignUpState extends State<InputSignUp> {
           ),
         ),
         TextField(
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           controller: _passwordController,
           obscureText: !_showPassword,
           style: TextStyle(
@@ -208,7 +221,7 @@ class _InputSignUpState extends State<InputSignUp> {
             ),
           ),
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 18.0),
         GestureDetector(
           onTap: () {
             setState(() {
@@ -217,25 +230,38 @@ class _InputSignUpState extends State<InputSignUp> {
           },
           child: Row(
             children: [
-              Checkbox(
-                value: _agreeToApply,
-                activeColor: const Color(0xFF4285F4),
-                checkColor: Colors.white,
-                onChanged: (value) {
-                  setState(() {
-                    _agreeToApply = value!;
-                  });
-                },
-              ),
-              Text(
-                'Yes, I understand and agree to StudentHub',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  //fontFamily: "GGX88Reg_Light",
-                  color: textColor,
+              SizedBox(
+                height: 24,
+                width: 24,
+                child: Checkbox(
+                  value: _agreeToApply,
+                  activeColor: const Color(0xFF4285F4),
+                  checkColor: Colors.white,
+                  onChanged: (value) {
+                    setState(() {
+                      _agreeToApply = value!;
+                    });
+                  },
                 ),
               ),
+              const SizedBox(
+                width: 5,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Text(
+                  'Yes, I understand and agree to StudentHub',
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.clip,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    //fontFamily: "GGX88Reg_Light",
+                    color: textColor,
+                  ),
+                ),
+              )
             ],
           ),
         )
