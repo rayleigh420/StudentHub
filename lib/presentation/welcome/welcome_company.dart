@@ -1,3 +1,4 @@
+import 'package:boilerplate/presentation/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeCompany extends StatelessWidget {
@@ -43,7 +44,12 @@ class WelcomeCompany extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5))),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return  DashBoardScreen();
+                    }));
+                  },
                   child: const Text(
                       style: TextStyle(fontSize: 16), "Get Started!")),
             ),

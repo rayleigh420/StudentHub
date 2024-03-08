@@ -1,3 +1,4 @@
+import 'package:boilerplate/presentation/profile/profile_company_input.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -8,53 +9,61 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
-        child: Column(
-          children: [
-            AccountSection(
-                title: UserAva(
-                  name: "Duy Le",
-                  company: 'Company',
-                ),
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20),
-                    child: UserAva(
-                      name: "Nhat Duy",
-                      company: 'Student',
+    return SafeArea(
+        child: Scaffold(
+      body: Container(
+          padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
+          child: Column(
+            children: [
+              AccountSection(
+                  title: UserAva(
+                    name: "Duy Le",
+                    company: 'Company',
+                  ),
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: UserAva(
+                        name: "Nhat Duy",
+                        company: 'Student',
+                      ),
                     ),
-                  ),
-                ]),
-            AccountSection(
-                title: Text(
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                    'Account Setting'),
-                children: [
-                  AccountItem(
-                    icon: Icons.manage_accounts_sharp,
-                    title: 'Profile',
-                    onTap: () {
-                      // Xử lý khi người dùng nhấn vào Profile
-                    },
-                  ),
-                  AccountItem(
-                    icon: Icons.settings,
-                    title: 'Settings',
-                    onTap: () {
-                      // Xử lý khi người dùng nhấn vào Settings
-                    },
-                  ),
-                  AccountItem(
-                    icon: Icons.logout,
-                    title: 'Logout',
-                    onTap: () {
-                      // Xử lý khi người dùng nhấn vào Logout
-                    },
-                  ),
-                ])
-          ],
-        ));
+                  ]),
+              AccountSection(
+                  title: Text(
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                      'Account Setting'),
+                  children: [
+                    AccountItem(
+                      icon: Icons.manage_accounts_sharp,
+                      title: 'Profile',
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) {
+                          return const ProfileCompanyInput();
+                        }));
+                        // Xử lý khi người dùng nhấn vào Profile
+                      },
+                    ),
+                    AccountItem(
+                      icon: Icons.settings,
+                      title: 'Settings',
+                      onTap: () {
+                        // Xử lý khi người dùng nhấn vào Settings
+                      },
+                    ),
+                    AccountItem(
+                      icon: Icons.logout,
+                      title: 'Logout',
+                      onTap: () {
+                        // Xử lý khi người dùng nhấn vào Logout
+                      },
+                    ),
+                  ])
+            ],
+          )),
+    ));
   }
 }
 
