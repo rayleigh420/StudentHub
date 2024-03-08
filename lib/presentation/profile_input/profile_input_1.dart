@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -70,9 +71,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
             Text(
               'Tell us about your self and you will be on your way connect with real-world project',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 17,
-              ),
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 20.0),
             // const SizedBox(height: 17.0),
@@ -304,132 +303,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
   }
 
   Widget buildEducation(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.65,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Education",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(right: 10),
-                  // width: MediaQuery.of(context).size.width * 0.2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: borderColor,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        padding: const EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.add,
-                          size: 17,
-                          weight: 100,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        buildEducationItem(context, 1),
-        buildEducationItem(context, 2)
-      ],
-    );
-  }
-
-  Widget buildEducationItem(BuildContext context, int index) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Le Hong Phong High School',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '2009-2010',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(right: 10),
-              // width: MediaQuery.of(context).size.width * 0.2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: borderColor,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    padding: const EdgeInsets.all(4.0),
-                    child: Icon(
-                      Icons.edit,
-                      size: 17,
-                      weight: 100,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: borderColor,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    padding: const EdgeInsets.all(4.0),
-                    child: Icon(
-                      Icons.delete,
-                      size: 17,
-                      weight: 100,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+    return ExpWidget(
+        borderColor: borderColor,
+        educationText: "Education",
+        educationItems: [
+          ExpItem(title: "Le Hong Phong High School", time: '2008-2010'),
+          ExpItem(
+              title: "Ho Chi Minh University of Science", time: '2010-2014'),
+        ]);
   }
 
   Widget buildNext(BuildContext context) {
