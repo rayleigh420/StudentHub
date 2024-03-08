@@ -36,7 +36,6 @@ class _InputLoginState extends State<InputLogin> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     // print(_themeStore.darkMode);
     return SafeArea(
         child: Scaffold(
@@ -89,50 +88,6 @@ class _InputLoginState extends State<InputLogin> {
             // ),
             buildSignupSection(context),
           ],
-=======
-    print(_themeStore.darkMode);
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // const Text(
-              //   'StudentHub',
-              //   // textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //       fontSize: 24,
-              //       //fontFamily: "GGX88HV",
-              //       fontWeight: FontWeight.bold),
-              // ),
-              const SizedBox(height: 17.0),
-              Text(
-                'Add your email and password',
-                // textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  //fontFamily: "GGX88Reg_Light",
-                  // color:
-                  //     _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              // const SizedBox(height: 17.0),
-              buildForm(context),
-              const SizedBox(height: 30),
-              buildLaunchButton(context, () {
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
-                }
-              }),
-              buildSignupSection(context)
-            ],
-          ),
->>>>>>> dev
         ),
       ),
     ));
