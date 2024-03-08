@@ -1,3 +1,4 @@
+import 'package:boilerplate/presentation/project/project.dart';
 import 'package:flutter/material.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/di/service_locator.dart';
@@ -264,7 +265,12 @@ class _ResumeUploadState extends State<ResumeUpload> {
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(builder: (context) {
+                          return  ProjectScreen(isNew: true,);
+                        }));
+                      },
                       child: const Text(
                           style: TextStyle(fontSize: 16), "Continue")),
                 ),
