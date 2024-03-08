@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
+import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -304,13 +304,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
   Widget buildEducation(BuildContext context) {
     return ExpWidget(
-        borderColor: borderColor,
-        educationText: "Education",
-        educationItems: [
-          ExpItem(title: "Le Hong Phong High School", time: '2008-2010'),
-          ExpItem(
-              title: "Ho Chi Minh University of Science", time: '2010-2014'),
-        ]);
+      borderColor: borderColor,
+      educationText: "Education",
+      educationItems: [
+        ExpItem(title: "Le Hong Phong High School", time: '2008-2010'),
+        ExpItem(title: "Ho Chi Minh University of Science", time: '2010-2014'),
+      ],
+      isProject: false,
+    );
   }
 
   Widget buildNext(BuildContext context) {
