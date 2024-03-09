@@ -1,0 +1,221 @@
+import 'package:boilerplate/core/widgets/project_item.dart';
+import 'package:boilerplate/domain/entity/project/project.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+class BrowseProjectScreen extends StatefulWidget {
+  const BrowseProjectScreen({super.key});
+
+  @override
+  State<BrowseProjectScreen> createState() => _BrowseProjectScreenState();
+}
+
+class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
+  final data = {
+    "title": "Senior frontend developer (Fintech)",
+    "props": [
+      "Students are looking for",
+      "Clear expectation about your project or deliverables",
+      "React",
+      "Redux",
+      "TypeScript",
+      "GraphQL",
+      "Node.js",
+      "AWS",
+    ],
+    "scopeFrom": 1,
+    "scopeFrom2": "month",
+    "scopeTo": 3,
+    "scopeTo2": "months",
+    "quantityRequired": "6",
+    "createdDate": DateTime.now().add(Duration(days: -3)),
+    "proposal": 6
+  };
+  final projDat = Project(
+      title: "Senior frontend developer (Fintech)",
+      props: [
+        "Students are looking for",
+        "Clear expectation about your project or deliverables",
+        "React",
+        "Redux",
+        "TypeScript",
+        "GraphQL",
+        "Node.js",
+        "AWS",
+      ],
+      scopeFrom: 1,
+      scopeFrom2: "month",
+      scopeTo: 3,
+      scopeTo2: "month",
+      proposal: 6,
+      createdDate: DateTime.now().add(Duration(days: -3)));
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: Container(
+                child: CustomScrollView(
+              physics: BouncingScrollPhysics(),
+              slivers: [
+                
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Text("BrowseProjectScreen"),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      buildSearchBar(context),
+                      ProjectItem(projDat: projDat),
+                      ProjectItem(projDat: projDat),
+                      ProjectItem(projDat: projDat),
+                      ProjectItem(projDat: projDat),
+                      ProjectItem(projDat: projDat),
+                      // buildProjectItem()
+                    ],
+                  ),
+                )
+              ],
+            ))));
+  }
+
+  Widget buildSearchBar(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 1,
+      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Flexible(
+              child: Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+            // alignment: Alignment.centerLeft,
+
+            child: SizedBox(
+              // height: MediaQuery.of(context).size.height * 0.06,
+              child: TextField(
+                textAlignVertical: TextAlignVertical.center,
+                // textAlign: TextAlign.center,
+                maxLines: 1,
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  filled: true,
+                  hintStyle: TextStyle(
+                    color: Colors.grey,
+                  ),
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+          )),
+          Container(
+            padding: EdgeInsets.all(5),
+            margin: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Color(0xFFE91E63),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Icon(Icons.favorite,
+                color: Colors.white,
+                size: MediaQuery.of(context).size.height * 0.023),
+          )
+        ],
+      ),
+    );
+  }
+
+  int dateDiff(DateTime date1, DateTime date2) {
+    Duration difference = date1.difference(date2);
+    return difference.inDays;
+  }
+
+  Widget buildProjectItem() {
+    return Container(
+        padding: EdgeInsets.all(8),
+        margin: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              // decoration: BoxDecoration(
+              //   border: Border.all(color: Colors.grey),
+              //   borderRadius: BorderRadius.circular(8),
+              // ),
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Created ${dateDiff(DateTime.now(), projDat.createdDate!)} days ago",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    projDat.title,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                          "${projDat.scopeFrom} ${projDat.scopeFrom2} - ${projDat.scopeTo} ${projDat.scopeTo2}",
+                          style: TextStyle(fontSize: 13)),
+                      Text(", ", style: TextStyle(fontSize: 13)),
+                      Text(
+                          "${projDat.quantityRequired != null ? projDat.quantityRequired : 0}  students",
+                          style: TextStyle(fontSize: 13)),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const Text("Student are looking for",
+                      style: TextStyle(fontSize: 13)),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 5.0),
+                        child: Text("-   ${projDat.props[index]}",
+                            style: TextStyle(fontSize: 13)),
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text("Proposals: ${projDat.proposal} proposals",
+                      style: TextStyle(fontSize: 13)),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child:
+                    Icon(Icons.favorite_border, color: Colors.grey, size: 30),
+              ),
+            ),
+          ],
+        ));
+  }
+}
