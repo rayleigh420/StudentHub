@@ -23,6 +23,7 @@ import 'package:boilerplate/presentation/profile/profile_company_input.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input_account.dart';
 import 'package:boilerplate/presentation/profile/resume_upload.dart';
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           // theme: AppThemeData.darkThemeData,
-          theme: _themeStore.darkMode
+          theme: !_themeStore.darkMode
               ? AppThemeData.darkThemeData
               : AppThemeData.lightThemeData,
           routes: Routes.routes,
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
             // Built-in localization of basic text for Cupertino widgets
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: HomeScreen(),
+          home: AppBottomNavigationBar(),
         );
       },
     );
