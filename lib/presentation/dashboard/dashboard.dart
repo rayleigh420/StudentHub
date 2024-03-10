@@ -1,3 +1,4 @@
+import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: Container(
+            body: SingleChildScrollView(
+      child: Container(
           padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
           child: Column(
             children: [
@@ -20,7 +22,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 children: [
                   const Text(
                       style: TextStyle(fontWeight: FontWeight.w600),
-                      "Your Job"),
+                      "Your Projects"),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -29,6 +31,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       child: const Text(
                           style: TextStyle(fontSize: 16), "Post a job")),
                 ],
+              ),
+              // Row(
+              //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   mainAxisSize: MainAxisSize.min,
+              //   children: [
+              //   ],
+              // ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: FilterButtons(),
               ),
               Container(
                 margin: EdgeInsets.only(
@@ -47,6 +59,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               ),
             ],
           )),
-    ));
+    )));
   }
 }
