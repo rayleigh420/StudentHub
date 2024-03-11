@@ -39,6 +39,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
                     decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(width: 1.0),
@@ -50,6 +51,9 @@ class _ProjectPost4State extends State<ProjectPost4> {
                           "Students are looking for",
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 25,
                         ),
                         Text(
                           "- Clear expectation about your project or deliverables",
@@ -94,6 +98,9 @@ class _ProjectPost4State extends State<ProjectPost4> {
                       )
                     ],
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -113,9 +120,20 @@ class _ProjectPost4State extends State<ProjectPost4> {
                             style: TextStyle(fontSize: 14),
                           )
                         ],
-                      )
+                      ),
                     ],
-                  )
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5))),
+                        onPressed: () {},
+                        child: const Text(
+                            style: TextStyle(fontSize: 16), "Post job")),
+                  ),
                 ],
               ),
             )),

@@ -75,6 +75,18 @@ class _ProjectPost3State extends State<ProjectPost3> {
                       )),
                     ),
                   ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5))),
+                        onPressed: () {},
+                        child: const Text(
+                            style: TextStyle(fontSize: 16),
+                            "Review your post")),
+                  ),
                 ],
               ),
             )),
