@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           // theme: AppThemeData.darkThemeData,
-          theme: _themeStore.darkMode
+          theme: !_themeStore.darkMode
               ? AppThemeData.darkThemeData
               : AppThemeData.lightThemeData,
           routes: Routes.routes,
