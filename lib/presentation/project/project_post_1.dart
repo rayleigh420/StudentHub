@@ -64,7 +64,18 @@ class _ProjectPost1State extends State<ProjectPost1> {
                             style: TextStyle(fontSize: 14),
                           )
                         ],
-                      ))
+                      )),
+                  Container(
+                    margin: const EdgeInsets.only(top: 30),
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5))),
+                        onPressed: () {},
+                        child: const Text(
+                            style: TextStyle(fontSize: 16), "Next: Scope")),
+                  ),
                 ],
               ),
             )),
