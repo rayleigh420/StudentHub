@@ -54,7 +54,11 @@ class _ProjectItemState extends State<ProjectItem> {
                     )
                   ],
                 ),
-                Icon(Icons.more_vert)
+                IconButton(
+                    icon: Icon(Icons.more_vert),
+                    onPressed: () {
+                      buildModal(context);
+                    })
               ],
             ),
             SizedBox(height: 15),
@@ -113,5 +117,48 @@ class _ProjectItemState extends State<ProjectItem> {
             )
           ],
         ));
+  }
+
+  void buildModal(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.assignment),
+                  title: Text('View Proposals'),
+                  onTap: () => {},
+                ),
+                ListTile(
+                  leading: Icon(Icons.message),
+                  title: Text('View messages'),
+                  onTap: () => {},
+                ),
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('View hired'),
+                  onTap: () => {},
+                ),
+                ListTile(
+                  leading: Icon(Icons.post_add),
+                  title: Text('View Job posting'),
+                  onTap: () => {},
+                ),
+                ListTile(
+                  leading: Icon(Icons.edit),
+                  title: Text('Edit posting'),
+                  onTap: () => {},
+                ),
+                ListTile(
+                  leading: Icon(Icons.delete),
+                  title: Text('Remove posting'),
+                  onTap: () => {},
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
