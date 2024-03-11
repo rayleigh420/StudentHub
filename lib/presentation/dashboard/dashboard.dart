@@ -1,3 +1,5 @@
+import 'package:boilerplate/core/widgets/projects/list_project.dart';
+import 'package:boilerplate/core/widgets/projects/projectItem.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 margin: EdgeInsets.only(top: 20),
                 child: FilterButtons(),
               ),
+              // ProjectItem(),
+              ListProject(),
               Container(
                 margin: EdgeInsets.only(
                     top: DeviceUtils.getScaledHeight(context, 0.35)),
