@@ -1,5 +1,7 @@
 import 'package:boilerplate/core/widgets/project_item.dart';
+import 'package:boilerplate/core/widgets/search_project_modal.dart';
 import 'package:boilerplate/domain/entity/project/project.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -48,31 +50,42 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
       scopeTo: 3,
       scopeTo2: "month",
       proposal: 6,
-      createdDate: DateTime.now().add(Duration(days: -3)));
+      createdDate: DateTime.now().add(Duration(days: -3)),
+      isSaved: false);
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             body: Container(
-                child: CustomScrollView(
-              physics: BouncingScrollPhysics(),
-              slivers: [
-                
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      Text("BrowseProjectScreen"),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      buildSearchBar(context),
-                      ProjectItem(projDat: projDat),
-                      ProjectItem(projDat: projDat),
-                      ProjectItem(projDat: projDat),
-                      ProjectItem(projDat: projDat),
-                      ProjectItem(projDat: projDat),
-                      // buildProjectItem()
+                child: Column(
+              children: [
+                buildSearchBar(context),
+                SizedBox(
+                  height: DeviceUtils.getScaledHeight(context, 0.9),
+                  child: CustomScrollView(
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 16,
+                            ),
+
+                            ProjectItem(projDat: projDat),
+                            ProjectItem(projDat: projDat),
+                            ProjectItem(projDat: projDat),
+                            ProjectItem(projDat: projDat),
+                            ProjectItem(projDat: projDat),
+                            const SizedBox(
+                              height: 16,
+                            )
+                            // buildProjectItem()
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 )
@@ -88,32 +101,47 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Flexible(
-              child: Container(
-            margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            // alignment: Alignment.centerLeft,
-
-            child: SizedBox(
-              // height: MediaQuery.of(context).size.height * 0.06,
-              child: TextField(
-                textAlignVertical: TextAlignVertical.center,
-                // textAlign: TextAlign.center,
-                maxLines: 1,
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  filled: true,
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                isDismissible: true,
+                context: context,
+                isScrollControlled: true,
+                useRootNavigator: true,
+                enableDrag: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) {
+                  return SearchProjectModal();
+                },
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+              margin: EdgeInsets.fromLTRB(0, 10, 10, 10),
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: Icon(Icons.search, color: Colors.grey),
                   ),
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
+                  Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: const Text(
+                        "Search",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ))
+                ],
               ),
             ),
-          )),
+          ),
           Container(
             padding: EdgeInsets.all(5),
             margin: EdgeInsets.all(5),
@@ -147,10 +175,6 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              // decoration: BoxDecoration(
-              //   border: Border.all(color: Colors.grey),
-              //   borderRadius: BorderRadius.circular(8),
-              // ),
               width: MediaQuery.of(context).size.width * 0.8,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
