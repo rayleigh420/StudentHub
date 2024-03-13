@@ -8,6 +8,7 @@ class Project {
   int? quantityRequired;
   DateTime? createdDate;
   final int proposal;
+  bool? isSaved;
   Project({
     required this.title,
     required this.props,
@@ -18,6 +19,7 @@ class Project {
     this.quantityRequired,
     this.createdDate,
     required this.proposal,
+    this.isSaved
   });
   factory Project.fromMap(Map<String, dynamic> json) => Project(
         title: json["title"],
@@ -29,6 +31,7 @@ class Project {
         quantityRequired: json["quantityRequired"],
         createdDate: DateTime.parse(json["createdDate"]),
         proposal: json["proposal"],
+        isSaved: json["isSaved"]
       );
   Map<String, dynamic> toMap() {
     return {
@@ -40,7 +43,8 @@ class Project {
       "scopeTo2": scopeTo2,
       "quantityRequired": quantityRequired,
       "createdDate": createdDate,
-      "proposal": proposal
+      "proposal": proposal,
+      "isSaved": isSaved
     };
   }
 }
