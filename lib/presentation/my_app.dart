@@ -28,7 +28,7 @@ import 'package:boilerplate/presentation/profile/profile_company_input.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input_account.dart';
 import 'package:boilerplate/presentation/profile/resume_upload.dart';
-import 'package:boilerplate/presentation/companyReview/companyDashboard.dart';
+// import 'package:boilerplate/presentation/companyReview/companyDashboard.dart';
 import 'package:boilerplate/presentation/companyReview/project_detail.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 class MyApp extends StatelessWidget {
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           // theme: AppThemeData.darkThemeData,
-          theme: !_themeStore.darkMode
+          theme: _themeStore.darkMode
               ? AppThemeData.darkThemeData
               : AppThemeData.lightThemeData,
           routes: Routes.routes,
