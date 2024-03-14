@@ -1,5 +1,6 @@
 import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
+import 'package:boilerplate/presentation/browse_project/browse_project_main.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/home/store/language/language_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
@@ -14,6 +15,7 @@ import 'package:boilerplate/presentation/project/project_post_1.dart';
 import 'package:boilerplate/presentation/project/project_post_2.dart';
 import 'package:boilerplate/presentation/project/project_post_3.dart';
 import 'package:boilerplate/presentation/project/project_post_4.dart';
+import 'package:boilerplate/presentation/search_project_screen/search_project_screen.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
@@ -21,13 +23,14 @@ import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
 import '../di/service_locator.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input_account.dart';
 import 'package:boilerplate/presentation/profile/resume_upload.dart';
-
+import 'package:boilerplate/presentation/companyReview/companyDashboard.dart';
+import 'package:boilerplate/presentation/companyReview/project_detail.dart';
+import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
@@ -62,7 +65,7 @@ class MyApp extends StatelessWidget {
             // Built-in localization of basic text for Cupertino widgets
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: ProjectPost4(),
+          home: AppBottomNavigationBar(),
         );
       },
     );
