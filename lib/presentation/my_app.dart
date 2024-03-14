@@ -11,6 +11,10 @@ import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_1.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
+import 'package:boilerplate/presentation/project/project_post_1.dart';
+import 'package:boilerplate/presentation/project/project_post_2.dart';
+import 'package:boilerplate/presentation/project/project_post_3.dart';
+import 'package:boilerplate/presentation/project/project_post_4.dart';
 import 'package:boilerplate/presentation/search_project_screen/search_project_screen.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
@@ -19,7 +23,6 @@ import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
 import '../di/service_locator.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
@@ -44,7 +47,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           // theme: AppThemeData.darkThemeData,
-          theme: _themeStore.darkMode
+          theme: !_themeStore.darkMode
               ? AppThemeData.darkThemeData
               : AppThemeData.lightThemeData,
           routes: Routes.routes,
@@ -63,7 +66,6 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           home: AppBottomNavigationBar(),
-
         );
       },
     );
