@@ -2,6 +2,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project/project.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ProjectModal extends StatefulWidget {
@@ -45,6 +46,7 @@ class _ProjectModalState extends State<ProjectModal> {
             ),
             Expanded(
               child: ListView(
+                physics: BouncingScrollPhysics(),
                 children: [
                   buildScope(context),
                   const SizedBox(
@@ -62,7 +64,6 @@ class _ProjectModalState extends State<ProjectModal> {
                   SizedBox(
                     height: 100,
                   ),
-                  
                 ],
               ),
             ),
@@ -75,13 +76,16 @@ class _ProjectModalState extends State<ProjectModal> {
 
   Widget buildCompanyAndJobTitle(BuildContext context) {
     final w = DeviceUtils.getScaledWidth(context, 0.14);
+    const img = kIsWeb
+        ? AssetImage('/images/company.png')
+        : AssetImage('assets/images/company.png');
     return Container(
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
             child: Image(
-              image: AssetImage('/images/company.png'),
+              image: img,
               width: w,
               height: w,
             ),

@@ -56,13 +56,17 @@ class _SavedProjectState extends State<SavedProject> {
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              title: Text("Saved Project"),
+            ),
             body: Container(
                 child: Column(
               children: [
-                SizedBox(
-                  height: DeviceUtils.getScaledHeight(context, 0.9),
+                Expanded(
+                  // height: DeviceUtils.getScaledHeight(context, 0.7),
                   child: CustomScrollView(
                     shrinkWrap: true,
+                    
                     physics: BouncingScrollPhysics(),
                     slivers: [
                       SliverToBoxAdapter(
