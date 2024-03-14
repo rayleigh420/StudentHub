@@ -15,7 +15,6 @@ class ResumeUpload extends StatefulWidget {
 }
 
 class _ResumeUploadState extends State<ResumeUpload> {
-
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -40,16 +39,15 @@ class _ResumeUploadState extends State<ResumeUpload> {
   bool _lockParentWindow1 = false;
   bool _userAborted1 = false;
 
-
   FileType _pickingType = FileType.any;
- 
 
   @override
   void initState() {
     super.initState();
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6C6C6C);
   }
-   void _pickFiles() async {
+
+  void _pickFiles() async {
     _resetState();
     try {
       _directoryPath = null;
@@ -61,14 +59,13 @@ class _ResumeUploadState extends State<ResumeUpload> {
         allowedExtensions: (_extension?.isNotEmpty ?? false)
             ? _extension?.replaceAll(' ', '').split(',')
             : null,
-       
         lockParentWindow: _lockParentWindow,
       ))
           ?.files;
     } on PlatformException catch (e) {
       _logException('Unsupported operation' + e.toString());
     } catch (e) {
-        _logException(e.toString());
+      _logException(e.toString());
     }
     if (!mounted) return;
     setState(() {
@@ -78,6 +75,7 @@ class _ResumeUploadState extends State<ResumeUpload> {
       _userAborted = _paths == null;
     });
   }
+
   void _pickFiles1() async {
     _resetState1();
     try {
@@ -90,14 +88,13 @@ class _ResumeUploadState extends State<ResumeUpload> {
         allowedExtensions: (_extension?.isNotEmpty ?? false)
             ? _extension?.replaceAll(' ', '').split(',')
             : null,
-       
         lockParentWindow: _lockParentWindow1,
       ))
           ?.files;
     } on PlatformException catch (e) {
       _logException('Unsupported operation' + e.toString());
     } catch (e) {
-        _logException(e.toString());
+      _logException(e.toString());
     }
     if (!mounted) return;
     setState(() {
@@ -107,7 +104,8 @@ class _ResumeUploadState extends State<ResumeUpload> {
       _userAborted1 = _paths == null;
     });
   }
-   void _resetState() {
+
+  void _resetState() {
     if (!mounted) {
       return;
     }
@@ -120,6 +118,7 @@ class _ResumeUploadState extends State<ResumeUpload> {
       _userAborted = false;
     });
   }
+
   void _resetState1() {
     if (!mounted) {
       return;
@@ -133,7 +132,8 @@ class _ResumeUploadState extends State<ResumeUpload> {
       _userAborted1 = false;
     });
   }
-   void _logException(String message) {
+
+  void _logException(String message) {
     print(message);
     _scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
     _scaffoldMessengerKey.currentState?.showSnackBar(
@@ -147,7 +147,6 @@ class _ResumeUploadState extends State<ResumeUpload> {
       ),
     );
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -173,12 +172,9 @@ class _ResumeUploadState extends State<ResumeUpload> {
                       textAlign: TextAlign.left,
                       "Tell us about your company and you will be on your way connect with real-world project"),
                 ),
-              
                 SizedBox(
                   height: 40,
                 ),
-               
-
                 const Text(
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
@@ -187,34 +183,26 @@ class _ResumeUploadState extends State<ResumeUpload> {
                 SizedBox(
                   height: 10,
                 ),
-                        DottedBorder(
-                    dashPattern: [8, 4],
-                    strokeWidth: 2,
-                    radius: Radius.circular(15),
-                    color: Colors.white,
-                    
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 70, right: 70, bottom: 30, top: 30),
-                      height: 40,
-                      width: 200,
-
-                      child: _fileName != null
-                          ? InkWell(
-                              onTap: () => _pickFiles(),
-                            child: Text(_fileName!.toString()
-                            )
-                            )
-                          :
-                       FloatingActionButton.extended(
-                                onPressed: () => _pickFiles(),
-                                label:
-                                    Text('Choose files to upload'),
-                                icon: const Icon(Icons.description)),
-                     
-                    ),
-                    ),
-
-              
+                DottedBorder(
+                  dashPattern: [8, 4],
+                  strokeWidth: 2,
+                  radius: Radius.circular(15),
+                  color: Colors.white,
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                        left: 70, right: 70, bottom: 30, top: 30),
+                    height: 40,
+                    width: 200,
+                    child: _fileName != null
+                        ? InkWell(
+                            onTap: () => _pickFiles(),
+                            child: Text(_fileName!.toString()))
+                        : FloatingActionButton.extended(
+                            onPressed: () => _pickFiles(),
+                            label: Text('Choose files to upload'),
+                            icon: const Icon(Icons.description)),
+                  ),
+                ),
                 SizedBox(
                   height: 40,
                 ),
@@ -226,38 +214,29 @@ class _ResumeUploadState extends State<ResumeUpload> {
                 SizedBox(
                   height: 10,
                 ),
-                 DottedBorder(
-                    dashPattern: [8, 4],
-                    strokeWidth: 2,
-                    radius: Radius.circular(15),
-                    color: Colors.white,
-                    
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 70, right: 70, bottom: 30, top: 30),
-                      height: 40,
-                      width: 200,
-
-                      child: _fileName1 != null
-                          ? InkWell(
-                              onTap: () => _pickFiles1(),
-                            child:
-                             Text(_fileName1!.toString()
-                             )
-                             )
-                          :
-                       FloatingActionButton.extended(
-                                onPressed: () => _pickFiles1(),
-                                label:
-                                    Text('Choose files to upload'),
-                                icon: const Icon(Icons.description)),
-                     
-                    ),
-                    ),
-               
+                DottedBorder(
+                  dashPattern: [8, 4],
+                  strokeWidth: 2,
+                  radius: Radius.circular(15),
+                  color: Colors.white,
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                        left: 70, right: 70, bottom: 30, top: 30),
+                    height: 40,
+                    width: 200,
+                    child: _fileName1 != null
+                        ? InkWell(
+                            onTap: () => _pickFiles1(),
+                            child: Text(_fileName1!.toString()))
+                        : FloatingActionButton.extended(
+                            onPressed: () => _pickFiles1(),
+                            label: Text('Choose files to upload'),
+                            icon: const Icon(Icons.description)),
+                  ),
+                ),
                 SizedBox(
                   height: 120,
                 ),
-              
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(left: 170, bottom: 20),
@@ -266,9 +245,9 @@ class _ResumeUploadState extends State<ResumeUpload> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
                       onPressed: () {
-                        Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (context) {
-                          return  ProjectScreen(isNew: true,);
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) {
+                          return ProjectScreen();
                         }));
                       },
                       child: const Text(
