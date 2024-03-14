@@ -1,4 +1,5 @@
 import 'package:boilerplate/presentation/alert/alert.dart';
+import 'package:boilerplate/presentation/browse_project/browse_project_main.dart';
 import 'package:boilerplate/presentation/dashboard/dashboard.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/login/login.dart';
@@ -16,10 +17,8 @@ class AppBottomNavigationBar extends StatefulWidget {
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 4;
 
-  static List<Widget>   _widgetOptions = <Widget>[
-    ProjectScreen(
-      isNew: true,
-    ),
+  static List<Widget> _widgetOptions = <Widget>[
+    ProjectScreen(),
     MessageScreen(),
     DashBoardScreen(),
     AlerttScreen(),
@@ -45,7 +44,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      // appBar: _buildAppBar(),
       body: SafeArea(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

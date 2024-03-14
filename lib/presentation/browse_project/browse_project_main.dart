@@ -1,13 +1,16 @@
 import 'package:boilerplate/core/widgets/project_item.dart';
 import 'package:boilerplate/core/widgets/search_project_modal.dart';
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project/project.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/saved_project/saved_project.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class BrowseProjectScreen extends StatefulWidget {
-  const BrowseProjectScreen({super.key});
-
+  BrowseProjectScreen({super.key, required this.navigatorKey});
+  GlobalKey<NavigatorState> navigatorKey;
   @override
   State<BrowseProjectScreen> createState() => _BrowseProjectScreenState();
 }
@@ -52,17 +55,22 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
       proposal: 6,
       createdDate: DateTime.now().add(Duration(days: -3)),
       isSaved: false);
+  ThemeStore _themeStore = getIt<ThemeStore>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+            appBar: AppBar(
+              title: Text("Browse Project"),
+            ),
             resizeToAvoidBottomInset: false,
             body: Container(
                 child: Column(
               children: [
                 buildSearchBar(context),
-                SizedBox(
-                  height: DeviceUtils.getScaledHeight(context, 0.9),
+                Expanded(
+                  // height: DeviceUtils.getScaledHeight(context, 0.7),
                   child: CustomScrollView(
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
@@ -142,16 +150,24 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(5),
-            margin: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: Color(0xFFE91E63),
-              borderRadius: BorderRadius.circular(100),
+          GestureDetector(
+            onTap: () {
+              widget.navigatorKey.currentState!
+                  .pushNamed('saved_project', arguments: projDat);
+              print(widget.navigatorKey.currentState!.canPop());
+              // Navigator.pushNamed(context, 'saved_project');
+            },
+            child: Container(
+              padding: EdgeInsets.all(5),
+              margin: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Color(0xFFE91E63),
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Icon(Icons.favorite,
+                  color: Colors.white,
+                  size: MediaQuery.of(context).size.height * 0.023),
             ),
-            child: Icon(Icons.favorite,
-                color: Colors.white,
-                size: MediaQuery.of(context).size.height * 0.023),
           )
         ],
       ),
