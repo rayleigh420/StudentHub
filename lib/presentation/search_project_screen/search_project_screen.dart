@@ -16,11 +16,6 @@ class SearchProjectScreen extends StatefulWidget {
 
 class _SearchProjectScreenState extends State<SearchProjectScreen> {
   ThemeStore _themeStore = getIt<ThemeStore>();
-  @override
-  void initState() {
-    super.initState();
-    _themeStore.changeBrightnessToDark(false);
-  }
 
   final data = {
     "title": "Senior frontend developer (Fintech)",
@@ -65,13 +60,16 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+            appBar: AppBar(
+              title: Text("Search Project"),
+            ),
             resizeToAvoidBottomInset: false,
             body: Container(
                 child: Column(
               children: [
                 buildSearchBar(context),
-                SizedBox(
-                  height: DeviceUtils.getScaledHeight(context, 0.9),
+                Expanded(
+                  // height: DeviceUtils.getScaledHeight(context, 0.7),
                   child: CustomScrollView(
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),

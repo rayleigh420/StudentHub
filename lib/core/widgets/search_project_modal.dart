@@ -1,5 +1,6 @@
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/search_project_screen/search_project_screen.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,7 @@ class SearchProjectModal extends StatefulWidget {
 class _SearchProjectModalState extends State<SearchProjectModal> {
   ThemeStore _themeStore = getIt<ThemeStore>();
   TextEditingController _searchController = TextEditingController();
+  FocusNode _searchFocusNode = FocusNode();
   List<String> _recentSearches = [
     "Recent Search 1",
     "Recent Search 2",
@@ -21,10 +23,16 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
     "Recent Search 5"
   ];
   @override
+  void initState() {
+    super.initState();
+    _searchFocusNode.requestFocus();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: _themeStore.darkMode ? Color(0xff2E3239) : Colors.white,
+        color: _themeStore.darkMode ? Color(0xff2E3239) : Color(0xffFCFCFC),
         border: Border(
             top: BorderSide(
                 color:
@@ -33,27 +41,44 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
             topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),
       width: DeviceUtils.getScaledWidth(context, 1),
-      height: DeviceUtils.getScaledHeight(context, 0.93),
+      height: DeviceUtils.getScaledHeight(context, 0.8),
       child: Container(
         padding: EdgeInsets.fromLTRB(20, 40, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: "Search for projects",
-                prefixIcon: Icon(Icons.search,
-                    color: _themeStore.darkMode ? Colors.white : null),
+            Container(
+              decoration: BoxDecoration(
+                color: _themeStore.darkMode ? Color(0xff2E3239) : Colors.white,
+                border: Border.all(
+                    color: _themeStore.darkMode ? Colors.grey : Colors.black),
+                borderRadius: BorderRadius.circular(15),
               ),
-              onChanged: (value) {
-                // Handle search text change
-              },
-              onSubmitted: (value) {},
+              child: TextField(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "Search for projects",
+                  prefixIcon: Icon(Icons.search,
+                      color: _themeStore.darkMode ? Colors.white : null),
+                ),
+                onChanged: (value) {
+                  // Handle search text change
+                },
+                onSubmitted: (value) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SearchProjectScreen(),
+                    ),
+                  );
+                },
+              ),
             ),
             SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: _recentSearches.length,
                 itemBuilder: (context, index) {
                   return ListTile(
