@@ -25,6 +25,9 @@ import 'package:boilerplate/presentation/profile/profile_company_input.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input_account.dart';
 import 'package:boilerplate/presentation/profile/resume_upload.dart';
+import 'package:boilerplate/presentation/companyReview/companyDashboard.dart';
+import 'package:boilerplate/presentation/companyReview/project_detail.dart';
+import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   // Create your store as a final variable in a base Widget. This works better
@@ -60,6 +63,7 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           home: AppBottomNavigationBar(),
+
         );
       },
     );
