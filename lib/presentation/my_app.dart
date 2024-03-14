@@ -1,5 +1,6 @@
 import 'package:boilerplate/constants/app_theme.dart';
 import 'package:boilerplate/constants/strings.dart';
+import 'package:boilerplate/presentation/browse_project/browse_project_main.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/home/store/language/language_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
@@ -10,6 +11,7 @@ import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_1.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
+import 'package:boilerplate/presentation/search_project_screen/search_project_screen.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
@@ -60,7 +62,8 @@ class MyApp extends StatelessWidget {
             // Built-in localization of basic text for Cupertino widgets
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: HireOffer(),
+          home: AppBottomNavigationBar(),
+
         );
       },
     );
