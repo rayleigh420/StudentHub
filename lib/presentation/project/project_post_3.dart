@@ -82,7 +82,9 @@ class _ProjectPost3State extends State<ProjectPost3> {
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/project_post_4');
+                        },
                         child: const Text(
                             style: TextStyle(fontSize: 16),
                             "Review your post")),

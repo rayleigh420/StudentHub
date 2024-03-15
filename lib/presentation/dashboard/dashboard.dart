@@ -29,7 +29,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/project_post_1');
+                      },
                       child: const Text(
                           style: TextStyle(fontSize: 16), "Post a job")),
                 ],
