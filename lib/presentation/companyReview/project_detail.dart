@@ -1,9 +1,7 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:boilerplate/core/widgets/toggle_button.dart';
-
 
 class ProjectDetail extends StatefulWidget {
   @override
@@ -14,7 +12,6 @@ class _ProjectDetailState extends State<ProjectDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: SafeArea(
         child: Container(
             padding: const EdgeInsets.fromLTRB(25, 20, 25, 0),
@@ -27,25 +24,24 @@ class _ProjectDetailState extends State<ProjectDetail> {
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                
                 children: [
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: Text(
                       "Senior frontend developer (Fintech)",
-                      style: TextStyle(fontWeight: FontWeight.w600,
-                          fontSize: 18,
-                          color: Colors.green.shade900),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: 5,
                   ),
-                   Container(
-                      margin: EdgeInsets.only(top: 20),
-                      child: ToggleButtonsCompanyDetail(),
-                    ),
-                        
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    child: ToggleButtonsCompanyDetail(),
+                  ),
                   Container(
                     margin: EdgeInsets.only(top: 15),
                     padding: EdgeInsets.only(top: 10, bottom: 10),
