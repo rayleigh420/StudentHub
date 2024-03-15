@@ -83,7 +83,9 @@ class _ProjectPost2State extends State<ProjectPost2> {
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/project_post_3');
+                        },
                         child: const Text(
                             style: TextStyle(fontSize: 16),
                             "Next: Description")),
