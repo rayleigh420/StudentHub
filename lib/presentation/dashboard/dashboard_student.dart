@@ -1,15 +1,15 @@
-import 'package:boilerplate/core/widgets/projects/list_project.dart';
-import 'package:boilerplate/core/widgets/projects/projectItem.dart';
+import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
+import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
-class DashBoardScreen extends StatefulWidget {
+class DashboardStudentScreen extends StatefulWidget {
   @override
-  _DashBoardScreenState createState() => _DashBoardScreenState();
+  _DashboardStudentScreenState createState() => _DashboardStudentScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen> {
+class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,7 +47,22 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 child: FilterButtons(),
               ),
               // ProjectItem(),
-              ListProject(),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(top: 20),
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Color(0xFF121212)
+                      : Colors.yellow,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  "You have a new message",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ),
+              ListProjectCompany(),
               Container(
                 margin: EdgeInsets.only(
                     top: DeviceUtils.getScaledHeight(context, 0.35)),
