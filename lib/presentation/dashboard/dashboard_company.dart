@@ -1,15 +1,15 @@
-import 'package:boilerplate/core/widgets/projects/list_project.dart';
-import 'package:boilerplate/core/widgets/projects/projectItem.dart';
+import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
+import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
-class DashBoardScreen extends StatefulWidget {
+class DashboardCompanyScreen extends StatefulWidget {
   @override
-  _DashBoardScreenState createState() => _DashBoardScreenState();
+  _DashboardCompanyScreenState createState() => _DashboardCompanyScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen> {
+class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,7 +47,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 child: FilterButtons(),
               ),
               // ProjectItem(),
-              ListProject(),
+              ListProjectCompany(),
               Container(
                 margin: EdgeInsets.only(
                     top: DeviceUtils.getScaledHeight(context, 0.35)),
