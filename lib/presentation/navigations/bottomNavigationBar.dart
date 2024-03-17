@@ -1,6 +1,7 @@
 import 'package:boilerplate/presentation/alert/alert.dart';
 import 'package:boilerplate/presentation/browse_project/browse_project_main.dart';
-import 'package:boilerplate/presentation/dashboard/dashboard.dart';
+import 'package:boilerplate/presentation/dashboard/dashboard_company.dart';
+import 'package:boilerplate/presentation/dashboard/dashboard_student.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/login/login.dart';
 import 'package:boilerplate/presentation/message/message.dart';
@@ -20,7 +21,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   static List<Widget> _widgetOptions = <Widget>[
     ProjectScreen(),
     MessageScreen(),
-    DashBoardScreen(),
+    true ? DashboardStudentScreen() : DashboardCompanyScreen(),
     AlerttScreen(),
     ProfileScreen()
     // DashboardScreen(),

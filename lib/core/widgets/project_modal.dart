@@ -1,6 +1,7 @@
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project/project.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/project/student/submit_project.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -301,20 +302,28 @@ class _ProjectModalState extends State<ProjectModal> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Container(
-            alignment: Alignment.center,
-            height: DeviceUtils.getScaledHeight(context, 0.034),
-            decoration: BoxDecoration(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(10)
-                // border: Border(top: BorderSide(color: )),
-                ),
-            width: DeviceUtils.getScaledWidth(context, 0.4),
-            child: Text(
-              "Apply Now",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SubmitProject()),
+              );
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: DeviceUtils.getScaledHeight(context, 0.034),
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(10)
+                  // border: Border(top: BorderSide(color: )),
+                  ),
+              width: DeviceUtils.getScaledWidth(context, 0.4),
+              child: Text(
+                "Apply Now",
+                textAlign: TextAlign.center,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
             ),
           ),
           Container(
