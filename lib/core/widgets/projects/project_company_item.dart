@@ -19,16 +19,16 @@ class Project {
       required this.hired});
 }
 
-class ProjectItem extends StatefulWidget {
+class ProjectItemCompany extends StatefulWidget {
   final Project project;
 
-  ProjectItem({required this.project});
+  ProjectItemCompany({required this.project});
 
   @override
-  _ProjectItemState createState() => _ProjectItemState();
+  _ProjectItemCompanyState createState() => _ProjectItemCompanyState();
 }
 
-class _ProjectItemState extends State<ProjectItem> {
+class _ProjectItemCompanyState extends State<ProjectItemCompany> {
   @override
   Widget build(BuildContext context) {
     return Container(
