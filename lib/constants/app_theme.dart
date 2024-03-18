@@ -110,7 +110,8 @@ class AppThemeData {
     primaryContainer: Color(0xFF1CDEC9),
     secondary: Color(0xFF4D1F7C),
     secondaryContainer: Color(0xFF451B6F),
-    background: Color(0xFF2e3239),
+    background: Color(0xFF2D333B),
+    // background: Color(0xFF2e3239),
     surface: Color(0xFF1F1929),
     onBackground: Color(0x0DFFFFFF),
     // White with 0.05 opacity
