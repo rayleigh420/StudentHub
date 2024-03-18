@@ -125,11 +125,14 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
+      
       // appBar: _buildAppBar(),
       tabBuilder: (BuildContext context, int index) {
         return CupertinoTabView(
+          
           builder: (BuildContext context) {
             return SafeArea(
+              
               top: false,
               bottom: false,
               child: _widgetOptions.elementAt(index),
