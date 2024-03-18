@@ -18,6 +18,7 @@
 /// In order to use this newly created setting or even the colours in it, you would just
 /// `import` this file in your project, anywhere you needed it.
 /// `import 'path/to/setting.dart';`
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -45,6 +46,19 @@ class AppThemeData {
       highlightColor: Colors.transparent,
       focusColor: focusColor,
       bottomNavigationBarTheme: _bottomNavigationBarTheme(colorScheme),
+      cupertinoOverrideTheme: CupertinoThemeData(
+        primaryColor: Color(0xFF4285F4),
+        scaffoldBackgroundColor: colorScheme.background,
+        barBackgroundColor: colorScheme.background,
+        textTheme: CupertinoTextThemeData(
+          primaryColor: colorScheme.onBackground,
+          textStyle: TextStyle(
+            color: colorScheme.onBackground,
+            fontSize: 19,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: Color.alphaBlend(
