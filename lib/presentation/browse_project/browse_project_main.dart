@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class BrowseProjectScreen extends StatefulWidget {
-  BrowseProjectScreen({super.key, required this.navigatorKey});
-  GlobalKey<NavigatorState> navigatorKey;
+  BrowseProjectScreen({super.key});
+
   @override
   State<BrowseProjectScreen> createState() => _BrowseProjectScreenState();
 }
@@ -152,9 +152,11 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
           ),
           GestureDetector(
             onTap: () {
-              widget.navigatorKey.currentState!
-                  .pushNamed('saved_project', arguments: projDat);
-              print(widget.navigatorKey.currentState!.canPop());
+              // Navigator.of(context).pushNamed('saved_project');
+              Navigator.of(context, rootNavigator: false).push(
+                  MaterialPageRoute(
+                      builder: (context) => SavedProject(),
+                      maintainState: false));
               // Navigator.pushNamed(context, 'saved_project');
             },
             child: Container(
