@@ -1,12 +1,12 @@
-import 'package:boilerplate/core/widgets/projects/projectItem.dart';
+import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:flutter/cupertino.dart';
 
-class ListProject extends StatefulWidget {
+class ListProjectCompany extends StatefulWidget {
   @override
-  _ListProjectState createState() => _ListProjectState();
+  _ListProjectCompanyState createState() => _ListProjectCompanyState();
 }
 
-class _ListProjectState extends State<ListProject> {
+class _ListProjectCompanyState extends State<ListProjectCompany> {
   final List<Project> projects = [
     Project(
         name: "Senior frontend developer (Fintech)",
@@ -22,8 +22,9 @@ class _ListProjectState extends State<ListProject> {
     return Container(
       margin: EdgeInsets.only(top: 20),
       child: Column(
-        children:
-            [1, 2, 3, 4].map((e) => ProjectItem(project: projects[0])).toList(),
+        children: [1, 2, 3, 4]
+            .map((e) => ProjectItemCompany(project: projects[0]))
+            .toList(),
       ),
     );
   }
