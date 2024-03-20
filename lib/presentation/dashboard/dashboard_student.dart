@@ -1,6 +1,7 @@
 import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
+import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,11 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/project_post_1');
+                        Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                                builder: (context) => ProjectPost1(),
+                                maintainState: false));
+                        // Navigator.pushNamed(context, '/project_post_1');
                       },
                       child: const Text(
                           style: TextStyle(fontSize: 16), "Post a job")),
