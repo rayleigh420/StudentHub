@@ -83,6 +83,7 @@ import 'package:boilerplate/presentation/dashboard/dashboard_company.dart';
 import 'package:boilerplate/presentation/dashboard/dashboard_student.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/login/login.dart';
+import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/presentation/message/message.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
 import 'package:boilerplate/presentation/project/project.dart';
@@ -96,10 +97,11 @@ class AppBottomNavigationBar extends StatefulWidget {
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
+    // MeetingScreen(),
     MessageScreen(),
     true ? DashboardStudentScreen() : DashboardCompanyScreen(),
     AlerttScreen(),
@@ -125,14 +127,11 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabScaffold(
-      
       // appBar: _buildAppBar(),
       tabBuilder: (BuildContext context, int index) {
         return CupertinoTabView(
-          
           builder: (BuildContext context) {
             return SafeArea(
-              
               top: false,
               bottom: false,
               child: _widgetOptions.elementAt(index),
