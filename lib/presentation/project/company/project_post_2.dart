@@ -1,4 +1,5 @@
 import 'package:boilerplate/core/widgets/appBar.dart';
+import 'package:boilerplate/presentation/project/company/project_post_3.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -84,7 +85,11 @@ class _ProjectPost2State extends State<ProjectPost2> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/project_post_3');
+                          Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ProjectPost3(),
+                                  maintainState: false));
+                          // Navigator.pushNamed(context, '/project_post_3');
                         },
                         child: const Text(
                             style: TextStyle(fontSize: 16),
