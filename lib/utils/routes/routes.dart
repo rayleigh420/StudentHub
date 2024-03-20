@@ -16,6 +16,8 @@ import 'package:boilerplate/presentation/saved_project/saved_project.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
 import 'package:flutter/material.dart';
+import 'package:boilerplate/presentation/companyReview/project_detail.dart';
+import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 
 class Routes {
   Routes._();
@@ -38,7 +40,11 @@ class Routes {
   static const String project_post_2 = '/project_post_2';
   static const String project_post_3 = '/project_post_3';
   static const String project_post_4 = '/project_post_4';
+
+  static const String project_detail = '/project_detail';
+  static const String hire_offer = '/hire_offer';
   static const String submit_project = '/submit_project';
+
 
   static final routes = <String, WidgetBuilder>{
     login_boilerplate: (BuildContext context) => LoginScreen(),
@@ -59,6 +65,8 @@ class Routes {
     project_post_2: (context) => ProjectPost2(),
     project_post_3: (context) => ProjectPost3(),
     project_post_4: (context) => ProjectPost4(),
+    project_detail: (context) => ProjectDetail(),
+    hire_offer: (context) => HireOffer(),
     submit_project: (context) => SubmitProject(),
   };
 }
