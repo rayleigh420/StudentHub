@@ -118,6 +118,9 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
               borderRadius: BorderRadius.circular(100),
             ),
             child: TextField(
+              onTapOutside: (event) {
+                DeviceUtils.hideKeyboard(context);
+              },
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Search for projects",
