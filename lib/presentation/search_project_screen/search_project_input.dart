@@ -1,73 +1,35 @@
 import 'package:boilerplate/core/widgets/project_item.dart';
-import 'package:boilerplate/core/widgets/schedules/schedule_item_chat.dart';
-import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
 import 'package:boilerplate/core/widgets/search_project_modal.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project/project.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/presentation/saved_project/saved_project.dart';
-import 'package:boilerplate/presentation/search_project_screen/search_project_input.dart';
+import 'package:boilerplate/presentation/search_project_screen/search_project_screen.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class BrowseProjectScreen extends StatefulWidget {
-  BrowseProjectScreen({super.key});
+class SearchProjectInput extends StatefulWidget {
+  SearchProjectInput({super.key});
 
   @override
-  State<BrowseProjectScreen> createState() => _BrowseProjectScreenState();
+  State<SearchProjectInput> createState() => _SearchProjectInputState();
 }
 
-class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
-  final data = {
-    "title": "Senior frontend developer (Fintech)",
-    "props": [
-      "Students are looking for",
-      "Clear expectation about your project or deliverables",
-      "React",
-      "Redux",
-      "TypeScript",
-      "GraphQL",
-      "Node.js",
-      "AWS",
-    ],
-    "scopeFrom": 1,
-    "scopeFrom2": "month",
-    "scopeTo": 3,
-    "scopeTo2": "months",
-    "quantityRequired": "6",
-    "createdDate": DateTime.now().add(Duration(days: -3)),
-    "proposal": 6
-  };
-  final projDat = Project(
-      title: "Senior frontend developer (Fintech)",
-      props: [
-        "Students are looking for",
-        "Clear expectation about your project or deliverables",
-        "React",
-        "Redux",
-        "TypeScript",
-        "GraphQL",
-        "Node.js",
-        "AWS",
-      ],
-      scopeFrom: 1,
-      scopeFrom2: "month",
-      scopeTo: 3,
-      scopeTo2: "month",
-      proposal: 6,
-      createdDate: DateTime.now().add(Duration(days: -3)),
-      isSaved: false);
+class _SearchProjectInputState extends State<SearchProjectInput> {
+  final FocusNode focusNode = FocusNode();
   ThemeStore _themeStore = getIt<ThemeStore>();
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode.requestFocus();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            appBar: AppBar(
-              title: Text("Browse Project"),
-            ),
             resizeToAvoidBottomInset: false,
             body: Container(
                 child: Column(
@@ -86,15 +48,11 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
                               height: 16,
                             ),
 
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            ScheduleItemChat(),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
                             const SizedBox(
                               height: 16,
                             )
@@ -117,74 +75,55 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          GestureDetector(
-            onTap: () {
-              // showModalBottomSheet(
-              //   isDismissible: true,
-              //   context: context,
-              //   isScrollControlled: true,
-              //   useRootNavigator: true,
-              //   enableDrag: true,
-              //   backgroundColor: Colors.transparent,
-              //   builder: (context) {
-              //     return ScheduleMeetingModal();
-              //   },
-              // );
-              // Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-              //     builder: (context) => SearchProjectInput(),
-              //     maintainState: false));
-              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                  builder: (context) => MeetingScreen(),
-                  maintainState: false));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              margin: EdgeInsets.fromLTRB(0, 10, 10, 10),
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Icon(Icons.search, color: Colors.grey),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: const Text(
-                        "Search",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ))
-                ],
-              ),
+          Flexible(
+              child: Container(
+            padding: EdgeInsets.only(left: 8),
+            margin: EdgeInsets.fromLTRB(0, 10, 10, 10),
+            decoration: BoxDecoration(
+              // border: Border.all(color: Colors.grey),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(100),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              // Navigator.of(context).pushNamed('saved_project');
-              Navigator.of(context, rootNavigator: false).push(
-                  MaterialPageRoute(
-                      builder: (context) => SavedProject(),
-                      maintainState: false));
-              // Navigator.pushNamed(context, 'saved_project');
-            },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              margin: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Color(0xFFE91E63),
-                borderRadius: BorderRadius.circular(100),
+            child: TextField(
+              onTapOutside: (event){
+                DeviceUtils.hideKeyboard(context);
+              },
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Search for projects",
+                prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),
-              child: Icon(Icons.favorite,
-                  color: Colors.white,
-                  size: MediaQuery.of(context).size.height * 0.023),
+              onSubmitted: (value) {
+                Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+                    builder: (context) => SearchProjectScreen(),
+                    maintainState: false));
+              },
             ),
-          )
+          )),
+          GestureDetector(
+              onTap: () {
+                // showModalBottomSheet(
+                //   isDismissible: true,
+                //   context: context,
+                //   isScrollControlled: true,
+                //   useRootNavigator: true,
+                //   enableDrag: true,
+                //   backgroundColor: Colors.transparent,
+                //   builder: (context) {
+                //     return FilterSearchProjectModal();
+                //   },
+                // );
+                Navigator.of(context, rootNavigator: false).pop();
+              },
+              child: Container(
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(5),
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ))
         ],
       ),
     );

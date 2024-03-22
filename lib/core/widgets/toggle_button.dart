@@ -60,18 +60,22 @@ class _ToggleButtonsCompanyDetail extends State<ToggleButtonsCompanyDetail> {
           text: 'Proposals',
           isSelected: _selectedIndex == 0,
           onPressed: () {
+             Navigator.pushNamed(context, '/hire_offer');
             setState(() {
               _selectedIndex = 0;
             });
+            
           },
         ),
         ToggleButton(
           text: 'Detail',
           isSelected: _selectedIndex == 1,
           onPressed: () {
+             Navigator.pushNamed(context, '/project_detail');
             setState(() {
               _selectedIndex = 1;
             });
+            
           },
         ),
         ToggleButton(
