@@ -20,42 +20,30 @@ class _ProjectScreenState extends State<ProjectScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PopScope(
-          canPop: true,
-          onPopInvoked: (value) {
-            if (_projectNavigatorKey.currentState!.canPop()) {
-              print("đụ mẹ");
-              _projectNavigatorKey.currentState!.pop();
-              return;
-            }
-            return;
-          },
-          child: Navigator(
-            key: _projectNavigatorKey,
-            initialRoute: "/",
-            onGenerateRoute: (RouteSettings settings) {
-              WidgetBuilder builder;
-              switch (settings.name) {
-                case '/':
-                  builder = (BuildContext context) => BrowseProjectScreen(
-                        navigatorKey: _projectNavigatorKey,
-                      );
-                  break;
-                case 'searched_project':
-                  builder = (BuildContext context) => SearchProjectScreen();
-                  break;
-                case 'saved_project':
-                  builder = (BuildContext context) => SavedProject();
-                  break;
-                default:
-                  throw Exception('Invalid route: ${settings.name}');
-              }
-              return MaterialPageRoute(
-                builder: builder,
-                settings: settings,
-              );
-            },
-          )),
+      body: Navigator(
+        key: _projectNavigatorKey,
+        initialRoute: "/",
+        onGenerateRoute: (RouteSettings settings) {
+          WidgetBuilder builder;
+          switch (settings.name) {
+            case '/':
+              builder = (BuildContext context) => BrowseProjectScreen();
+              break;
+            case 'searched_project':
+              builder = (BuildContext context) => SearchProjectScreen();
+              break;
+            case 'saved_project':
+              builder = (BuildContext context) => SavedProject();
+              break;
+            default:
+              throw Exception('Invalid route: ${settings.name}');
+          }
+          return MaterialPageRoute(
+            builder: builder,
+            settings: settings,
+          );
+        },
+      ),
     );
   }
 }

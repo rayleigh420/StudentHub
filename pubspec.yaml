@@ -64,6 +64,7 @@ dependencies:
   # X
   xxtea: ^2.1.0
   textfield_tags: ^2.1.1
+  flutter_webrtc: ^0.9.19
   # Y
   # Z
 
