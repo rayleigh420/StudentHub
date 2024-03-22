@@ -1,8 +1,6 @@
 import 'package:boilerplate/utils/device/device_utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 class MeetingScreen extends StatefulWidget {
   const MeetingScreen({super.key});
@@ -12,27 +10,9 @@ class MeetingScreen extends StatefulWidget {
 }
 
 class _MeetingScreenState extends State<MeetingScreen> {
-  late RTCVideoRenderer _localRenderer;
-  late RTCVideoRenderer _remoteRenderer;
-
   @override
   void initState() {
     super.initState();
-    _initRenderers();
-  }
-
-  void _initRenderers() async {
-    _localRenderer = RTCVideoRenderer();
-    _remoteRenderer = RTCVideoRenderer();
-    await _localRenderer.initialize();
-    await _remoteRenderer.initialize();
-  }
-
-  @override
-  void dispose() {
-    _localRenderer.dispose();
-    _remoteRenderer.dispose();
-    super.dispose();
   }
 
   final img = kIsWeb
@@ -58,7 +38,6 @@ class _MeetingScreenState extends State<MeetingScreen> {
                 height: DeviceUtils.getScaledHeight(context, 0.37),
                 child: Stack(
                   children: [
-                    RTCVideoView(_localRenderer),
                     Positioned(
                       top: 10,
                       right: 16,
@@ -88,7 +67,6 @@ class _MeetingScreenState extends State<MeetingScreen> {
               height: DeviceUtils.getScaledHeight(context, 0.37),
               child: Stack(
                 children: [
-                  RTCVideoView(_localRenderer),
                   Positioned(
                     top: 10,
                     right: 16,
