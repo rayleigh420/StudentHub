@@ -1,5 +1,6 @@
 import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
+import 'package:boilerplate/core/widgets/projects/submited_project_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
@@ -67,22 +68,10 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                   style: TextStyle(fontSize: 15),
                 ),
               ),
-              ListProjectCompany(),
-              Container(
-                margin: EdgeInsets.only(
-                    top: DeviceUtils.getScaledHeight(context, 0.35)),
-                child: Center(
-                    child: Column(
-                  children: [
-                    const Text(
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                        "Welcome Duy!"),
-                    const Text(
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                        "You have no jobs!"),
-                  ],
-                )),
-              ),
+              SubmitedProjectItem(),
+              SubmitedProjectItem(),
+              SubmitedProjectItem(),
+              SubmitedProjectItem(),
             ],
           )),
     )));
