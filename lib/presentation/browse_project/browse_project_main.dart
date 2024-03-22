@@ -94,7 +94,7 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
                             const SizedBox(
                               height: 16,
                             ),
-                            ScheduleItemChat(),
+
                             const SizedBox(
                               height: 16,
                             )
@@ -130,12 +130,10 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
               //     return ScheduleMeetingModal();
               //   },
               // );
-              // Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-              //     builder: (context) => SearchProjectInput(),
-              //     maintainState: false));
-              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                  builder: (context) => MeetingScreen(),
-                  maintainState: false));
+              Navigator.of(context, rootNavigator: false).push(
+                  MaterialPageRoute(
+                      builder: (context) => SearchProjectInput(),
+                      maintainState: false));
             },
             child: Container(
               decoration: BoxDecoration(

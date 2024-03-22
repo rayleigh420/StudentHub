@@ -1,0 +1,86 @@
+import 'package:boilerplate/domain/entity/message/message.dart';
+
+class MessageList {
+  final List<Message> messages = [
+    Message(
+      id: '1',
+      content: 'Hello',
+      sender: 'UserA',
+      receiver: 'UserB',
+      createdAt: DateTime.now(),
+      type: 'text',
+    ),
+    Message(
+      id: '2',
+      content: 'Hi there!',
+      sender: 'UserB',
+      receiver: 'UserA',
+      createdAt: DateTime.now().add(Duration(minutes: 5)),
+      type: 'text',
+    ),
+    Message(
+      id: '3',
+      content: 'How are you?',
+      sender: 'UserA',
+      receiver: 'UserB',
+      createdAt: DateTime.now().add(Duration(minutes: 10)),
+      type: 'text',
+    ),
+    Message(
+      id: '4',
+      content: "I'm fine, thanks!",
+      sender: 'UserB',
+      receiver: 'UserA',
+      createdAt: DateTime.now().add(Duration(minutes: 15)),
+      type: 'text',
+    ),
+    Message(
+      id: '5',
+      content: 'Meeting at 10:00 AM',
+      sender: 'UserA',
+      receiver: 'UserB',
+      createdAt: DateTime.now().add(Duration(minutes: 20)),
+      type: 'text',
+    ),
+    Message(
+      id: '6',
+      content: 'Sure, see you then!',
+      sender: 'UserB',
+      receiver: 'UserA',
+      createdAt: DateTime.now().add(Duration(minutes: 25)),
+      type: 'text',
+    ),
+    Message(
+      id: '7',
+      content: 'Reminder: Buy groceries',
+      sender: 'UserA',
+      receiver: 'UserB',
+      createdAt: DateTime.now().add(Duration(minutes: 30)),
+      type: 'schedule',
+    ),
+    Message(
+      id: '8',
+      content: 'Got it!',
+      sender: 'UserB',
+      receiver: 'UserA',
+      createdAt: DateTime.now().add(Duration(minutes: 35)),
+      type: 'text',
+    ),
+    Message(
+      id: '9',
+      content: 'Don\'t forget to call mom',
+      sender: 'UserA',
+      receiver: 'UserB',
+      createdAt: DateTime.now().add(Duration(minutes: 40)),
+      type: 'text',
+    ),
+    Message(
+      id: '10',
+      content: 'Will do!',
+      sender: 'UserB',
+      receiver: 'UserA',
+      createdAt: DateTime.now().add(Duration(minutes: 45)),
+      type: 'text',
+    ),
+  ];
+}
