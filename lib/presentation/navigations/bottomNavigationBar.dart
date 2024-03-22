@@ -79,12 +79,14 @@
 // }
 import 'package:boilerplate/presentation/alert/alert.dart';
 import 'package:boilerplate/presentation/browse_project/browse_project_main.dart';
+import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/presentation/dashboard/dashboard_company.dart';
 import 'package:boilerplate/presentation/dashboard/dashboard_student.dart';
 import 'package:boilerplate/presentation/home/home.dart';
 import 'package:boilerplate/presentation/login/login.dart';
 import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/presentation/message/message.dart';
+import 'package:boilerplate/presentation/notification/noti_list.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
 import 'package:boilerplate/presentation/project/project.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
@@ -102,9 +104,9 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
     // MeetingScreen(),
-    MessageScreen(),
+    MessageList(),
     true ? DashboardStudentScreen() : DashboardCompanyScreen(),
-    AlerttScreen(),
+    NotiList(),
     ProfileScreen()
     // DashboardScreen(),
     // ProfileScreen(),
