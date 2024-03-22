@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
+import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,7 @@ class ScheduleItemChat extends StatelessWidget {
             context: context,
             builder: (context) {
               return CupertinoActionSheet(
-                title: Text("Options"),
-                message: Text("Select an option"),
+                title: Text("Reschedule or cancel meeting"),
                 actions: [
                   CupertinoActionSheetAction(
                     onPressed: () {
@@ -54,10 +54,10 @@ class ScheduleItemChat extends StatelessWidget {
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, 16, 12, 12),
-        margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
-        width: DeviceUtils.getScaledHeight(context, 1),
+        // margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
+        width: DeviceUtils.getScaledWidth(context, 0.7),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Color(0xfff0f0f0),
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -77,13 +77,13 @@ class ScheduleItemChat extends StatelessWidget {
                 Text(
                   "Catchup meeting",
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent),
+                      color: Colors.black),
                 ),
                 Text(
                   "60 minutes",
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
                 ),
               ],
             ),
@@ -92,14 +92,14 @@ class ScheduleItemChat extends StatelessWidget {
             ),
             Text(
               "Start time: Thursday 13/3/2024 15:00",
-              style: TextStyle(fontSize: 15),
+              style: TextStyle(fontSize: 13),
             ),
             SizedBox(
               height: 10,
             ),
             Text(
               "End time: Thursday 13/3/2024 16:00",
-              style: TextStyle(fontSize: 15),
+              style: TextStyle(fontSize: 13),
             ),
             SizedBox(
               height: 10,
@@ -109,20 +109,21 @@ class ScheduleItemChat extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    print("Tapped");
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MeetingScreen()));
                   },
                   child: Container(
                     // margin: EdgeInsets.only(right: 8),
-                    padding: EdgeInsets.all(8),
-                    width: 80,
+                    padding: EdgeInsets.all(6),
+                    width: 60,
                     decoration: BoxDecoration(
-                      color: Colors.blueAccent,
+                      color: Colors.black,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       "Join",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 13),
                     ),
                   ),
                 )
