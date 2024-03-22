@@ -45,7 +45,8 @@ class _SubmitProjectState extends State<SubmitProject> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
-                        width: 3,
+                        color: Colors.grey,
+                        width: 5,
                       )),
                     ),
                   ),
