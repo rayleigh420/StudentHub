@@ -1,6 +1,7 @@
 import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
+import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
     return SafeArea(
         child: Scaffold(
             body: SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
       child: Container(
           padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
           child: Column(
@@ -30,7 +32,10 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5))),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/project_post_1');
+                        Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                                builder: (context) => ProjectPost1(),
+                                maintainState: false));
                       },
                       child: const Text(
                           style: TextStyle(fontSize: 16), "Post a job")),

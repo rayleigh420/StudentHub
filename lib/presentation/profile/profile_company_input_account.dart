@@ -28,9 +28,12 @@ class _ProfileCompanyInputAccountState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: SingleChildScrollView(
+    return SafeArea(
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text("Student Hub"),
+            ),
+            body: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

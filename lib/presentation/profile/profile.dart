@@ -11,6 +11,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        title: Text('StudentHub'),
+      ),
       body: Container(
           padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
           child: Column(

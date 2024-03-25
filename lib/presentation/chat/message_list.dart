@@ -13,6 +13,9 @@ class _MessageListState extends State<MessageList> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        title: Text('StudentHub'),
+      ),
       body: Container(
         padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
         child: SingleChildScrollView(

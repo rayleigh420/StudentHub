@@ -39,6 +39,19 @@ class _InputLoginState extends State<InputLogin> {
     // print(_themeStore.darkMode);
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        title: const Text('StudentHub'),
+        actions: [
+          IconButton(
+            icon: Icon(_themeStore.darkMode
+                ? Icons.person_2
+                : Icons.person_2_rounded),
+            onPressed: () {
+              _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
+            },
+          )
+        ],
+      ),
       resizeToAvoidBottomInset: true,
       body: Container(
         padding: const EdgeInsets.all(20.0),
