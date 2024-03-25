@@ -30,6 +30,18 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        title: const Text('StudentHub'),
+        actions: [
+          IconButton(
+            icon: Icon(
+                _themeStore.darkMode ? Icons.person_2 : Icons.person_2_rounded),
+            onPressed: () {
+              _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
+            },
+          )
+        ],
+      ),
       body: Container(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -63,7 +75,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
                 (selected == 0)
                     ? null
                     : () {
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => InputSignUp(type: selected)));
                       }),
             const SizedBox(height: 30),

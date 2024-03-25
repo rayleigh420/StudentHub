@@ -1,4 +1,5 @@
 import 'package:boilerplate/presentation/dashboard/dashboard_company.dart';
+import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeCompany extends StatelessWidget {
@@ -45,10 +46,14 @@ class WelcomeCompany extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5))),
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
-                      return DashboardCompanyScreen();
-                    }));
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                          builder: (context) => AppBottomNavigationBar(
+                                isStudent: false,
+                                selectedIndex: 0,
+                              )),
+                    );
+                    ;
                   },
                   child: const Text(
                       style: TextStyle(fontSize: 16), "Get Started!")),

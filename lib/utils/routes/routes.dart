@@ -45,7 +45,6 @@ class Routes {
   static const String hire_offer = '/hire_offer';
   static const String submit_project = '/submit_project';
 
-
   static final routes = <String, WidgetBuilder>{
     login_boilerplate: (BuildContext context) => LoginScreen(),
     home: (BuildContext context) => HomeScreen(),
@@ -60,7 +59,8 @@ class Routes {
     alert: (context) => AlerttScreen(),
     dashboard: (context) => DashboardCompanyScreen(),
     profile: (context) => ProfileScreen(),
-    rootTab: (context) => AppBottomNavigationBar(),
+    rootTab: (context) =>
+        AppBottomNavigationBar(selectedIndex: 0, isStudent: false),
     project_post_1: (context) => ProjectPost1(),
     project_post_2: (context) => ProjectPost2(),
     project_post_3: (context) => ProjectPost3(),

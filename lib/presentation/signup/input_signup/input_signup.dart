@@ -2,6 +2,9 @@ import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
+import 'package:boilerplate/presentation/profile/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile_input/profile_input_1.dart';
 import 'package:flutter/material.dart';
 
 class InputSignUp extends StatefulWidget {
@@ -32,6 +35,18 @@ class _InputSignUpState extends State<InputSignUp> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(
+        title: const Text('StudentHub'),
+        actions: [
+          IconButton(
+            icon: Icon(
+                _themeStore.darkMode ? Icons.person_2 : Icons.person_2_rounded),
+            onPressed: () {
+              _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
+            },
+          )
+        ],
+      ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: Container(
@@ -63,6 +78,20 @@ class _InputSignUpState extends State<InputSignUp> {
               const SizedBox(height: 30),
               buildLaunchButton(context, () {
                 log('Login pressed');
+                if (widget.type == 1) {
+                  Navigator.of(context)
+                      .pushReplacement(MaterialPageRoute(builder: (context) {
+                    return ProfileCompanyInput();
+                    // return AppBottomNavigationBar(
+                    //   selectedIndex: 0,
+                    //   isStudent: false,
+                    // );
+                  }));
+                } else {
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => ProfileInput1()));
+                  ;
+                }
               }),
               // buildSignupSection(context)
             ],

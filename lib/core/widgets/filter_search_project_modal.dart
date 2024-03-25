@@ -35,56 +35,87 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text("Filter", style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            const Divider(),
-            SizedBox(height: 10),
-            const Text("Project length", style: TextStyle()),
-            SizedBox(height: 10),
-            buildRadios(context),
-            SizedBox(height: 20),
-            const Text("Students needed", style: TextStyle()),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.only(left:15),
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: _themeStore.darkMode ? Colors.white : Colors.grey),
-                    borderRadius: BorderRadius.circular(15),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Number of students",
+            SizedBox(
+              height: DeviceUtils.getScaledHeight(context, 0.6),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: 10),
+                    const Divider(),
+                    SizedBox(height: 10),
+                    const Text("Project length", style: TextStyle()),
+                    SizedBox(height: 10),
+                    buildRadios(context),
+                    SizedBox(height: 20),
+                    const Text("Students needed", style: TextStyle()),
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.only(left: 15),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: _themeStore.darkMode
+                                ? Colors.white
+                                : Colors.grey),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: TextField(
+                        scrollPadding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        onTapOutside: (event) {
+                          DeviceUtils.hideKeyboard(context);
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Number of students",
+                        ),
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          // Handle search text change
+                        },
+                        onSubmitted: (value) {},
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text("Proposals less than", style: TextStyle()),
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.only(left: 15),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: _themeStore.darkMode
+                                ? Colors.white
+                                : Colors.grey),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: TextField(
+                        scrollPadding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        keyboardType: TextInputType.number,
+                        onTapOutside: (event) {
+                          DeviceUtils.hideKeyboard(context);
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Input proposal amount",
+                        ),
+                        onChanged: (value) {
+                          // Handle search text change
+                        },
+                        onSubmitted: (value) {},
+                      ),
+                    ),
+                    SizedBox(height: 100),
+                  ],
                 ),
-                onChanged: (value) {
-                  // Handle search text change
-                },
-                onSubmitted: (value) {},
-              ),
-            ),
-            const SizedBox(height: 20,),
-            const Text("Proposals less than", style: TextStyle()),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.only(left:15),
-              decoration: BoxDecoration(
-                border: Border.all(
-                    color: _themeStore.darkMode ? Colors.white : Colors.grey),
-                    borderRadius: BorderRadius.circular(15),
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Input proposal amount",
-                ),
-                onChanged: (value) {
-                  // Handle search text change
-                },
-                onSubmitted: (value) {},
               ),
             ),
             const Spacer(),
-            buildButtons(context),  
+            buildButtons(context),
           ],
         ),
       ),
@@ -182,6 +213,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
       ],
     );
   }
+
   Widget buildButtons(BuildContext context) {
     return Container(
       decoration: BoxDecoration(

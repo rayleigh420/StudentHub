@@ -8,13 +8,21 @@ import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
 class SearchProjectScreen extends StatefulWidget {
-  const SearchProjectScreen({super.key});
+  final String searchQuery;
+  const SearchProjectScreen({super.key, this.searchQuery = "abc"});
 
   @override
   State<SearchProjectScreen> createState() => _SearchProjectScreenState();
 }
 
 class _SearchProjectScreenState extends State<SearchProjectScreen> {
+  String searchQuery = "";
+  @override
+  void initState() {
+    super.initState();
+    searchQuery = widget.searchQuery;
+  }
+
   ThemeStore _themeStore = getIt<ThemeStore>();
 
   final data = {
@@ -117,13 +125,16 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(100),
             ),
-            child: TextField(
+            child: TextFormField(
+              maxLines: 1,
               onTapOutside: (event) {
                 DeviceUtils.hideKeyboard(context);
               },
+              initialValue: searchQuery,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Search for projects",
+                
+                // hintText: "Search for projects âs",
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),
             ),

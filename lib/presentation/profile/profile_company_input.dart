@@ -54,9 +54,10 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: SingleChildScrollView(
+    return SafeArea(
+        child: Scaffold(
+            body: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
