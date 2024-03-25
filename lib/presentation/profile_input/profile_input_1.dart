@@ -4,6 +4,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -31,7 +32,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final TextEditingController skillSetTextController = TextEditingController();
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
-  Color borderColor = Colors.grey;
+  Color borderColor = Colors.black;
   @override
   void initState() {
     super.initState();
@@ -55,77 +56,95 @@ class _ProfileInput1State extends State<ProfileInput1> {
         child: Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 17.0),
-            Text(
-              'Welcome to Student Hub',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
+            SizedBox(
+              height: DeviceUtils.getScaledHeight(context, 0.8),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 17.0),
+                    Text(
+                      'Welcome to Student Hub',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    Text(
+                      'Tell us about your self and you will be on your way connect with real-world project',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 20.0),
+                    // const SizedBox(height: 17.0),
+                    Text(
+                      'Tech Stack:',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    DropdownMenu<String>(
+                      onSelected: (value) {
+                        setState(() {
+                          techStacksValue = value!;
+                        });
+                      },
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      initialSelection: techStacks.first,
+                      dropdownMenuEntries: techStacks
+                          .map<DropdownMenuEntry<String>>(
+                              (String value) => DropdownMenuEntry<String>(
+                                    value: value,
+                                    label: value,
+                                  ))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 20.0),
+                    Text(
+                      'Skill Set:',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    buildSkillsetSection(context),
+                    const SizedBox(height: 30),
+                    buildLanguage(context),
+                    const SizedBox(height: 30),
+                    buildEducation(context),
+                    const SizedBox(height: 30),
+                    buildEducation(context),
+                    const SizedBox(height: 30),
+                    buildEducation(context),
+
+                    // Container(
+                    //   height: 500,
+                    //   decoration: BoxDecoration(
+                    //     border: Border.all(
+                    //       color: Colors.grey,
+                    //       width: 1,
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 20.0),
-            Text(
-              'Tell us about your self and you will be on your way connect with real-world project',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 20.0),
-            // const SizedBox(height: 17.0),
-            Text(
-              'Tech Stack:',
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            DropdownMenu<String>(
-              onSelected: (value) {
-                setState(() {
-                  techStacksValue = value!;
-                });
-              },
-              width: MediaQuery.of(context).size.width * 0.9,
-              initialSelection: techStacks.first,
-              dropdownMenuEntries: techStacks
-                  .map<DropdownMenuEntry<String>>(
-                      (String value) => DropdownMenuEntry<String>(
-                            value: value,
-                            label: value,
-                          ))
-                  .toList(),
-            ),
-            const SizedBox(height: 20.0),
-            Text(
-              'Skill Set:',
-              textAlign: TextAlign.start,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            buildSkillsetSection(context),
-            const SizedBox(height: 30),
-            buildLanguage(context),
-            const SizedBox(height: 30),
-            buildEducation(context),
+            const Spacer(),
             buildNext(context),
-            // Container(
-            //   height: 500,
-            //   decoration: BoxDecoration(
-            //     border: Border.all(
-            //       color: Colors.grey,
-            //       width: 1,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -170,7 +189,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
       decoration: BoxDecoration(
         border: Border.all(
           color: borderColor,
-          width: 1,
+          width: 0.05,
         ),
       ),
       child: Column(
@@ -462,31 +481,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
           )
         ],
       ),
-      // child: Column(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   children: [
-      //     Container(
-      //       alignment: Alignment.bottomCenter,
-      //       child: Text("Dont have Student Hub account?"),
-      //     ),
-      //     GestureDetector(
-      //       onTap: () {
-      //         log("push");
-      //         // Navigator.of(context)
-      //         //     .pushReplacement(MaterialPageRoute(builder: (context) {
-      //         //   return const SignUpIdentity();
-      //         // }));
-      //       },
-      //       child: const Text(
-      //         "Sign Up",
-      //         style: TextStyle(
-      //           color: Color(0xFF4285F4),
-      //           fontWeight: FontWeight.bold,
-      //         ),
-      //       ),
-      //     )
-      //   ],
-      // ),
+      
     );
   }
 }

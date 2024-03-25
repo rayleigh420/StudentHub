@@ -40,7 +40,12 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 20),
-                    child: ToggleButtonsCompanyDetail(),
+                    child: ToggleButtonsCompanyDetail(
+                      selected: 0,
+                      setSelected: (index) {
+                        print(index);
+                      },
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.only(top: 15),

@@ -94,24 +94,55 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
+  final int selectedIndex;
+  final bool isStudent;
+  AppBottomNavigationBar(
+      {required this.selectedIndex, required this.isStudent});
   @override
   _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-  int _selectedIndex = 0;
-
-  static List<Widget> _widgetOptions = <Widget>[
-    BrowseProjectScreen(),
-    // MeetingScreen(),
-    MessageList(),
-    true ? DashboardStudentScreen() : DashboardCompanyScreen(),
-    NotiList(),
-    ProfileScreen()
-    // DashboardScreen(),
-    // ProfileScreen(),
-    // HomeScreen(),
-  ];
+   int _selectedIndex = 0;
+   bool _isStudent = false;
+  static List<Widget> _widgetOptions = [];
+  @override
+  void initState() {
+    super.initState();
+    _isStudent = widget.isStudent;
+    _selectedIndex = widget.selectedIndex;
+    _widgetOptions = <Widget>[
+      BrowseProjectScreen(),
+      // MeetingScreen(),
+      MessageList(),
+      // true ? DashboardStudentScreen() : DashboardCompanyScreen(),
+      !_isStudent ? DashboardCompanyScreen() : DashboardStudentScreen(),
+      NotiList(),
+      ProfileScreen()
+      // DashboardScreen(),
+      // ProfileScreen(),
+      // HomeScreen(),
+    ];
+    if (_selectedIndex == 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => new AlertDialog(
+            title: new Text("title"),
+            content: new Text("Message"),
+            actions: <Widget>[
+              new ElevatedButton(
+                child: new Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -132,6 +163,11 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       // appBar: _buildAppBar(),
       tabBuilder: (BuildContext context, int index) {
         return CupertinoTabView(
+          onGenerateRoute: (settings) {
+            return MaterialPageRoute(
+              builder: (context) => _widgetOptions.elementAt(index),
+            );
+          },
           builder: (BuildContext context) {
             return SafeArea(
               top: false,

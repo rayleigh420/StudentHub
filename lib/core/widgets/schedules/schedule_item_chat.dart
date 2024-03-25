@@ -6,8 +6,25 @@ import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ScheduleItemChat extends StatelessWidget {
+// class ScheduleItemChat extends StatelessWidget {
+
+// }
+
+class ScheduleItemChat extends StatefulWidget {
+  final isCancelled = false;
   const ScheduleItemChat({super.key});
+
+  @override
+  State<ScheduleItemChat> createState() => _ScheduleItemChatState();
+}
+
+class _ScheduleItemChatState extends State<ScheduleItemChat> {
+  bool isCancelled = false;
+  @override
+  void initState() {
+    super.initState();
+    isCancelled = widget.isCancelled;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +38,7 @@ class ScheduleItemChat extends StatelessWidget {
                 actions: [
                   CupertinoActionSheetAction(
                     onPressed: () {
+                      // Navigator.of(context).pop();
                       showModalBottomSheet(
                         isDismissible: true,
                         context: context,
@@ -38,6 +56,10 @@ class ScheduleItemChat extends StatelessWidget {
                   CupertinoActionSheetAction(
                     onPressed: () {
                       log("cancelled tapped");
+                      setState(() {
+                        isCancelled = true;
+                      });
+                      Navigator.of(context).pop();
                     },
                     child: Text("Cancel meeting",
                         style: TextStyle(color: Colors.grey)),
@@ -115,16 +137,21 @@ class ScheduleItemChat extends StatelessWidget {
                   child: Container(
                     // margin: EdgeInsets.only(right: 8),
                     padding: EdgeInsets.all(6),
-                    width: 60,
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: isCancelled ? Colors.white : Colors.blueAccent,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text(
-                      "Join",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 13),
-                    ),
+                    child: isCancelled
+                        ? Text(
+                            "Meeting Cancelled",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.red, fontSize: 13),
+                          )
+                        : Text(
+                            "Join",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white, fontSize: 13),
+                          ),
                   ),
                 )
               ],
