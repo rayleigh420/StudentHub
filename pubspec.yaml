@@ -26,9 +26,11 @@ dependencies:
   cupertino_icons: ^1.0.5
   # D
   dio: ^5.1.1
+  dotted_border: ^2.1.0
   # E
   event_bus: ^2.0.0
   # F
+  file_picker: ^6.2.0
   flutter_mobx: ^2.0.6+5
   # G
   get_it: ^7.2.0
@@ -61,6 +63,7 @@ dependencies:
   # W
   # X
   xxtea: ^2.1.0
+  textfield_tags: ^2.1.1
   # Y
   # Z
 
@@ -97,8 +100,11 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
   - assets/images/
+  - assets/images/playstore.png
+  - assets/images/playstore2.png
   - assets/icons/
   - assets/lang/
+  - assets/logos/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

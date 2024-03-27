@@ -2,7 +2,7 @@ import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/language/language_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/input_login/input_login.dart';
+import 'package:boilerplate/presentation/post/post_list.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -24,82 +24,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(top: 50),
-                child: const Text(
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                    "Build your product with high-skilled student"),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: const Text(
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                    textAlign: TextAlign.center,
-                    "Find and onboard best-skilled student for your product. Student works to gain experience & skills from real-world projects"),
-              ),
-              // Container(
-              //   margin: const EdgeInsets.only(top: 30),
-              //   child: Image.asset(
-              //     'assets/images/logo.jpg', // Đường dẫn của file logo
-              //     width: 150, // Điều chỉnh kích thước logo tùy ý
-              //   ),
-              // ),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 40),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => InputLogin()));
-                    },
-                    child:
-                        const Text(style: TextStyle(fontSize: 16), "Company")),
-              ),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 15),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => InputLogin()));
-                    },
-                    child:
-                        const Text(style: TextStyle(fontSize: 16), "Student")),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: const Text(
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-                    textAlign: TextAlign.center,
-                    "StudentHub is university market place to connect high-skilled student and company on a real-world project"),
-              )
-            ],
-          ),
-        ),
-      ),
+      body: PostListScreen(),
     );
   }
 
   // app bar methods:-----------------------------------------------------------
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: Text("Student Hub"),
-      // title: Text(AppLocalizations.of(context).translate('home_tv_posts')),
-      // actions: _buildActions(context),
+      title: Text(AppLocalizations.of(context).translate('home_tv_posts')),
+      actions: _buildActions(context),
     );
   }
 
