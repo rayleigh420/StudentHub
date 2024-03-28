@@ -40,7 +40,6 @@ dependencies:
   # I
   intl: ^0.18.0
   # J
-  json_serializable: ^6.6.1
   # K
   # L
   # M
@@ -64,6 +63,7 @@ dependencies:
   # X
   xxtea: ^2.1.0
   textfield_tags: ^2.1.1
+  json_annotation: ^4.8.1
   # Y
   # Z
 
@@ -77,8 +77,9 @@ dev_dependencies:
   # flutter packages pub run flutter_launcher_icons:main
   flutter_launcher_icons: ^0.13.1
   mobx_codegen: ^2.2.0
-  build_runner: ^2.3.3
+  build_runner: ^2.4.8
   analyzer: ^5.10.0
+  json_serializable: ^6.7.1
 
 flutter_icons:
   image_path: "assets/icons/ic_launcher.png"

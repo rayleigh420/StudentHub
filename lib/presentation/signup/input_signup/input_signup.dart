@@ -1,10 +1,14 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
+import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
+import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_1.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
 class InputSignUp extends StatefulWidget {
@@ -16,14 +20,15 @@ class InputSignUp extends StatefulWidget {
 
 class _InputSignUpState extends State<InputSignUp> {
   bool _showPassword = false;
-  bool _agreeToApply = false; // Added checkbox state
+  bool _agreeToApply = false;
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
-
+  final StudentHubSignupUC _authRepository = getIt<StudentHubSignupUC>();
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -31,8 +36,27 @@ class _InputSignUpState extends State<InputSignUp> {
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e);
   }
 
+  Future<String> signUp(
+      String email, String password, String fullName, int role) async {
+    try {
+      final response = await _authRepository.call(
+          params: SignUpParams(
+              email: email,
+              password: password,
+              fullName: fullName,
+              role: role));
+      log(response);
+      return response;
+    } catch (e) {
+      log(e.toString());
+      return e.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    log('Building InputSignUp');
+    log(widget.type.toString());
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -49,20 +73,18 @@ class _InputSignUpState extends State<InputSignUp> {
       ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Container(
-          // decoration: const BoxDecoration(color: Color(0xFFF6F6F6)),
-          padding: const EdgeInsets.all(20.0),
+          height: DeviceUtils.getScaledHeight(context, 1),
+          // padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 20,
+              left: 20,
+              right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // const Text(
-              //   'StudentHub',
-              //   // textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //       fontSize: 24,
-              //       //fontFamily: "GGX88HV",
-              //       fontWeight: FontWeight.bold),
-              // ),
               const SizedBox(height: 17.0),
               Text(
                 'Sign up as ${(widget.type == 1) ? 'Company' : 'Student'}',
@@ -74,23 +96,33 @@ class _InputSignUpState extends State<InputSignUp> {
               ),
               const SizedBox(height: 20.0),
               // const SizedBox(height: 17.0),
+
               buildForm(context),
               const SizedBox(height: 30),
-              buildLaunchButton(context, () {
+              buildLaunchButton(context, () async {
                 log('Login pressed');
-                if (widget.type == 1) {
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(builder: (context) {
-                    return ProfileCompanyInput();
-                    // return AppBottomNavigationBar(
-                    //   selectedIndex: 0,
-                    //   isStudent: false,
-                    // );
-                  }));
-                } else {
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => ProfileInput1()));
-                  ;
+                try {
+                  final token = await signUp(
+                      _emailController.text,
+                      _passwordController.text,
+                      _fullNameController.text,
+                      widget.type);
+                  if (widget.type == 1) {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return ProfileCompanyInput();
+                      // return AppBottomNavigationBar(
+                      //   selectedIndex: 0,
+                      //   isStudent: false,
+                      // );
+                    }));
+                  } else {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => ProfileInput1()));
+                    ;
+                  }
+                } catch (e) {
+                  throw Exception(e.toString());
                 }
               }),
               // buildSignupSection(context)
@@ -102,199 +134,202 @@ class _InputSignUpState extends State<InputSignUp> {
   }
 
   Widget buildForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-          child: Text(
-            'Full name',
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+            child: Text(
+              'Full name',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                //fontFamily: "GGX88Reg_Light",
+                // color: textColor
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          TextFormField(
+            onTapOutside: (event) {
+              FocusScope.of(context).unfocus();
+            },
+            controller: _fullNameController,
+            keyboardType: TextInputType.name,
             style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              //fontFamily: "GGX88Reg_Light",
-              // color: textColor
+              color: textFieldColor,
             ),
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        TextField(
-          onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
-          controller: _fullNameController,
-          keyboardType: TextInputType.name,
-          style: TextStyle(
-            color: textFieldColor,
-          ),
-          decoration: const InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: EdgeInsets.all(16),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-            ),
-            errorBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.red, width: 0.0),
-            ),
-            border: OutlineInputBorder(borderSide: BorderSide.none),
-            hintText: 'Enter your email',
-            hintStyle: TextStyle(
-              //fontFamily: "GGX88Reg_Light",
+            decoration: const InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: EdgeInsets.all(16),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 0.0),
+              ),
+              border: OutlineInputBorder(borderSide: BorderSide.none),
+              hintText: 'Enter your email',
+              hintStyle: TextStyle(
+                //fontFamily: "GGX88Reg_Light",
 
-              color: Color(0xFFc6c6c6),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16.0),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-          child: Text(
-            'Email',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              //fontFamily: "GGX88Reg_Light",
-              // color: textColor
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        TextField(
-          onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          style: TextStyle(
-            color: textFieldColor,
-          ),
-          decoration: const InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: EdgeInsets.all(16),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-            ),
-            errorBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.red, width: 0.0),
-            ),
-            border: OutlineInputBorder(borderSide: BorderSide.none),
-            hintText: 'Enter your email',
-            hintStyle: TextStyle(
-              //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFFc6c6c6),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16.0),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
-          child: Text(
-            'Password',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              //fontFamily: "GGX88Reg_Light",
-              // color: textColor
-            ),
-          ),
-        ),
-        TextField(
-          onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
-          controller: _passwordController,
-          obscureText: !_showPassword,
-          style: TextStyle(
-            color: textFieldColor,
-          ),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: EdgeInsets.all(16),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey, width: 0.0),
-            ),
-            errorBorder: const OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.red, width: 0.0),
-            ),
-            border: const OutlineInputBorder(borderSide: BorderSide.none),
-            hintText: 'Enter your password (8 or more characters)',
-            hintStyle: const TextStyle(
-              //fontFamily: "GGX88Reg_Light",
-              color: Color(0xFFc6c6c6),
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                _showPassword ? Icons.visibility_off : Icons.visibility,
+                color: Color(0xFFc6c6c6),
               ),
-              onPressed: () {
-                setState(() {
-                  _showPassword = !_showPassword;
-                });
-              },
             ),
           ),
-        ),
-        const SizedBox(height: 18.0),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              _agreeToApply = !_agreeToApply;
-            });
-          },
-          child: Row(
-            children: [
-              SizedBox(
-                height: 24,
-                width: 24,
-                child: Checkbox(
-                  value: _agreeToApply,
-                  activeColor: const Color(0xFF4285F4),
-                  checkColor: Colors.white,
-                  onChanged: (value) {
-                    setState(() {
-                      _agreeToApply = value!;
-                    });
-                  },
+          const SizedBox(height: 16.0),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+            child: Text(
+              'Email',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                //fontFamily: "GGX88Reg_Light",
+                // color: textColor
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          TextFormField(
+            onTapOutside: (event) {
+              FocusScope.of(context).unfocus();
+            },
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(
+              color: textFieldColor,
+            ),
+            decoration: const InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: EdgeInsets.all(16),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 0.0),
+              ),
+              border: OutlineInputBorder(borderSide: BorderSide.none),
+              hintText: 'Enter your email',
+              hintStyle: TextStyle(
+                //fontFamily: "GGX88Reg_Light",
+                color: Color(0xFFc6c6c6),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+            child: Text(
+              'Password',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                //fontFamily: "GGX88Reg_Light",
+                // color: textColor
+              ),
+            ),
+          ),
+          TextFormField(
+            onTapOutside: (event) {
+              FocusScope.of(context).unfocus();
+            },
+            controller: _passwordController,
+            obscureText: !_showPassword,
+            style: TextStyle(
+              color: textFieldColor,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: EdgeInsets.all(16),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.grey, width: 0.0),
+              ),
+              errorBorder: const OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.red, width: 0.0),
+              ),
+              border: const OutlineInputBorder(borderSide: BorderSide.none),
+              hintText: 'Enter your password (8 or more characters)',
+              hintStyle: const TextStyle(
+                //fontFamily: "GGX88Reg_Light",
+                color: Color(0xFFc6c6c6),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _showPassword ? Icons.visibility_off : Icons.visibility,
                 ),
+                onPressed: () {
+                  setState(() {
+                    _showPassword = !_showPassword;
+                  });
+                },
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Text(
-                  'Yes, I understand and agree to StudentHub',
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.clip,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    //fontFamily: "GGX88Reg_Light",
-                    color: textColor,
+            ),
+          ),
+          const SizedBox(height: 18.0),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _agreeToApply = !_agreeToApply;
+              });
+            },
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Checkbox(
+                    value: _agreeToApply,
+                    activeColor: const Color(0xFF4285F4),
+                    checkColor: Colors.white,
+                    onChanged: (value) {
+                      setState(() {
+                        _agreeToApply = value!;
+                      });
+                    },
                   ),
                 ),
-              )
-            ],
-          ),
-        )
-      ],
+                const SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  width: DeviceUtils.getScaledWidth(context, 0.8),
+                  child: Text(
+                    'Yes, I understand and agree to StudentHub',
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.clip,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                      //fontFamily: "GGX88Reg_Light",
+                      color: textColor,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
