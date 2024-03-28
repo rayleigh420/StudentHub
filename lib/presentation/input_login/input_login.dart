@@ -6,6 +6,7 @@ import 'package:boilerplate/di/service_locator.dart';
 
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
@@ -101,12 +102,19 @@ class _InputLoginState extends State<InputLogin> {
                 if (_formKey.currentState!.validate()) {
                   // DeviceUtils.hideKeyboard(context);
                   log("pressed");
-                  String token = await handleLogin(
+                  await handleLogin(
                       _emailController.text, _passwordController.text);
-                  log(token);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
+                  // log(token);
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   const SnackBar(content: Text('Processing Data')),
+                  // );
+                  Navigator.of(context)
+                      .pushReplacement(MaterialPageRoute(builder: (context) {
+                    return AppBottomNavigationBar(
+                      isStudent: true,
+                      selectedIndex: 2,
+                    );
+                  }));
                 }
               }),
               const SizedBox(height: 30),
