@@ -10,6 +10,7 @@ import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 import 'package:flutter/material.dart';
 
@@ -45,6 +46,21 @@ class _InputLoginState extends State<InputLogin> {
       log(a);
 
       return a;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
+
+  int handleRole(String token) {
+    try {
+      final jwt = JWT.decode(token);
+      print('Payload: ${jwt.payload}');
+      print('roles: ${jwt.payload['roles'][0]}');
+      // return jwt.payload['roles'][0];
+      String roleString = jwt.payload['roles'][0];
+      int role = int.parse(roleString);
+      print(role);
+      return role;
     } catch (e) {
       throw new Exception(e.toString());
     }
@@ -102,19 +118,32 @@ class _InputLoginState extends State<InputLogin> {
                 if (_formKey.currentState!.validate()) {
                   // DeviceUtils.hideKeyboard(context);
                   log("pressed");
-                  await handleLogin(
+                  String token = await handleLogin(
                       _emailController.text, _passwordController.text);
+                  log("123");
+                  log(token);
+                  int role = handleRole(token);
+                  if (role == 0) {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return AppBottomNavigationBar(
+                        isStudent: true,
+                        selectedIndex: 4,
+                      );
+                    }));
+                  } else {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return AppBottomNavigationBar(
+                        isStudent: false,
+                        selectedIndex: 4,
+                      );
+                    }));
+                  }
                   // log(token);
                   // ScaffoldMessenger.of(context).showSnackBar(
                   //   const SnackBar(content: Text('Processing Data')),
                   // );
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(builder: (context) {
-                    return AppBottomNavigationBar(
-                      isStudent: true,
-                      selectedIndex: 2,
-                    );
-                  }));
                 }
               }),
               const SizedBox(height: 30),
