@@ -4,13 +4,15 @@ import 'dart:developer';
 import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/rest_client.dart';
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/post/post_list.dart';
 import 'package:boilerplate/domain/entity/user/user.dart';
 
 class AuthApi {
   // dio instance
   final DioClient _dioClient;
-
+  
   // injecting dio instance
   AuthApi(this._dioClient);
 
@@ -45,7 +47,7 @@ class AuthApi {
       final res = await _dioClient.dio.post(Endpoints.signUp, data: {
         'email': email,
         'password': password,
-        'fullName': fullName,
+        'fullname': fullName,
         'role': role,
       });
       log("cout<<signup response");
@@ -60,7 +62,17 @@ class AuthApi {
       throw e;
     }
   }
-
+  Future<String> testToken() async {
+    try { 
+      final token = await getIt<SharedPreferenceHelper>().authToken;
+      final authToken = "Bearer ${token}";
+      log(token.toString());
+      log("loonf thais dit me m");
+      return "1";
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
   /// sample api call with default rest client
 //  Future<PostsList> getPosts() {
 //

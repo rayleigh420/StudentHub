@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
@@ -30,6 +31,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
   String techStacksValue = techStacks.first;
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
+  final ProfileTestUC _profileTestUC = getIt<ProfileTestUC>();
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   Color borderColor = Colors.black;
@@ -49,7 +51,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
   void dispose() {
     super.dispose();
   }
-
+  void handlePress(){
+    _profileTestUC.call();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,6 +72,16 @@ class _ProfileInput1State extends State<ProfileInput1> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: 17.0),
+                    GestureDetector(
+                      onTap: () {
+                        handlePress();
+                      },
+                      child: const Icon(
+                        Icons.arrow_back,
+                        size: 30,
+                      ),
+                    ),
+                    
                     Text(
                       'Welcome to Student Hub',
                       textAlign: TextAlign.center,
@@ -255,12 +269,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
             crossAxisAlignment: CrossAxisAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
               Container(
                 width: MediaQuery.of(context).size.width * 0.65,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    Text(   
                       "Language",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
