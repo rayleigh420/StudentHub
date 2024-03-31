@@ -7,4 +7,5 @@ abstract class AuthRepository {
   Future<String> signUpStudentHub(
       String email, String password, String fullName, int roles);
   Future<void> saveIsLoggedIn(bool value);
+  Future<String> testToken();
 }

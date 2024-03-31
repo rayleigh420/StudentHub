@@ -61,4 +61,13 @@ class AuthRepositoryImpl extends AuthRepository {
     _sharedPrefsHelper.saveIsLoggedIn(value);
     throw UnimplementedError();
   }
+  @override
+  Future<String> testToken() async {
+    try {
+      final token = await _authApi.testToken();
+      return token;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
 }
