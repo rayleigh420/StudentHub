@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
-import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
+import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
+import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
@@ -18,20 +19,22 @@ class ProfileInput1 extends StatefulWidget {
   State<ProfileInput1> createState() => _ProfileInput1State();
 }
 
-const List<String> techStacks = <String>[
-  'Full Stack Developer',
-  'Dev Ops',
-  'Flutter Developer',
-  'React Native Developer',
-  'Android Developer',
-  'IOS Developer',
-];
+// const List<String> techStacks = <String>[
+//   'Full Stack Developer',
+//   'Dev Ops',
+//   'Flutter Developer',
+//   'React Native Developer',
+//   'Android Developer',
+//   'IOS Developer',
+// ];
 
 class _ProfileInput1State extends State<ProfileInput1> {
-  String techStacksValue = techStacks.first;
+  final GetTechStackUseCase _getTechStackUseCase = getIt<GetTechStackUseCase>();
+  List<TechStack> techStacks = [];
+
+  int? techStacksValue;
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
-  final ProfileTestUC _profileTestUC = getIt<ProfileTestUC>();
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   Color borderColor = Colors.black;
@@ -45,15 +48,24 @@ class _ProfileInput1State extends State<ProfileInput1> {
     } else {
       borderColor = Colors.black;
     }
+
+    getTechStacks();
+  }
+
+  void getTechStacks() async {
+    final techStackList = await _getTechStackUseCase.call(params: null);
+    setState(() {
+      techStacks = techStackList.techStacks!;
+      techStacksValue = techStacks.first.id;
+    });
+    // log(techStackList.techStacks.toString());
   }
 
   @override
   void dispose() {
     super.dispose();
   }
-  void handlePress(){
-    _profileTestUC.call();
-  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -72,16 +84,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: 17.0),
-                    GestureDetector(
-                      onTap: () {
-                        handlePress();
-                      },
-                      child: const Icon(
-                        Icons.arrow_back,
-                        size: 30,
-                      ),
-                    ),
-                    
+
                     Text(
                       'Welcome to Student Hub',
                       textAlign: TextAlign.center,
@@ -90,6 +93,60 @@ class _ProfileInput1State extends State<ProfileInput1> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    // const SizedBox(height: 20.0),
+                    // Text(
+                    //   'Tell us about your self and you will be on your way connect with real-world project',
+                    //   textAlign: TextAlign.center,
+                    //   style:
+                    //       TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                    // ),
+                    // const SizedBox(height: 20.0),
+                    // // const SizedBox(height: 17.0),
+                    // Text(
+                    //   'Tech Stack:',
+                    //   textAlign: TextAlign.start,
+                    //   style: TextStyle(
+                    //     fontSize: 16,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 10.0),
+                    // DropdownMenu<String>(
+                    //   onSelected: (value) {
+                    //     setState(() {
+                    //       techStacksValue = value!;
+                    //     });
+                    //   },
+                    //   width: MediaQuery.of(context).size.width * 0.9,
+                    //   initialSelection: techStacks!.first,
+                    //   dropdownMenuEntries: techStacks
+                    //       .map<DropdownMenuEntry<String>>(
+                    //           (String value) => DropdownMenuEntry<String>(
+                    //                 value: value,
+                    //                 label: value,
+                    //               ))
+                    //       .toList(),
+                    // ),
+                    // const SizedBox(height: 20.0),
+                    // Text(
+                    //   'Skill Set:',
+                    //   textAlign: TextAlign.start,
+                    //   style: TextStyle(
+                    //     fontSize: 16,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 10.0),
+                    // buildSkillsetSection(context),
+                    // const SizedBox(height: 30),
+                    // buildLanguage(context),
+                    // const SizedBox(height: 30),
+                    // buildEducation(context),
+                    // const SizedBox(height: 30),
+                    // buildEducation(context),
+                    // const SizedBox(height: 30),
+                    // buildEducation(context),
+
                     const SizedBox(height: 20.0),
                     Text(
                       'Tell us about your self and you will be on your way connect with real-world project',
@@ -108,19 +165,19 @@ class _ProfileInput1State extends State<ProfileInput1> {
                       ),
                     ),
                     const SizedBox(height: 10.0),
-                    DropdownMenu<String>(
-                      onSelected: (value) {
+                    DropdownMenu<int>(
+                      onSelected: (int? value) {
                         setState(() {
                           techStacksValue = value!;
                         });
                       },
                       width: MediaQuery.of(context).size.width * 0.9,
-                      initialSelection: techStacks.first,
+                      initialSelection: techStacksValue,
                       dropdownMenuEntries: techStacks
-                          .map<DropdownMenuEntry<String>>(
-                              (String value) => DropdownMenuEntry<String>(
-                                    value: value,
-                                    label: value,
+                          .map<DropdownMenuEntry<int>>(
+                              (TechStack techStack) => DropdownMenuEntry<int>(
+                                    value: techStack.id!,
+                                    label: techStack.name!,
                                   ))
                           .toList(),
                     ),
@@ -139,20 +196,6 @@ class _ProfileInput1State extends State<ProfileInput1> {
                     buildLanguage(context),
                     const SizedBox(height: 30),
                     buildEducation(context),
-                    const SizedBox(height: 30),
-                    buildEducation(context),
-                    const SizedBox(height: 30),
-                    buildEducation(context),
-
-                    // Container(
-                    //   height: 500,
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(
-                    //       color: Colors.grey,
-                    //       width: 1,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -269,13 +312,12 @@ class _ProfileInput1State extends State<ProfileInput1> {
             crossAxisAlignment: CrossAxisAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               Container(
                 width: MediaQuery.of(context).size.width * 0.65,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(   
+                    Text(
                       "Language",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
@@ -496,7 +538,6 @@ class _ProfileInput1State extends State<ProfileInput1> {
           )
         ],
       ),
-      
     );
   }
 }
