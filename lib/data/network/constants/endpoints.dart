@@ -2,8 +2,8 @@ class Endpoints {
   Endpoints._();
 
   // base url
-  // static const String baseUrl = "http://jsonplaceholder.typicode.com";
   static const String baseUrl = "http://34.16.137.128";
+
   // receiveTimeout
   static const int receiveTimeout = 15000;
 
@@ -26,4 +26,8 @@ class Endpoints {
   static const String createProject = baseUrl + "/api/project";
   static const String getProjects = baseUrl + "/api/project";
   static const String getProjectById = baseUrl + "/api/project";
+
+  // TechStack endpoints
+  static const String getTechStacks =
+      baseUrl + "/api/techStack/getAllTechStack";
 }
