@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
+import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
@@ -16,17 +18,20 @@ class ProfileInput1 extends StatefulWidget {
   State<ProfileInput1> createState() => _ProfileInput1State();
 }
 
-const List<String> techStacks = <String>[
-  'Full Stack Developer',
-  'Dev Ops',
-  'Flutter Developer',
-  'React Native Developer',
-  'Android Developer',
-  'IOS Developer',
-];
+// const List<String> techStacks = <String>[
+//   'Full Stack Developer',
+//   'Dev Ops',
+//   'Flutter Developer',
+//   'React Native Developer',
+//   'Android Developer',
+//   'IOS Developer',
+// ];
 
 class _ProfileInput1State extends State<ProfileInput1> {
-  String techStacksValue = techStacks.first;
+  final GetTechStackUseCase _getTechStackUseCase = getIt<GetTechStackUseCase>();
+  List<TechStack> techStacks = [];
+
+  int? techStacksValue;
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
   final FocusNode skillSetFocusNode = FocusNode();
@@ -42,6 +47,17 @@ class _ProfileInput1State extends State<ProfileInput1> {
     } else {
       borderColor = Colors.black;
     }
+
+    getTechStacks();
+  }
+
+  void getTechStacks() async {
+    final techStackList = await _getTechStackUseCase.call(params: null);
+    setState(() {
+      techStacks = techStackList.techStacks!;
+      techStacksValue = techStacks.first.id;
+    });
+    // log(techStackList.techStacks.toString());
   }
 
   @override
@@ -85,19 +101,19 @@ class _ProfileInput1State extends State<ProfileInput1> {
               ),
             ),
             const SizedBox(height: 10.0),
-            DropdownMenu<String>(
-              onSelected: (value) {
+            DropdownMenu<int>(
+              onSelected: (int? value) {
                 setState(() {
                   techStacksValue = value!;
                 });
               },
               width: MediaQuery.of(context).size.width * 0.9,
-              initialSelection: techStacks.first,
+              initialSelection: techStacksValue,
               dropdownMenuEntries: techStacks
-                  .map<DropdownMenuEntry<String>>(
-                      (String value) => DropdownMenuEntry<String>(
-                            value: value,
-                            label: value,
+                  .map<DropdownMenuEntry<int>>(
+                      (TechStack techStack) => DropdownMenuEntry<int>(
+                            value: techStack.id!,
+                            label: techStack.name!,
                           ))
                   .toList(),
             ),
