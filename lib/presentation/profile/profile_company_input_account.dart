@@ -1,3 +1,4 @@
+import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/di/service_locator.dart';
@@ -15,6 +16,7 @@ class _ProfileCompanyInputAccountState
   final _companyNameController = TextEditingController();
   final _companyWebsiteController = TextEditingController();
   final _companyDescriptionController = TextEditingController();
+  
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -25,7 +27,7 @@ class _ProfileCompanyInputAccountState
     super.initState();
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6C6C6C);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
