@@ -1,3 +1,6 @@
+import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/profile_company.dart';
+import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
 import 'package:flutter/material.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
@@ -14,6 +17,8 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
   final _companyNameController = TextEditingController();
   final _companyWebsiteController = TextEditingController();
   final _companyDescriptionController = TextEditingController();
+  final CreateProfileCompanyUC _createProfileCompanyUC =
+      getIt<CreateProfileCompanyUC>();
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -23,26 +28,31 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
       "id": 0,
       "value": false,
       "title": "It's just me",
+      "size":0,
     },
     {
       "id": 1,
       "value": false,
       "title": "2-9 employees",
+      "size":1,
     },
     {
       "id": 2,
       "value": false,
       "title": "10-99 employees",
+      "size":2,
     },
     {
       "id": 3,
       "value": false,
       "title": "100-1000 employees",
+      "size":3,
     },
     {
       "id": 4,
       "value": false,
       "title": "More than 1000 employees",
+      "size":4,
     },
   ];
 
@@ -52,12 +62,21 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6C6C6C);
   }
 
+  void handleCreateProfile() {
+    _createProfileCompanyUC.call(
+        params: CreateProfileCompanyParams(
+            companyName: _companyNameController.text,
+             size: checkListItems.firstWhere((element) => element["value"] == true)["size"],
+              website: _companyWebsiteController.text,
+               description: _companyDescriptionController.text));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
             body: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+                physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -257,6 +276,7 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
+                            handleCreateProfile();
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(builder: (context) {
                               return const WelcomeCompany();
