@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
+import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
@@ -35,6 +37,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   Color borderColor = Colors.black;
+  final GetSkillSetUC _getSkillSetUC = getIt<GetSkillSetUC>();
+  List<SkillSet> skillSets = [];
+  int? skillSetId;
   @override
   void initState() {
     super.initState();
@@ -45,6 +50,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
     } else {
       borderColor = Colors.black;
     }
+    getSkillSet();
   }
 
   @override
@@ -53,6 +59,16 @@ class _ProfileInput1State extends State<ProfileInput1> {
   }
   void handlePress(){
     _profileTestUC.call();
+  }
+  void getSkillSet() async {
+    final skillSetList = await _getSkillSetUC.call(params: null);
+    log(skillSetList.SkillSets.toString());
+  
+    setState(() {
+      skillSets = skillSetList.SkillSets!;
+      skillSetId = skillSets.first.id;
+    });
+    // log(techStackList.techStacks.toString());
   }
   @override
   Widget build(BuildContext context) {
