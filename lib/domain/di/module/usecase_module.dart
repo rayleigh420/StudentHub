@@ -7,6 +7,9 @@ import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
+import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
+import 'package:boilerplate/domain/repository/user/user_repository.dart';
+import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/find_post_by_id_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
@@ -72,6 +75,10 @@ mixin UseCaseModule {
     //projects
     getIt.registerSingleton<GetProjectsUseCase>(
       GetProjectsUseCase(getIt<ProjectRepository>()),
+    );
+    // techstack:--------------------------------------------------------------------
+    getIt.registerSingleton<GetTechStackUseCase>(
+      GetTechStackUseCase(getIt<TechStackRepository>()),
     );
   }
 }
