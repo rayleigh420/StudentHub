@@ -28,26 +28,31 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
       "id": 0,
       "value": false,
       "title": "It's just me",
+      "size":0,
     },
     {
       "id": 1,
       "value": false,
       "title": "2-9 employees",
+      "size":1,
     },
     {
       "id": 2,
       "value": false,
       "title": "10-99 employees",
+      "size":2,
     },
     {
       "id": 3,
       "value": false,
       "title": "100-1000 employees",
+      "size":3,
     },
     {
       "id": 4,
       "value": false,
       "title": "More than 1000 employees",
+      "size":4,
     },
   ];
 
@@ -60,7 +65,10 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
   void handleCreateProfile() {
     _createProfileCompanyUC.call(
         params: CreateProfileCompanyParams(
-            companyName: "a", size: 1, website: "a", description: "a"));
+            companyName: _companyNameController.text,
+             size: checkListItems.firstWhere((element) => element["value"] == true)["size"],
+              website: _companyWebsiteController.text,
+               description: _companyDescriptionController.text));
   }
 
   @override
