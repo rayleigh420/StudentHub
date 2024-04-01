@@ -1,9 +1,11 @@
 import 'dart:async';
 
-import 'package:boilerplate/data/repository/profile/profile_repository_company_impl.dart';
+import 'package:boilerplate/data/repository/profile/profile_company_repository_impl.dart';
 import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profle_company_repository.dart';
+import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
@@ -15,6 +17,7 @@ import 'package:boilerplate/domain/usecase/post/udpate_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_company.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
+import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
@@ -65,6 +68,12 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<CreateProfileCompanyUC>(
       CreateProfileCompanyUC(getIt<ProfileCompanyRepository>()),
+    );
+    getIt.registerSingleton<CreateProfileStudentUC>(
+      CreateProfileStudentUC(getIt<ProfileStudentRepository>()),
+    );
+    getIt.registerSingleton<GetSkillSetUC>(
+      GetSkillSetUC(getIt<SkillSetRepository>()),
     );
   }
 }
