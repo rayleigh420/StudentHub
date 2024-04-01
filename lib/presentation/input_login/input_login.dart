@@ -1,15 +1,20 @@
+import 'dart:convert';
 import 'dart:developer';
 
+// import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/di/service_locator.dart';
+
+import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+
+import 'package:http/http.dart' as http;
 
 class InputLogin extends StatefulWidget {
   const InputLogin({super.key});
@@ -22,20 +27,48 @@ class _InputLoginState extends State<InputLogin> {
   bool _showPassword = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  final StudentHubLoginUC _authRepository = getIt<StudentHubLoginUC>();
   //------
   final ThemeStore _themeStore = getIt<ThemeStore>();
 
   final _formKey = GlobalKey<FormState>();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _themeStore.changeBrightnessToDark(false);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _themeStore.changeBrightnessToDark(false);
+  }
+
+  Future<String> handleLogin(String email, String password) async {
+    try {
+      String a = await _authRepository.call(
+          params: LoginParams(username: email, password: password));
+      log(a);
+
+      return a;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
+
+  int handleRole(String token) {
+    try {
+      final jwt = JWT.decode(token);
+      print('Payload: ${jwt.payload}');
+      print('roles: ${jwt.payload['roles'][0]}');
+      // return jwt.payload['roles'][0];
+      String roleString = jwt.payload['roles'][0];
+      int role = int.parse(roleString);
+      print(role);
+      return role;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    print("Building InputLogin");
     // print(_themeStore.darkMode);
     return SafeArea(
         child: Scaffold(
@@ -43,9 +76,8 @@ class _InputLoginState extends State<InputLogin> {
         title: const Text('StudentHub'),
         actions: [
           IconButton(
-            icon: Icon(_themeStore.darkMode
-                ? Icons.person_2
-                : Icons.person_2_rounded),
+            icon: Icon(
+                _themeStore.darkMode ? Icons.person_2 : Icons.person_2_rounded),
             onPressed: () {
               _themeStore.changeBrightnessToDark(!_themeStore.darkMode);
             },
@@ -53,54 +85,72 @@ class _InputLoginState extends State<InputLogin> {
         ],
       ),
       resizeToAvoidBottomInset: true,
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // const Text(
-            //   'StudentHub',
-            //   // textAlign: TextAlign.center,
-            //   style: TextStyle(
-            //       fontSize: 24,
-            //       //fontFamily: "GGX88HV",
-            //       fontWeight: FontWeight.bold),
-            // ),
-            const SizedBox(height: 17.0),
-            Text(
-              'Add your email and password',
-              // textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                //fontFamily: "GGX88Reg_Light",
-                // color:
-                //     _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          // padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              top: 20,
+              left: 20,
+              right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 17.0),
+              Text(
+                'Add your email and password',
+                // textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  //fontFamily: "GGX88Reg_Light",
+                  // color:
+                  //     _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e)
+                ),
               ),
-            ),
-            const SizedBox(height: 20.0),
-            // const SizedBox(height: 17.0),
-            buildForm(context),
-            const SizedBox(height: 30),
-            buildLaunchButton(context, () {
-              if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
-            }),
-            const SizedBox(height: 30),
-            // Container(
-            //   height: 500,
-            //   decoration: BoxDecoration(
-            //     border: Border.all(
-            //       color: Colors.grey,
-            //       width: 2,
-            //     ),
-            //   ),
-            // ),
-            buildSignupSection(context),
-          ],
+              const SizedBox(height: 20.0),
+              // const SizedBox(height: 17.0),
+              buildForm(context),
+              const SizedBox(height: 30),
+              buildLaunchButton(context, () async {
+                if (_formKey.currentState!.validate()) {
+                  // DeviceUtils.hideKeyboard(context);
+                  log("pressed");
+                  String token = await handleLogin(
+                      _emailController.text, _passwordController.text);
+                  log("123");
+                  log(token);
+                  int role = handleRole(token);
+                  if (role == 0) {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return AppBottomNavigationBar(
+                        isStudent: true,
+                        selectedIndex: 4,
+                      );
+                    }));
+                  } else {
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return AppBottomNavigationBar(
+                        isStudent: false,
+                        selectedIndex: 4,
+                      );
+                    }));
+                  }
+                  // log(token);
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   const SnackBar(content: Text('Processing Data')),
+                  // );
+                }
+              }),
+              const SizedBox(height: 30),
+
+              buildSignupSection(context),
+            ],
+          ),
         ),
       ),
     ));
@@ -260,9 +310,7 @@ class _InputLoginState extends State<InputLogin> {
             minimumSize: Size(MediaQuery.of(context).size.width * 1,
                 MediaQuery.of(context).size.height * 0.06),
           ),
-          onPressed: () {
-            onPress();
-          },
+          onPressed: () => onPress(),
           child: const Text(
             'Sign In',
             style: TextStyle(
@@ -276,33 +324,32 @@ class _InputLoginState extends State<InputLogin> {
   }
 
   Widget buildSignupSection(BuildContext context) {
-    return Expanded(
-      // alignment: Alignment.bottomCenter,
-      // margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Text("Dont have Student Hub account?"),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .pushReplacement(MaterialPageRoute(builder: (context) {
-                return const SignUpIdentity();
-              }));
-            },
-            child: const Text(
-              "Sign Up",
-              style: TextStyle(
-                color: Color(0xFF4285F4),
-                fontWeight: FontWeight.bold,
-              ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          alignment: Alignment.bottomCenter,
+          child: Text("Dont have Student Hub account?",
+              style: TextStyle(fontSize: 14)),
+        ),
+        const SizedBox(width: 5),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: (context) {
+              return const SignUpIdentity();
+            }));
+          },
+          child: const Text(
+            "Sign Up",
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
             ),
-          )
-        ],
-      ),
+          ),
+        )
+      ],
     );
   }
 }

@@ -77,6 +77,10 @@
 //     );
 //   }
 // }
+import 'dart:developer';
+
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/alert/alert.dart';
 import 'package:boilerplate/presentation/browse_project/browse_project_main.dart';
 import 'package:boilerplate/presentation/chat/message_list.dart';
@@ -96,6 +100,7 @@ import 'package:flutter/material.dart';
 class AppBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
   final bool isStudent;
+
   AppBottomNavigationBar(
       {required this.selectedIndex, required this.isStudent});
   @override
@@ -103,9 +108,19 @@ class AppBottomNavigationBar extends StatefulWidget {
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
-   int _selectedIndex = 0;
-   bool _isStudent = false;
+  int _selectedIndex = 0;
+  bool _isStudent = false;
+  String _accessToken = "";
   static List<Widget> _widgetOptions = [];
+
+  Future<void> _loadAccessToken() async {
+    final accessToken = await getIt<SharedPreferenceHelper>().authToken;
+    setState(() {
+      _accessToken = accessToken.toString();
+      print('1');
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -123,6 +138,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       // ProfileScreen(),
       // HomeScreen(),
     ];
+    _loadAccessToken();
     if (_selectedIndex == 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         await showDialog<String>(
@@ -159,6 +175,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    log(_accessToken);
     return CupertinoTabScaffold(
       // appBar: _buildAppBar(),
       tabBuilder: (BuildContext context, int index) {
