@@ -34,4 +34,9 @@ class Endpoints {
   static const String getLanguages = baseUrl + "/api/language/getByStudentId";
   static const String updateLanguage =
       baseUrl + "/api/language/updateByStudentId";
+
+  // Education endpoints
+  static const String getEducations = baseUrl + "/api/education/getByStudentId";
+  static const String updateEducation =
+      baseUrl + "/api/education/updateByStudentId";
 }
