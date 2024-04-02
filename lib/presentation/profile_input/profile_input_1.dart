@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
+import 'package:boilerplate/domain/usecase/education/get_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
@@ -37,6 +38,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final GetLanguageByStudentIdUseCase _getLanguageByStudentIdUseCase =
       getIt<GetLanguageByStudentIdUseCase>();
 
+  final GetEducationByStudentIdUseCase _getEducationByStudentIdUseCase =
+      getIt<GetEducationByStudentIdUseCase>();
+
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
   final FocusNode skillSetFocusNode = FocusNode();
@@ -55,6 +59,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
     // getTechStacks();
     getLanguageByStudentId();
+    getEducationByStudentId();
   }
 
   void getTechStacks() async {
@@ -71,6 +76,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
         await _getLanguageByStudentIdUseCase.call(params: null);
     // setState(() {
     //   languageList = languageList;
+    // });
+  }
+
+  void getEducationByStudentId() async {
+    final educationList =
+        await _getEducationByStudentIdUseCase.call(params: null);
+    // setState(() {
+    //   educationList = educationList;
     // });
   }
 
