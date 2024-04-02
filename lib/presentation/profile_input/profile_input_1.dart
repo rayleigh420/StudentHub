@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
+import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
@@ -31,8 +32,11 @@ class ProfileInput1 extends StatefulWidget {
 class _ProfileInput1State extends State<ProfileInput1> {
   final GetTechStackUseCase _getTechStackUseCase = getIt<GetTechStackUseCase>();
   List<TechStack> techStacks = [];
-
   int? techStacksValue;
+
+  final GetLanguageByStudentIdUseCase _getLanguageByStudentIdUseCase =
+      getIt<GetLanguageByStudentIdUseCase>();
+
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
   final FocusNode skillSetFocusNode = FocusNode();
@@ -49,7 +53,8 @@ class _ProfileInput1State extends State<ProfileInput1> {
       borderColor = Colors.black;
     }
 
-    getTechStacks();
+    // getTechStacks();
+    getLanguageByStudentId();
   }
 
   void getTechStacks() async {
@@ -59,6 +64,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
       techStacksValue = techStacks.first.id;
     });
     // log(techStackList.techStacks.toString());
+  }
+
+  void getLanguageByStudentId() async {
+    final languageList =
+        await _getLanguageByStudentIdUseCase.call(params: null);
+    // setState(() {
+    //   languageList = languageList;
+    // });
   }
 
   @override
