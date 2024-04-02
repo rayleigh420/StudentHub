@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
+import 'package:boilerplate/domain/repository/educations/education_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profle_company_repository.dart';
@@ -11,6 +12,8 @@ import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
+import 'package:boilerplate/domain/usecase/education/get_education_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/education/udpate_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
@@ -90,6 +93,14 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<UpdateLanguageByStudentIdUseCase>(
       UpdateLanguageByStudentIdUseCase(getIt<LanguageRepository>()),
+    );
+
+    // Education:--------------------------------------------------------------------
+    getIt.registerSingleton<GetEducationByStudentIdUseCase>(
+      GetEducationByStudentIdUseCase(getIt<EducationRepository>()),
+    );
+    getIt.registerSingleton<UpdateEducationByStudentIdUseCase>(
+      UpdateEducationByStudentIdUseCase(getIt<EducationRepository>()),
     );
   }
 }
