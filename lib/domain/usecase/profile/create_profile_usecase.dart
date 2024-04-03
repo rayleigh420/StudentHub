@@ -1,6 +1,6 @@
 import 'package:boilerplate/core/domain/usecase/use_case.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
-import 'package:boilerplate/domain/repository/profile/profle_company_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 
 class CreateProfileCompanyParams {
   final String companyName;
@@ -15,8 +15,7 @@ class CreateProfileCompanyParams {
   });
 }
 
-class CreateProfileCompanyUC
-    extends UseCase<bool, CreateProfileCompanyParams> {
+class CreateProfileCompanyUC extends UseCase<bool, CreateProfileCompanyParams> {
   final ProfileCompanyRepository _profileCompanyRepository;
 
   CreateProfileCompanyUC(this._profileCompanyRepository);
@@ -37,8 +36,7 @@ class CreateProfileStudentParams {
   });
 }
 
-class CreateProfileStudentUC
-    extends UseCase<bool, CreateProfileStudentParams> {
+class CreateProfileStudentUC extends UseCase<bool, CreateProfileStudentParams> {
   final ProfileStudentRepository _profileStudentRepository;
 
   CreateProfileStudentUC(this._profileStudentRepository);
