@@ -3,9 +3,14 @@ import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/core/data/network/dio/interceptors/auth_interceptor.dart';
 import 'package:boilerplate/core/data/network/dio/interceptors/logging_interceptor.dart';
 import 'package:boilerplate/data/network/apis/auth/auth_api.dart';
+import 'package:boilerplate/data/network/apis/educations/education_api.dart';
+import 'package:boilerplate/data/network/apis/experiences/experience_api.dart';
+import 'package:boilerplate/data/network/apis/languages/language_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
 import 'package:boilerplate/data/network/apis/skillSet/skill_set_api.dart';
+import 'package:boilerplate/data/network/apis/project/project_api.dart';
+import 'package:boilerplate/data/network/apis/techStacks/tech_stack_api.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/interceptors/error_interceptor.dart';
 import 'package:boilerplate/data/network/rest_client.dart';
@@ -54,11 +59,20 @@ mixin NetworkModule {
     // api's:-------------------------------------------------------------------
     getIt.registerSingleton(PostApi(getIt<DioClient>(), getIt<RestClient>()));
 
-    //
     getIt.registerSingleton(AuthApi(getIt<DioClient>()));
 
     getIt.registerSingleton(ProfileApi(getIt<DioClient>()));
 
+    getIt.registerSingleton(ProjectApi(getIt<DioClient>()));
+
+    getIt.registerSingleton<TechStackApi>(TechStackApi(getIt<DioClient>()));
+
     getIt.registerSingleton<SkillSetApi>(SkillSetApi(getIt<DioClient>()));
+
+    getIt.registerSingleton<LanguageApi>(LanguageApi(getIt<DioClient>()));
+
+    getIt.registerSingleton<EducationApi>(EducationApi(getIt<DioClient>()));
+
+    getIt.registerSingleton<ExperienceApi>(ExperienceApi(getIt<DioClient>()));
   }
 }
