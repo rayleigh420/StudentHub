@@ -1,16 +1,15 @@
+import 'package:boilerplate/core/widgets/progress_indicator_widget.dart';
 import 'package:boilerplate/core/widgets/project_item.dart';
-import 'package:boilerplate/core/widgets/schedules/schedule_item_chat.dart';
-import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
-import 'package:boilerplate/core/widgets/search_project_modal.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project/project.dart';
+import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/presentation/saved_project/saved_project.dart';
 import 'package:boilerplate/presentation/search_project_screen/search_project_input.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class BrowseProjectScreen extends StatefulWidget {
   BrowseProjectScreen({super.key});
@@ -59,7 +58,18 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
       proposal: 6,
       createdDate: DateTime.now().add(Duration(days: -3)),
       isSaved: false);
-  ThemeStore _themeStore = getIt<ThemeStore>();
+  final ThemeStore _themeStore = getIt<ThemeStore>();
+  final ProjectStore _projectStore = getIt<ProjectStore>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // check to see if already called api
+    if (!_projectStore.loading) {
+      _projectStore.getProjects();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +96,13 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
                               height: 16,
                             ),
 
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // Text("hi"),
+                            buildProjectContent(),
                             const SizedBox(
                               height: 16,
                             ),
@@ -119,17 +131,6 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              // showModalBottomSheet(
-              //   isDismissible: true,
-              //   context: context,
-              //   isScrollControlled: true,
-              //   useRootNavigator: true,
-              //   enableDrag: true,
-              //   backgroundColor: Colors.transparent,
-              //   builder: (context) {
-              //     return ScheduleMeetingModal();
-              //   },
-              // );
               Navigator.of(context, rootNavigator: false).push(
                   MaterialPageRoute(
                       builder: (context) => SearchProjectInput(),
@@ -164,12 +165,10 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
           ),
           GestureDetector(
             onTap: () {
-              // Navigator.of(context).pushNamed('saved_project');
               Navigator.of(context, rootNavigator: false).push(
                   MaterialPageRoute(
                       builder: (context) => SavedProject(),
                       maintainState: false));
-              // Navigator.pushNamed(context, 'saved_project');
             },
             child: Container(
               padding: EdgeInsets.all(5),
@@ -193,83 +192,26 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
     return difference.inDays;
   }
 
-  Widget buildProjectItem() {
-    return Container(
-        padding: EdgeInsets.all(8),
-        margin: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Created ${dateDiff(DateTime.now(), projDat.createdDate!)} days ago",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    projDat.title,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                          "${projDat.scopeFrom} ${projDat.scopeFrom2} - ${projDat.scopeTo} ${projDat.scopeTo2}",
-                          style: TextStyle(fontSize: 13)),
-                      Text(", ", style: TextStyle(fontSize: 13)),
-                      Text(
-                          "${projDat.quantityRequired != null ? projDat.quantityRequired : 0}  students",
-                          style: TextStyle(fontSize: 13)),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const Text("Student are looking for",
-                      style: TextStyle(fontSize: 13)),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 5.0),
-                        child: Text("-   ${projDat.props[index]}",
-                            style: TextStyle(fontSize: 13)),
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text("Proposals: ${projDat.proposal} proposals",
-                      style: TextStyle(fontSize: 13)),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child:
-                    Icon(Icons.favorite_border, color: Colors.grey, size: 30),
-              ),
-            ),
-          ],
-        ));
+  Widget buildProjectContent() {
+    return Observer(builder: (context) {
+      return _projectStore.loading
+          ? Text("Fetching data...")
+          : buildListProjects();
+    });
+  }
+
+  Widget buildListProjects() {
+    return _projectStore.projects != null
+        ? ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: _projectStore.projects!.projects!.length,
+            itemBuilder: (context, index) {
+              return ProjectItem(projDat: projDat);
+            },
+          )
+        : Center(
+            child: Text("No project found"),
+          );
   }
 }
