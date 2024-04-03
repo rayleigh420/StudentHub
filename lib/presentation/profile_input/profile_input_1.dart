@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
+import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
@@ -44,6 +45,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final GetEducationByStudentIdUseCase _getEducationByStudentIdUseCase =
       getIt<GetEducationByStudentIdUseCase>();
 
+  final GetExperienceByStudentIdUseCase _getExperienceByStudentIdUseCase =
+      getIt<GetExperienceByStudentIdUseCase>();
+
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
   final FocusNode skillSetFocusNode = FocusNode();
@@ -62,11 +66,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
     } else {
       borderColor = Colors.black;
     }
-    getSkillSet();
 
     // getTechStacks();
-    getLanguageByStudentId();
-    getEducationByStudentId();
+    // getSkillSet();
+
+    // getLanguageByStudentId();
+    // getEducationByStudentId();
+    getExperienceByStudentId();
   }
 
   void getTechStacks() async {
@@ -94,6 +100,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
     // });
   }
 
+  void getExperienceByStudentId() async {
+    final experienceList =
+        await _getExperienceByStudentIdUseCase.call(params: null);
+    // setState(() {
+    //   experienceList = experienceList;
+    // });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -105,7 +119,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
   void getSkillSet() async {
     final skillSetList = await _getSkillSetUC.call(params: null);
-    log(skillSetList.SkillSets.toString());
+    // log(skillSetList.SkillSets.toString());
 
     setState(() {
       skillSets = skillSetList.SkillSets!;
