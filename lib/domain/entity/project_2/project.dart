@@ -3,8 +3,8 @@ class Project {
   DateTime? createdAt;
   DateTime? updatedAt;
   DateTime? deletedAt;
-  int? companyId;
-  int? projectScopeId;
+  String? companyId;
+  int? projectScopeFlag;
   String? title;
   String? description;
   int? typeFlag;
@@ -15,37 +15,38 @@ class Project {
     this.updatedAt,
     this.deletedAt,
     this.companyId,
-    this.projectScopeId,
+    this.projectScopeFlag,
     this.title,
     this.description,
     this.typeFlag,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt?.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
-      'company_id': companyId,
-      'project_scope_id': projectScopeId,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+      'deletedAt': deletedAt?.toIso8601String(),
+      'companyId': companyId,
+      'projectScopeFlag': projectScopeFlag,
       'title': title,
       'description': description,
-      'type_flag': typeFlag,
+      'typeFlag': typeFlag,
     };
   }
 
-  factory Project.fromMap(Map<String, dynamic> map) {
+  factory Project.fromJson(Map<String, dynamic> map) {
     return Project(
       id: map['id'],
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
-      deletedAt: DateTime.parse(map['deleted_at']),
-      companyId: map['company_id'],
-      projectScopeId: map['project_scope_id'],
+      createdAt: DateTime.parse(map['createdAt']),
+      updatedAt: DateTime.parse(map['updatedAt']),
+      deletedAt:
+          map['deletedAt'] != null ? DateTime.parse(map['deletedAt']) : null,
+      companyId: map['companyId'],
+      projectScopeFlag: map['projectScopeFlag'],
       title: map['title'],
       description: map['description'],
-      typeFlag: map['type_flag'],
+      typeFlag: map['typeFlag'],
     );
   }
 }
