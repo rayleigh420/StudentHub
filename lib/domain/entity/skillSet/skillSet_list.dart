@@ -9,8 +9,8 @@ class SkillSetList {
 
   factory SkillSetList.fromJson(Map<String, dynamic> json) {
     List<SkillSet> SkillSets = <SkillSet>[];
-    SkillSets = List.from(
-        json['result'].map((SkillSet) => SkillSet.fromMap(SkillSet)));
+    SkillSets =
+        List.from(json['result'].map((skillset) => SkillSet.fromMap(skillset)));
 
     return SkillSetList(
       SkillSets: SkillSets,
