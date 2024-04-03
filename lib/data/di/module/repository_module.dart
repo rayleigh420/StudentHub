@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:boilerplate/data/local/datasources/post/post_datasource.dart';
 import 'package:boilerplate/data/network/apis/auth/auth_api.dart';
 import 'package:boilerplate/data/network/apis/educations/education_api.dart';
+import 'package:boilerplate/data/network/apis/experiences/experience_api.dart';
 import 'package:boilerplate/data/network/apis/languages/language_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
@@ -10,6 +11,7 @@ import 'package:boilerplate/data/network/apis/project/project_api.dart';
 import 'package:boilerplate/data/repository/auth/auth_repository_impl.dart';
 import 'package:boilerplate/data/network/apis/techStacks/tech_stack_api.dart';
 import 'package:boilerplate/data/repository/educations/education_repository_impl.dart';
+import 'package:boilerplate/data/repository/experiences/experience_repository_impl.dart';
 import 'package:boilerplate/data/repository/languages/language_repository_impl.dart';
 import 'package:boilerplate/data/repository/post/post_repository_impl.dart';
 import 'package:boilerplate/data/repository/profile/profile_repository_company_impl.dart';
@@ -20,6 +22,7 @@ import 'package:boilerplate/data/repository/user/user_repository_impl.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
 import 'package:boilerplate/domain/repository/educations/education_repository.dart';
+import 'package:boilerplate/domain/repository/experiences/experience_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profle_company_repository.dart';
@@ -73,6 +76,11 @@ mixin RepositoryModule {
     // Education
     getIt.registerSingleton<EducationRepository>(EducationRepositoryImpl(
       getIt<EducationApi>(),
+    ));
+
+    // Experience
+    getIt.registerSingleton<ExperienceRepository>(ExperienceRepositoryImpl(
+      getIt<ExperienceApi>(),
     ));
   }
 }
