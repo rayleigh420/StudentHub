@@ -41,4 +41,30 @@ class ProfileApi {
       throw new Exception(e.toString());
     }
   }
+  Future<bool> createProfileStudent(int techStackId,
+     List<String> skillSets,
+      String token) async {
+    try {
+      // final token = await getIt<SharedPreferenceHelper>().authToken;
+      final authToken = "Bearer ${token}";
+
+      log(token.toString());
+      final res = await _dioClient.dio.post(Endpoints.createProfileStudent,
+          data: {
+            'techStackId': techStackId,
+            'skillSets': skillSets,
+           
+          },
+          options: Options(
+            headers: {
+              'Authorization': authToken,
+            },
+          ));
+      log("cout<<createProfileStudent response");
+      log(res.data.toString());
+      return true;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
 }
