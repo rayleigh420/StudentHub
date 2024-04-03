@@ -39,4 +39,10 @@ class Endpoints {
   static const String getEducations = baseUrl + "/api/education/getByStudentId";
   static const String updateEducation =
       baseUrl + "/api/education/updateByStudentId";
+
+  // Experience endpoints
+  static const String getExperiences =
+      baseUrl + "/api/experience/getByStudentId";
+  static const String updateExperience =
+      baseUrl + "/api/experience/updateByStudentId";
 }
