@@ -62,10 +62,10 @@ class _ProfileInput1State extends State<ProfileInput1> {
   }
   void getSkillSet() async {
     final skillSetList = await _getSkillSetUC.call(params: null);
-    log(skillSetList.SkillSets.toString());
+    log(skillSetList.skillSets.toString());
   
     setState(() {
-      skillSets = skillSetList.SkillSets!;
+      skillSets = skillSetList.skillSets!;
       skillSetId = skillSets.first.id;
     });
     // log(techStackList.techStacks.toString());

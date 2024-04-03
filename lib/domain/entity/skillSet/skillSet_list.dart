@@ -1,19 +1,19 @@
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 
 class SkillSetList {
-  final List<SkillSet>? SkillSets;
+  final List<SkillSet>? skillSets;
 
   SkillSetList({
-    this.SkillSets,
+    this.skillSets,
   });
 
   factory SkillSetList.fromJson(Map<String, dynamic> json) {
-    List<SkillSet> SkillSets = <SkillSet>[];
-    SkillSets = List.from(
-        json['result'].map((SkillSet) => SkillSet.fromMap(SkillSet)));
+    List<SkillSet> skillSets = <SkillSet>[];
+    skillSets = List.from(
+        json['result'].map((skillSet) => SkillSet.fromMap(skillSet)));
 
     return SkillSetList(
-      SkillSets: SkillSets,
+      skillSets: skillSets,
     );
   }
 }
