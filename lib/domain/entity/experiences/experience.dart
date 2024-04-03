@@ -1,3 +1,4 @@
+import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 
 class Experience {
@@ -7,7 +8,7 @@ class Experience {
   DateTime? startMonth;
   DateTime? endMonth;
   String? description;
-  List<TechStack>? techStacks;
+  List<SkillSet>? skillSets;
 
   Experience({
     this.id,
@@ -16,7 +17,7 @@ class Experience {
     this.startMonth,
     this.endMonth,
     this.description,
-    this.techStacks,
+    this.skillSets,
   });
 
   factory Experience.fromMap(Map<String, dynamic> json) => Experience(
@@ -26,9 +27,9 @@ class Experience {
         startMonth: DateTime.parse(json["startMonth"]),
         endMonth: DateTime.parse(json["endMonth"]),
         description: json["description"],
-        techStacks: json["techStacks"] != null
-            ? List<TechStack>.from(
-                json["techStacks"].map((x) => TechStack.fromMap(x)))
+        skillSets: json["skillSets"] != null
+            ? List<SkillSet>.from(
+                json["skillSets"].map((x) => SkillSet.fromMap(x)))
             : [],
       );
 
@@ -39,8 +40,8 @@ class Experience {
         "startMonth": startMonth!.toIso8601String(),
         "endMonth": endMonth!.toIso8601String(),
         "description": description,
-        "techStacks": techStacks != null
-            ? List<dynamic>.from(techStacks!.map((x) => x.toMap()))
+        "skillSets": skillSets != null
+            ? List<dynamic>.from(skillSets!.map((x) => x.toMap()))
             : [],
       };
 }
