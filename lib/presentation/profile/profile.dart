@@ -1,4 +1,6 @@
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/profile/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -7,6 +9,17 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final ProfileStore _profileStore = getIt<ProfileStore>();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // check to see if already called api
+    if (!_profileStore.loading) {
+      _profileStore.getProfile();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

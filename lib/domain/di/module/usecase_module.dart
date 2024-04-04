@@ -5,13 +5,13 @@ import 'package:boilerplate/domain/repository/educations/education_repository.da
 import 'package:boilerplate/domain/repository/experiences/experience_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profle_company_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
-import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
 import 'package:boilerplate/domain/usecase/education/get_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/education/udpate_education_by_student_id.dart';
@@ -25,6 +25,7 @@ import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/insert_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/udpate_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/project/get_projects_usecase.dart';
@@ -112,6 +113,10 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<UpdateExperienceByStudentIdUseCase>(
       UpdateExperienceByStudentIdUseCase(getIt<ExperienceRepository>()),
+    );
+
+    getIt.registerSingleton<GetProfileUseCase>(
+      GetProfileUseCase(getIt<ProfileUserRepository>()),
     );
   }
 }

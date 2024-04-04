@@ -6,6 +6,7 @@ import 'package:boilerplate/core/data/network/dio/interceptors/auth_interceptor.
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/profile/profile.dart';
 import 'package:dio/dio.dart';
 
 class ProfileApi {
@@ -37,6 +38,18 @@ class ProfileApi {
       log("cout<<createProfileCompany response");
       log(res.data.toString());
       return true;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
+
+  Future<Profile> getProfile() async {
+    try {
+      // final authToken = "Bearer ${token}";
+      final res = await _dioClient.dio.get(Endpoints.getProfile);
+      log("cout<<getProfile response");
+      log(res.data.toString());
+      return Profile.fromJson(res.data);
     } catch (e) {
       throw new Exception(e.toString());
     }
