@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/language/language_student.dart';
+import 'package:boilerplate/domain/entity/language/language_student_list.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecase.dart';
@@ -58,9 +60,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
+
+  final LanguageStudentList languages =
+      LanguageStudentList(languageStudents: []);
+
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   Color borderColor = Colors.black;
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +86,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
     // getEducationByStudentId();
     // getExperienceByStudentId();
 
-    createProfileStudent();
+    // createProfileStudent();
   }
 
   void getTechStacks() async {
@@ -418,10 +425,18 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.add,
-                          size: 17,
-                        ),
+                        child: Icon(Icons.add, size: 17),
+                        // ElevatedButton(
+                        //     child: Icon(Icons.add, size: 17),
+                        //     onPressed: _addLanguage,
+                        //     style: ButtonStyle(
+                        //       shape: MaterialStateProperty.all<
+                        //           RoundedRectangleBorder>(
+                        //         RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(999),
+                        //         ),
+                        //       ),
+                        //     )),
                       ),
                       const SizedBox(width: 10),
                       Container(
@@ -445,14 +460,18 @@ class _ProfileInput1State extends State<ProfileInput1> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        const Text(
-          'Ennglish: Native',
-          textAlign: TextAlign.start,
-          style: TextStyle(
-            fontSize: 15,
-          ),
-        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: languages.languageStudents!.map((language) {
+            return Text(
+              '${language.languageName}: ${language.level}',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            );
+          }).toList(),
+        )
       ],
     );
   }
@@ -511,6 +530,48 @@ class _ProfileInput1State extends State<ProfileInput1> {
         buildEducationItem(context, 1),
         buildEducationItem(context, 2)
       ],
+    );
+  }
+
+  void _addLanguage() {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController levelController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add a language'),
+          content: Column(
+            children: <Widget>[
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(hintText: "Language name"),
+              ),
+              TextField(
+                controller: levelController,
+                decoration: InputDecoration(hintText: "Language level"),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Done'),
+              onPressed: () {
+                setState(() {
+                  // Replace this with your actual code to add the language to the list
+                  languages.languageStudents!.add(LanguageStudent(
+                    id: null,
+                    languageName: nameController.text,
+                    level: levelController.text,
+                  ));
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
