@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
@@ -39,6 +40,10 @@ class _ProfileInput1State extends State<ProfileInput1> {
   List<TechStack> techStacks = [];
   int? techStacksValue;
 
+  final GetSkillSetUC _getSkillSetUC = getIt<GetSkillSetUC>();
+  List<SkillSet> skillSets = [];
+  int? skillSetId;
+
   final GetLanguageByStudentIdUseCase _getLanguageByStudentIdUseCase =
       getIt<GetLanguageByStudentIdUseCase>();
 
@@ -48,14 +53,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final GetExperienceByStudentIdUseCase _getExperienceByStudentIdUseCase =
       getIt<GetExperienceByStudentIdUseCase>();
 
+  final CreateProfileStudentUC _createProfileStudentUC =
+      getIt<CreateProfileStudentUC>();
+
   final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   Color borderColor = Colors.black;
-  final GetSkillSetUC _getSkillSetUC = getIt<GetSkillSetUC>();
-  List<SkillSet> skillSets = [];
-  int? skillSetId;
   @override
   void initState() {
     super.initState();
@@ -72,7 +77,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
     // getLanguageByStudentId();
     // getEducationByStudentId();
-    getExperienceByStudentId();
+    // getExperienceByStudentId();
+
+    createProfileStudent();
   }
 
   void getTechStacks() async {
@@ -106,6 +113,15 @@ class _ProfileInput1State extends State<ProfileInput1> {
     // setState(() {
     //   experienceList = experienceList;
     // });
+  }
+
+  void createProfileStudent() async {
+    final result = await _createProfileStudentUC.call(
+        params: CreateProfileStudentParams(
+      techStackId: 1,
+      skillSets: ['1', '2'],
+    ));
+    log(result.toString());
   }
 
   @override
