@@ -27,7 +27,8 @@ import 'package:boilerplate/domain/usecase/post/find_post_by_id_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/insert_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/udpate_post_usecase.dart';
-import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/create_profile_company_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecase.dart';
 
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';

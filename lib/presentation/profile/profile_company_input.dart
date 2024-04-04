@@ -1,4 +1,4 @@
-import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/create_profile_company_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_company.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
@@ -28,31 +28,31 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
       "id": 0,
       "value": false,
       "title": "It's just me",
-      "size":0,
+      "size": 0,
     },
     {
       "id": 1,
       "value": false,
       "title": "2-9 employees",
-      "size":1,
+      "size": 1,
     },
     {
       "id": 2,
       "value": false,
       "title": "10-99 employees",
-      "size":2,
+      "size": 2,
     },
     {
       "id": 3,
       "value": false,
       "title": "100-1000 employees",
-      "size":3,
+      "size": 3,
     },
     {
       "id": 4,
       "value": false,
       "title": "More than 1000 employees",
-      "size":4,
+      "size": 4,
     },
   ];
 
@@ -66,9 +66,10 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
     _createProfileCompanyUC.call(
         params: CreateProfileCompanyParams(
             companyName: _companyNameController.text,
-             size: checkListItems.firstWhere((element) => element["value"] == true)["size"],
-              website: _companyWebsiteController.text,
-               description: _companyDescriptionController.text));
+            size: checkListItems
+                .firstWhere((element) => element["value"] == true)["size"],
+            website: _companyWebsiteController.text,
+            description: _companyDescriptionController.text));
   }
 
   @override

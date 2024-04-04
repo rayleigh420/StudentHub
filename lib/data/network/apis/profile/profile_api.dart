@@ -41,9 +41,9 @@ class ProfileApi {
       throw new Exception(e.toString());
     }
   }
-  Future<bool> createProfileStudent(int techStackId,
-     List<String> skillSets,
-      String token) async {
+
+  Future<bool> createProfileStudent(
+      int techStackId, List<String> skillSets, String token) async {
     try {
       // final token = await getIt<SharedPreferenceHelper>().authToken;
       final authToken = "Bearer ${token}";
@@ -53,7 +53,6 @@ class ProfileApi {
           data: {
             'techStackId': techStackId,
             'skillSets': skillSets,
-           
           },
           options: Options(
             headers: {

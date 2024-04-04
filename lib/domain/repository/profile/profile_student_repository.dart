@@ -1,7 +1,3 @@
 abstract class ProfileStudentRepository {
-  Future<bool> createProfileStudent(
-    int techStackId,
-    List<String> skillSets
-
-  );
+  Future<bool> createProfileStudent(int techStackId, List<String> skillSets);
 }
