@@ -30,7 +30,7 @@ class Endpoints {
   static const String getTechStacks =
       baseUrl + "/api/techStack/getAllTechStack";
 
-  // skillset endpoints
+  // Skillset endpoints
   static const String getSkillSets = baseUrl + "/api/skillset/getAllSkillSet";
 
   // Language endpoints
