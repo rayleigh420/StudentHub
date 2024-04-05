@@ -32,11 +32,12 @@ class Company {
   factory Company.fromJson(Map<String, dynamic> map) {
     return Company(
       id: map['id'],
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
-      deletedAt: DateTime.parse(map['deleted_at']),
-      userId: map['user_id'],
-      companyName: map['company_name'],
+      createdAt: DateTime.parse(map['createdAt']),
+      updatedAt: DateTime.parse(map['updatedAt']),
+      deletedAt:
+          map['deletedAt'] != null ? DateTime.parse(map['deletedAt']) : null,
+      userId: map['userId'],
+      companyName: map['companyName'],
       website: map['website'],
       size: map['size'],
       description: map['description'],
@@ -46,14 +47,27 @@ class Company {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
-      'user_id': userId,
-      'company_name': companyName,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'deletedAt': deletedAt?.toIso8601String(),
+      'userId': userId,
+      'companyName': companyName,
       'website': website,
       'size': size,
       'description': description,
     };
+  }
+
+  void getTypes() {
+    print('Company');
+    print('id: ${id.runtimeType}');
+    print('createdAt: ${createdAt.runtimeType}');
+    print('updatedAt: ${updatedAt.runtimeType}');
+    print('deletedAt: ${deletedAt?.runtimeType}');
+    print('userId: ${userId.runtimeType}');
+    print('companyName: ${companyName.runtimeType}');
+    print('website: ${website.runtimeType}');
+    print('size: ${size.runtimeType}');
+    print('description: ${description.runtimeType}');
   }
 }

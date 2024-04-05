@@ -88,6 +88,7 @@ mixin RepositoryModule {
     // Profile User
     getIt.registerSingleton<ProfileUserRepository>(ProfileUserRepositoryImpl(
       getIt<ProfileApi>(),
+      getIt<SharedPreferenceHelper>(),
     ));
   }
 }

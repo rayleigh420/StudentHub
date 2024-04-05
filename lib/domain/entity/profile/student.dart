@@ -21,11 +21,12 @@ class Student {
   factory Student.fromJson(Map<String, dynamic> map) {
     return Student(
       id: map['id'],
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
-      deletedAt: DateTime.parse(map['deleted_at']),
-      userId: map['user_id'],
-      techStackId: map['tech_stack_id'],
+      createdAt: DateTime.parse(map['createdAt']),
+      updatedAt: DateTime.parse(map['updatedAt']),
+      deletedAt:
+          map['deletedAt'] != null ? DateTime.parse(map['deletedAt']) : null,
+      userId: map['userId'],
+      techStackId: map['techStackId'],
       resume: map['resume'],
     );
   }
@@ -33,11 +34,11 @@ class Student {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
-      'user_id': userId,
-      'tech_stack_id': techStackId,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'deletedAt': deletedAt?.toIso8601String(),
+      'userId': userId,
+      'techStackId': techStackId,
       'resume': resume,
     };
   }

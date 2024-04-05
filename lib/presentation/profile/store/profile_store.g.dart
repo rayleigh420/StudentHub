@@ -15,6 +15,13 @@ mixin _$ProfileStore on _ProfileStore, Store {
   bool get loading => (_$loadingComputed ??=
           Computed<bool>(() => super.loading, name: '_ProfileStore.loading'))
       .value;
+  Computed<String>? _$userRoleComputed;
+
+  @override
+  String get userRole =>
+      (_$userRoleComputed ??= Computed<String>(() => super.userRole,
+              name: '_ProfileStore.userRole'))
+          .value;
 
   late final _$fetchProfileFutureAtom =
       Atom(name: '_ProfileStore.fetchProfileFuture', context: context);
@@ -78,7 +85,8 @@ mixin _$ProfileStore on _ProfileStore, Store {
 fetchProfileFuture: ${fetchProfileFuture},
 profile: ${profile},
 success: ${success},
-loading: ${loading}
+loading: ${loading},
+userRole: ${userRole}
     ''';
   }
 }

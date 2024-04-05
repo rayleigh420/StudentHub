@@ -48,10 +48,12 @@ class ProfileApi {
       // final authToken = "Bearer ${token}";
       final res = await _dioClient.dio.get(Endpoints.getProfile);
       log("cout<<getProfile response");
-      log(res.data.toString());
-      return Profile.fromJson(res.data);
+      print(res.data["result"].toString());
+      return Profile.fromJson(res.data["result"]);
     } catch (e) {
-      throw new Exception(e.toString());
+      log(e.toString());
+      throw e;
+      // throw new Exception(e.toString());
     }
   }
 }
