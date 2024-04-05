@@ -6,7 +6,9 @@ import 'package:boilerplate/domain/entity/language/language_student.dart';
 import 'package:boilerplate/domain/entity/language/language_student_list.dart';
 import 'package:boilerplate/domain/entity/educations/education_list.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
+import 'package:boilerplate/domain/usecase/education/udpate_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
@@ -52,8 +54,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final GetLanguageByStudentIdUseCase _getLanguageByStudentIdUseCase =
       getIt<GetLanguageByStudentIdUseCase>();
 
+  final UpdateLanguageByStudentIdUseCase _updateLanguageByStudentIdUseCase =
+      getIt<UpdateLanguageByStudentIdUseCase>();
+
   final GetEducationByStudentIdUseCase _getEducationByStudentIdUseCase =
       getIt<GetEducationByStudentIdUseCase>();
+
+  final UpdateEducationByStudentIdUseCase _updateEducationByStudentIdUseCase =
+      getIt<UpdateEducationByStudentIdUseCase>();
 
   final GetExperienceByStudentIdUseCase _getExperienceByStudentIdUseCase =
       getIt<GetExperienceByStudentIdUseCase>();
@@ -83,7 +91,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
       borderColor = Colors.black;
     }
 
-    // getTechStacks();
+    getTechStacks();
     getSkillSet();
 
     // getLanguageByStudentId();
@@ -126,11 +134,21 @@ class _ProfileInput1State extends State<ProfileInput1> {
     // });
   }
 
+  void updateLanguageByStudentId() async {
+    final result =
+        await _updateLanguageByStudentIdUseCase.call(params: languages);
+  }
+
+  void updateEducationByStudentId() async {
+    final result =
+        await _updateEducationByStudentIdUseCase.call(params: educations);
+  }
+
   void createProfileStudent() async {
     final result = await _createProfileStudentUC.call(
         params: CreateProfileStudentParams(
-      techStackId: 1,
-      skillSets: ['1', '2'],
+      techStackId: techStacksValue!,
+      skillSets: skills.map((skill) => skill.id!.toString()).toList(),
     ));
     log(result.toString());
   }
@@ -725,6 +743,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
         children: [
           ElevatedButton(
             onPressed: () {
+              createProfileStudent();
               log("push");
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
