@@ -30,4 +30,46 @@ class ProjectApi {
       throw new Exception(e.toString());
     }
   }
+
+  Future<ProjectList> getProjectsCompany(int companyId) async {
+    try {
+      // final token = await getIt<SharedPreferenceHelper>().authToken;
+      final res = await _dioClient.dio.get(
+        Endpoints.getProjectCompany + "/" + companyId.toString(),
+      );
+      log("cdc");
+      log(res.data["result"].toString());
+      log(res.data["result"].runtimeType.toString());
+      return ProjectList.fromJson(res.data["result"]);
+    } catch (e) {
+      log("error in get projects api");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
+
+  Future<Project> postProject(String title, int scopeType, int studentNumber,
+      String describeProject, int companyId) async {
+    try {
+      final res = await _dioClient.dio.post(
+        Endpoints.createProject,
+        data: jsonEncode({
+          "companyId": companyId,
+          "title": title,
+          "projectScopeFlag": scopeType,
+          "numberOfStudents": studentNumber,
+          "description": describeProject,
+          "typeFlag": 0
+        }),
+      );
+      log("cdc2");
+      log(res.data["result"].toString());
+      log(res.data["result"].runtimeType.toString());
+      return Project.fromJson(res.data["result"]);
+    } catch (e) {
+      log("error in get projects api");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
 }

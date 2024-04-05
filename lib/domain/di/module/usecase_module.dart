@@ -28,7 +28,9 @@ import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
+import 'package:boilerplate/domain/usecase/project/get_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_projects_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
@@ -118,5 +120,11 @@ mixin UseCaseModule {
     getIt.registerSingleton<GetProfileUseCase>(
       GetProfileUseCase(getIt<ProfileUserRepository>()),
     );
+
+    getIt.registerSingleton<GetCompanyProjectsUseCase>(
+      GetCompanyProjectsUseCase(getIt<ProjectRepository>()),
+    );
+    getIt.registerSingleton<PostCompanyProjectsUseCase>(
+        PostCompanyProjectsUseCase(getIt<ProjectRepository>()));
   }
 }

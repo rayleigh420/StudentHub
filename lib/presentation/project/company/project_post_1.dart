@@ -1,5 +1,6 @@
 import 'package:boilerplate/core/widgets/appBar.dart';
 import 'package:boilerplate/presentation/project/company/project_post_2.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ class ProjectPost1 extends StatefulWidget {
 }
 
 class _ProjectPost1State extends State<ProjectPost1> {
+  final TextEditingController _titleController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +44,10 @@ class _ProjectPost1State extends State<ProjectPost1> {
                     height: 10,
                   ),
                   TextField(
+                    controller: _titleController,
+                    onTapOutside: (event) {
+                      DeviceUtils.hideKeyboard(context);
+                    },
                     decoration: InputDecoration(
                       hintText: 'Write a title for jour post',
                     ),
@@ -74,9 +81,11 @@ class _ProjectPost1State extends State<ProjectPost1> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(
-                                  builder: (context) => ProjectPost2(),
+                          Navigator.of(context, rootNavigator: true)
+                              .push(MaterialPageRoute(
+                                  builder: (context) => ProjectPost2(
+                                        title: _titleController.text,
+                                      ),
                                   maintainState: false));
                           // Navigator.pushNamed(context, '/project_post_2');
                         },

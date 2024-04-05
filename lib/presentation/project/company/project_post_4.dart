@@ -1,14 +1,26 @@
+import 'dart:developer';
+
 import 'package:boilerplate/core/widgets/appBar.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
+import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProjectPost4 extends StatefulWidget {
+  final String? title;
+  final int? scopeType;
+  final int? studentNumber;
+  final String? describeProject;
+  ProjectPost4(
+      {this.title, this.scopeType, this.studentNumber, this.describeProject});
   @override
   _ProjectPost4State createState() => _ProjectPost4State();
 }
 
 class _ProjectPost4State extends State<ProjectPost4> {
+  final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +46,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                     height: 15,
                   ),
                   Text(
-                    "Title of the job",
+                    widget.title!,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                   Container(
@@ -91,7 +103,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                         children: [
                           Text("Project scope"),
                           Text(
-                            "- 3 to 6 month",
+                            "- ${widget.scopeType == 0 ? "One to Three Months" : "Three to Six Months"}",
                             style: TextStyle(fontSize: 14),
                           )
                         ],
@@ -116,7 +128,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                         children: [
                           Text("Student required:"),
                           Text(
-                            "- 6 students",
+                            "- ${widget.studentNumber} students",
                             style: TextStyle(fontSize: 14),
                           )
                         ],
@@ -130,7 +142,21 @@ class _ProjectPost4State extends State<ProjectPost4> {
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
-                        onPressed: () {},
+                        onPressed: () {
+                          log("${widget.title} ${widget.scopeType} ${widget.studentNumber} ${widget.describeProject}");
+                          _projectCompanyStore.postCompanyProjects(
+                              widget.title!,
+                              widget.scopeType!,
+                              widget.studentNumber!,
+                              widget.describeProject!);
+                          Navigator.of(context, rootNavigator: true)
+                              .push(MaterialPageRoute(
+                                  builder: (context) => AppBottomNavigationBar(
+                                        isStudent: false,
+                                        selectedIndex: 2,
+                                      ),
+                                  maintainState: false));
+                        },
                         child: const Text(
                             style: TextStyle(fontSize: 16), "Post job")),
                   ),

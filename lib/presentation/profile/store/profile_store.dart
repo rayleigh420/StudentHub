@@ -30,6 +30,9 @@ abstract class _ProfileStore with Store {
   @computed
   bool get loading => fetchProfileFuture.status == FutureStatus.pending;
 
+  @computed
+  String get userRole => profile?.student != null ? 'student' : 'company';
+
   @action
   Future getProfile() async {
     final future = _getProfileUseCase.call(params: null);

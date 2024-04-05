@@ -34,4 +34,21 @@ class Profile {
       'company': company?.toJson(),
     };
   }
+
+  String toString() {
+    return 'Profile(id: $id, fullname: $fullname, roles: $roles, student: $student, company: $company)';
+  }
+
+  void getTypes() {
+    print('Profile');
+    print('id: ${id.runtimeType}');
+    print('fullname: ${fullname.runtimeType}');
+    print('roles: ${roles.runtimeType}');
+    if (student != null) {
+      // student?.getTypes();
+    } else {
+      company?.getTypes();
+    }
+    // print('company: ${company?.runtimeType}');
+  }
 }

@@ -25,7 +25,7 @@ class Endpoints {
   static const String createProject = baseUrl + "/api/project";
   static const String getProjects = baseUrl + "/api/project";
   static const String getProjectById = baseUrl + "/api/project";
-
+  static const String getProjectCompany = baseUrl + "/api/project/company";
   // TechStack endpoints
   static const String getTechStacks =
       baseUrl + "/api/techStack/getAllTechStack";
