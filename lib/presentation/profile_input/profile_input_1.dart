@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/educations/education.dart';
 import 'package:boilerplate/domain/entity/language/language_student.dart';
 import 'package:boilerplate/domain/entity/language/language_student_list.dart';
+import 'package:boilerplate/domain/entity/educations/education_list.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecase.dart';
@@ -63,6 +65,8 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
   final LanguageStudentList languages =
       LanguageStudentList(languageStudents: []);
+
+  final EducationList educations = EducationList(educations: []);
 
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -513,10 +517,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.add,
-                          size: 17,
-                          weight: 100,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.add,
+                            size: 17,
+                            weight: 100,
+                          ),
+                          onPressed: _addEducation,
                         ),
                       ),
                     ],
@@ -527,8 +534,12 @@ class _ProfileInput1State extends State<ProfileInput1> {
           ),
         ),
         const SizedBox(height: 16),
-        buildEducationItem(context, 1),
-        buildEducationItem(context, 2)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: educations.educations!.map((education) {
+            return buildEducationItem(context, education);
+          }).toList(),
+        )
       ],
     );
   }
@@ -575,7 +586,55 @@ class _ProfileInput1State extends State<ProfileInput1> {
     );
   }
 
-  Widget buildEducationItem(BuildContext context, int index) {
+  void _addEducation() {
+    final TextEditingController schoolController = TextEditingController();
+    final TextEditingController startYearController = TextEditingController();
+    final TextEditingController endYearController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add education'),
+          content: Column(
+            children: <Widget>[
+              TextField(
+                controller: schoolController,
+                decoration: InputDecoration(hintText: "School name"),
+              ),
+              TextField(
+                controller: startYearController,
+                decoration: InputDecoration(hintText: "Start year"),
+              ),
+              TextField(
+                controller: endYearController,
+                decoration: InputDecoration(hintText: "End year"),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Done'),
+              onPressed: () {
+                setState(() {
+                  // Replace this with your actual code to add the education to the list
+                  educations.educations!.add(Education(
+                    id: null,
+                    schoolName: schoolController.text,
+                    startYear: DateTime(int.parse(startYearController.text)),
+                    endYear: DateTime(int.parse(endYearController.text)),
+                  ));
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildEducationItem(BuildContext context, Education education) {
     return Container(
       margin: EdgeInsets.only(bottom: 15),
       child: Row(
@@ -584,7 +643,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Le Hong Phong High School',
+                education.schoolName!,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 15,
@@ -592,7 +651,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
               ),
               const SizedBox(height: 10),
               Text(
-                '2009-2010',
+                '${education.startYear!.year} - ${education.endYear!.year}',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 15,
@@ -632,10 +691,18 @@ class _ProfileInput1State extends State<ProfileInput1> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                     padding: const EdgeInsets.all(4.0),
-                    child: Icon(
-                      Icons.delete,
-                      size: 17,
-                      weight: 100,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        size: 17,
+                        weight: 100,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          educations.educations!.removeWhere((item) =>
+                              item.schoolName == education.schoolName);
+                        });
+                      },
                     ),
                   ),
                 ],
