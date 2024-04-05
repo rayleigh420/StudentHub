@@ -47,6 +47,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final GetSkillSetUC _getSkillSetUC = getIt<GetSkillSetUC>();
   List<SkillSet> skillSets = [];
   int? skillSetId;
+  final List<SkillSet> skills = [];
 
   final GetLanguageByStudentIdUseCase _getLanguageByStudentIdUseCase =
       getIt<GetLanguageByStudentIdUseCase>();
@@ -60,7 +61,6 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final CreateProfileStudentUC _createProfileStudentUC =
       getIt<CreateProfileStudentUC>();
 
-  final List<String> skillsets = [];
   final TextEditingController skillSetTextController = TextEditingController();
 
   final LanguageStudentList languages =
@@ -84,7 +84,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
     }
 
     // getTechStacks();
-    // getSkillSet();
+    getSkillSet();
 
     // getLanguageByStudentId();
     // getEducationByStudentId();
@@ -146,11 +146,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
   void getSkillSet() async {
     final skillSetList = await _getSkillSetUC.call(params: null);
-    // log(skillSetList.SkillSets.toString());
 
     setState(() {
       skillSets = skillSetList.SkillSets!;
-      skillSetId = skillSets.first.id;
     });
     // log(techStackList.techStacks.toString());
   }
@@ -299,18 +297,23 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
   void addSkillSet() {
     final newSkillSet = skillSetTextController.text.trim();
-    if (newSkillSet.isNotEmpty && !skillsets.contains(newSkillSet)) {
+    if (newSkillSet.isNotEmpty &&
+        skillSets.any((skill) => skill.name == newSkillSet) &&
+        !skills.any((skill) => skill.name == newSkillSet)) {
+      print("Hello");
       setState(() {
-        skillsets.add(newSkillSet);
+        skills.add(skillSets.firstWhere((skill) => skill.name == newSkillSet));
       });
       skillSetTextController.clear();
       skillSetFocusNode.requestFocus();
     }
+    skillSetTextController.clear();
+    skillSetFocusNode.requestFocus();
   }
 
   void _removeTag(int index) {
     setState(() {
-      skillsets.removeAt(index);
+      skills.removeWhere((skill) => skill.id! == index);
     });
   }
 
@@ -321,7 +324,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
           spacing: 8.0,
           runSpacing: 8.0,
           children: List<Widget>.generate(
-            skillsets.length,
+            skills.length,
             (i) => buildSkillsetItem(context, i),
           ),
         ),
@@ -342,16 +345,16 @@ class _ProfileInput1State extends State<ProfileInput1> {
         children: [
           Wrap(
             children: [
-              for (int i = 0; i < skillsets.length; i++)
+              for (int i = 0; i < skills.length; i++)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Chip(
-                    label: Text(skillsets[i]),
+                    label: Text(skills[i].name!),
                     deleteIcon: Icon(
                       Icons.close,
                       size: 15,
                     ),
-                    onDeleted: () => _removeTag(i),
+                    onDeleted: () => _removeTag(skills[i].id!),
                   ),
                 ),
               Row(
@@ -385,9 +388,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Chip(
-        label: Text(skillsets[i]),
+        label: Text(skills[i].name!),
         deleteIcon: Icon(Icons.close),
-        onDeleted: () => _removeTag(i),
+        onDeleted: () => _removeTag(skills[i].id!),
       ),
     );
   }
