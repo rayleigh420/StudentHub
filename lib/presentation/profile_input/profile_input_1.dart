@@ -150,7 +150,12 @@ class _ProfileInput1State extends State<ProfileInput1> {
       techStackId: techStacksValue!,
       skillSets: skills.map((skill) => skill.id!.toString()).toList(),
     ));
-    log(result.toString());
+    // log(result.toString());
+
+    if (result) {
+      updateLanguageByStudentId();
+      updateEducationByStudentId();
+    }
   }
 
   @override
@@ -450,7 +455,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(Icons.add, size: 17),
+                        child: IconButton(
+                            icon: Icon(Icons.add, size: 17),
+                            onPressed: _addLanguage),
                         // ElevatedButton(
                         //     child: Icon(Icons.add, size: 17),
                         //     onPressed: _addLanguage,
