@@ -25,11 +25,11 @@ class LanguageApi {
   Future<LanguageStudentList> updateLanguageByStudentId(
       int studentId, LanguageStudentList languageStudentList) async {
     try {
-      final res = await _dioClient.dio.put(
-          '${Endpoints.getLanguages}/$studentId',
-          data: languageStudentList.languageStudents!
-              .map((e) => e.toMap())
-              .toList());
+      final res = await _dioClient.dio
+          .put('${Endpoints.updateLanguage}/$studentId', data: {
+        'languages':
+            languageStudentList.languageStudents!.map((e) => e.toMap()).toList()
+      });
       return LanguageStudentList.fromJson(res.data);
     } catch (e) {
       print(e.toString());

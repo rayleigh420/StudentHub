@@ -6,7 +6,7 @@ class EducationRepositoryImpl extends EducationRepository {
   final EducationApi _educationApi;
 
   // Use shareHelper to get student id
-  int studentId = 42;
+  int studentId = 23;
 
   EducationRepositoryImpl(this._educationApi);
 
