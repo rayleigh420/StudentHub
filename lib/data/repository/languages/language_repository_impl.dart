@@ -6,7 +6,7 @@ class LanguageRepositoryImpl extends LanguageRepository {
   final LanguageApi _languageApi;
 
   // Use shareHelper to get student id
-  int studentId = 42;
+  int studentId = 23;
 
   LanguageRepositoryImpl(this._languageApi);
 

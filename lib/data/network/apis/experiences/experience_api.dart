@@ -24,9 +24,10 @@ class ExperienceApi {
   Future<ExperienceList> updateExperienceByStudentId(
       int studentId, ExperienceList experienceList) async {
     try {
-      final res = await _dioClient.dio.put(
-          '${Endpoints.getExperiences}/$studentId',
-          data: experienceList.experiences!.map((e) => e.toMap()).toList());
+      final res = await _dioClient.dio
+          .put('${Endpoints.updateLanguage}/$studentId', data: {
+        'experience': experienceList.experiences!.map((e) => e.toMap()).toList()
+      });
       return ExperienceList.fromJson(res.data);
     } catch (e) {
       print(e.toString());

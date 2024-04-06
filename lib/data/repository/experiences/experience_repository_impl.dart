@@ -6,7 +6,7 @@ class ExperienceRepositoryImpl extends ExperienceRepository {
   final ExperienceApi _experienceApi;
 
   // Use shareHelper to get student id
-  int studentId = 42;
+  int studentId = 151;
 
   ExperienceRepositoryImpl(this._experienceApi);
 
