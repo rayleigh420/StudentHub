@@ -145,14 +145,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
   }
 
   void createProfileStudent() async {
-    final result = await _createProfileStudentUC.call(
-        params: CreateProfileStudentParams(
-      techStackId: techStacksValue!,
-      skillSets: skills.map((skill) => skill.id!.toString()).toList(),
-    ));
-    // log(result.toString());
+    // final result = await _createProfileStudentUC.call(
+    //     params: CreateProfileStudentParams(
+    //   techStackId: techStacksValue!,
+    //   skillSets: skills.map((skill) => skill.id!.toString()).toList(),
+    // ));
 
-    if (result) {
+    if (true) {
       updateLanguageByStudentId();
       updateEducationByStudentId();
     }
@@ -580,18 +579,28 @@ class _ProfileInput1State extends State<ProfileInput1> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add a language'),
-          content: Column(
-            children: <Widget>[
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(hintText: "Language name"),
-              ),
-              TextField(
-                controller: levelController,
-                decoration: InputDecoration(hintText: "Language level"),
-              ),
-            ],
+          title: Center(
+              child: Container(
+            child: Text(
+              'Add a language',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          )),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 2 / 3,
+            width: MediaQuery.of(context).size.width * 14 / 15,
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(hintText: "Language name"),
+                ),
+                TextField(
+                  controller: levelController,
+                  decoration: InputDecoration(hintText: "Language level"),
+                ),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -623,22 +632,32 @@ class _ProfileInput1State extends State<ProfileInput1> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add education'),
-          content: Column(
-            children: <Widget>[
-              TextField(
-                controller: schoolController,
-                decoration: InputDecoration(hintText: "School name"),
-              ),
-              TextField(
-                controller: startYearController,
-                decoration: InputDecoration(hintText: "Start year"),
-              ),
-              TextField(
-                controller: endYearController,
-                decoration: InputDecoration(hintText: "End year"),
-              ),
-            ],
+          title: Center(
+              child: Container(
+            child: Text(
+              'Add a education',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          )),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 2 / 3,
+            width: MediaQuery.of(context).size.width * 14 / 15,
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: schoolController,
+                  decoration: InputDecoration(hintText: "School name"),
+                ),
+                TextField(
+                  controller: startYearController,
+                  decoration: InputDecoration(hintText: "Start year"),
+                ),
+                TextField(
+                  controller: endYearController,
+                  decoration: InputDecoration(hintText: "End year"),
+                ),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(

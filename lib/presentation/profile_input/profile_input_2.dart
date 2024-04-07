@@ -61,7 +61,7 @@ class _ProfileInput2State extends State<ProfileInput2> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(
-              height: DeviceUtils.getScaledHeight(context, 0.80),
+              height: DeviceUtils.getScaledHeight(context, 0.9),
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Container(
