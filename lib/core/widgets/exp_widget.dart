@@ -1,5 +1,8 @@
 import 'package:boilerplate/core/widgets/skill_set_widget.dart';
+import 'package:boilerplate/domain/entity/experiences/experience.dart';
+import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ExpItem {
   final String title;
@@ -12,15 +15,17 @@ class ExpItem {
 class ExpWidget extends StatefulWidget {
   final Color borderColor;
   final String educationText;
-  final List<ExpItem> educationItems;
+  final List<Experience> experienceItems;
+  Function addExperience;
 
   final bool isProject;
 
   ExpWidget(
       {required this.borderColor,
       required this.educationText,
-      required this.educationItems,
-      required this.isProject});
+      required this.experienceItems,
+      required this.isProject,
+      required this.addExperience});
 
   @override
   _ExpWidgetState createState() => _ExpWidgetState();
@@ -84,7 +89,7 @@ class _ExpWidgetState extends State<ExpWidget> {
           ),
         ),
         const SizedBox(height: 16),
-        for (var item in widget.educationItems) buildExpItem(context, item),
+        for (var item in widget.experienceItems) buildExpItem(context, item),
       ],
     );
   }
@@ -92,9 +97,13 @@ class _ExpWidgetState extends State<ExpWidget> {
   void _addExperience() {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
+    List<SkillSet> skills = [];
 
     DateTime? startMonth;
     DateTime? endMonth;
+
+    final startMonthController = TextEditingController();
+    final endMonthController = TextEditingController();
 
     void _selectDate(BuildContext context, bool isStartMonth) async {
       final DateTime? picked = await showDatePicker(
@@ -107,10 +116,16 @@ class _ExpWidgetState extends State<ExpWidget> {
         setState(() {
           if (isStartMonth) {
             startMonth = picked;
+            startMonthController.text = DateFormat('yyyy-MM-dd').format(picked);
           } else {
             endMonth = picked;
+            endMonthController.text = DateFormat('yyyy-MM-dd').format(picked);
           }
         });
+    }
+
+    void changeSkillSet(List<SkillSet> skillSet) {
+      skills = skillSet;
     }
 
     showDialog(
@@ -125,7 +140,7 @@ class _ExpWidgetState extends State<ExpWidget> {
             ),
           )),
           content: Container(
-            height: MediaQuery.of(context).size.height * 2 / 3,
+            height: MediaQuery.of(context).size.height * 1 / 2,
             width: MediaQuery.of(context).size.width * 14 / 15,
             child: Column(
               children: <Widget>[
@@ -140,19 +155,19 @@ class _ExpWidgetState extends State<ExpWidget> {
                 TextField(
                   readOnly: true,
                   onTap: () => _selectDate(context, true),
-                  controller: TextEditingController(
-                      text: startMonth?.toIso8601String()),
+                  controller: startMonthController,
                   decoration: InputDecoration(hintText: "Start Month"),
                 ),
                 TextField(
                   readOnly: true,
                   onTap: () => _selectDate(context, false),
-                  controller:
-                      TextEditingController(text: endMonth?.toIso8601String()),
+                  controller: endMonthController,
                   decoration: InputDecoration(hintText: "End Month"),
                 ),
                 SizedBox(height: 20.0),
-                SkillSetWidget(borderColor: widget.borderColor)
+                SkillSetWidget(
+                    borderColor: widget.borderColor,
+                    changeSkillSet: changeSkillSet)
               ],
             ),
           ),
@@ -160,13 +175,14 @@ class _ExpWidgetState extends State<ExpWidget> {
             TextButton(
               child: Text('Done'),
               onPressed: () {
-                setState(() {
-                  // Replace this with your actual code to add the experience to the list
-                  // experiences.add(Experience(
-                  //   title: titleController.text,
-                  //   description: descriptionController.text,
-                  // ));
-                });
+                widget.addExperience(Experience(
+                  id: null,
+                  title: titleController.text,
+                  description: descriptionController.text,
+                  startMonth: startMonth,
+                  endMonth: endMonth,
+                  skillSets: skills,
+                ));
                 Navigator.of(context).pop();
               },
             ),
@@ -176,7 +192,7 @@ class _ExpWidgetState extends State<ExpWidget> {
     );
   }
 
-  Widget buildExpItem(BuildContext context, ExpItem item) {
+  Widget buildExpItem(BuildContext context, Experience item) {
     return Container(
         margin: EdgeInsets.only(bottom: 15),
         child: Column(
@@ -187,7 +203,7 @@ class _ExpWidgetState extends State<ExpWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.title,
+                      item.title!,
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: 15,
@@ -195,7 +211,7 @@ class _ExpWidgetState extends State<ExpWidget> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      item.time,
+                      '${DateFormat('yyyy-MM-dd').format(item.startMonth!)} - ${DateFormat('yyyy-MM-dd').format(item.endMonth!)}',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: 15,
@@ -253,105 +269,11 @@ class _ExpWidgetState extends State<ExpWidget> {
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 20.0),
-                SkillSetWidget(borderColor: widget.borderColor)
+                SkillSetWidget(
+                    borderColor: widget.borderColor, skillPrev: item.skillSets!)
               ],
             )
           ],
         ));
   }
-
-  // void addSkillSet() {
-  //   final newSkillSet = skillSetTextController.text.trim();
-  //   if (newSkillSet.isNotEmpty && !skillsets.contains(newSkillSet)) {
-  //     setState(() {
-  //       skillsets.add(newSkillSet);
-  //     });
-  //     skillSetTextController.clear();
-  //     skillSetFocusNode.requestFocus();
-  //   }
-  // }
-
-  // void _removeTag(int index) {
-  //   setState(() {
-  //     skillsets.removeAt(index);
-  //   });
-  // }
-
-  // Widget buildTags(BuildContext context) {
-  //   return Row(
-  //     children: [
-  //       Wrap(
-  //         spacing: 8.0,
-  //         runSpacing: 8.0,
-  //         children: List<Widget>.generate(
-  //           skillsets.length,
-  //           (i) => buildSkillsetItem(context, i),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget buildSkillsetSection(BuildContext context, Color borderColor) {
-  //   return Container(
-  //     padding: const EdgeInsets.all(8.0),
-  //     decoration: BoxDecoration(
-  //       border: Border.all(
-  //         color: borderColor,
-  //         width: 1,
-  //       ),
-  //     ),
-  //     child: Column(
-  //       children: [
-  //         Wrap(
-  //           children: [
-  //             for (int i = 0; i < skillsets.length; i++)
-  //               Padding(
-  //                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-  //                 child: Chip(
-  //                   label: Text(skillsets[i]),
-  //                   deleteIcon: Icon(
-  //                     Icons.close,
-  //                     size: 15,
-  //                   ),
-  //                   onDeleted: () => _removeTag(i),
-  //                 ),
-  //               ),
-  //             Row(
-  //               children: [
-  //                 Expanded(
-  //                   child: TextField(
-  //                     focusNode: skillSetFocusNode,
-  //                     onTapOutside: (event) {
-  //                       FocusScope.of(context).unfocus();
-  //                     },
-  //                     controller: skillSetTextController,
-  //                     decoration: InputDecoration(
-  //                       border: InputBorder.none,
-  //                       hintText: 'Enter a tag',
-  //                     ),
-  //                     onSubmitted: (_) {
-  //                       addSkillSet();
-  //                     },
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ],
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget buildSkillsetItem(BuildContext context, int i) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 4.0),
-  //     child: Chip(
-  //       label: Text(skillsets[i]),
-  //       deleteIcon: Icon(Icons.close),
-  //       onDeleted: () => _removeTag(i),
-  //     ),
-  //   );
-  // }
 }

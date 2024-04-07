@@ -145,13 +145,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
   }
 
   void createProfileStudent() async {
-    // final result = await _createProfileStudentUC.call(
-    //     params: CreateProfileStudentParams(
-    //   techStackId: techStacksValue!,
-    //   skillSets: skills.map((skill) => skill.id!.toString()).toList(),
-    // ));
+    final result = await _createProfileStudentUC.call(
+        params: CreateProfileStudentParams(
+      techStackId: techStacksValue!,
+      skillSets: skills.map((skill) => skill.id!.toString()).toList(),
+    ));
 
-    if (true) {
+    if (result) {
       updateLanguageByStudentId();
       updateEducationByStudentId();
     }
