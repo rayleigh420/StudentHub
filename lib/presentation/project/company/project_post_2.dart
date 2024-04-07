@@ -5,12 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProjectPost2 extends StatefulWidget {
+  final String? title;
+  ProjectPost2({this.title});
   @override
   _ProjectPost2State createState() => _ProjectPost2State();
 }
 
 class _ProjectPost2State extends State<ProjectPost2> {
-  final List<String> _time = ['1 to 3 months', '3 to 6 months'];
+  final List<String> _time = ["One to three months", "Three to six months"];
+  final List<int> _timeValue = [0, 1];
+  int scopeType = 0;
+  final TextEditingController _studentNumberController =
+      TextEditingController();
   String? time = '1 to 3 months';
   @override
   Widget build(BuildContext context) {
@@ -48,18 +54,17 @@ class _ProjectPost2State extends State<ProjectPost2> {
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 10),
-                  ..._time.map((size) {
-                    return RadioListTile<String>(
-                      title: Text(size),
-                      value: size,
-                      groupValue: time,
-                      onChanged: (String? value) {
-                        setState(() {
-                          time = value;
+                  ..._timeValue.map((size) {
+                    return RadioListTile<int>(
+                        title: Text(_time[size]),
+                        value: size,
+                        groupValue: _timeValue.indexOf(scopeType),
+                        onChanged: (int? value) {
+                          setState(() {
+                            scopeType = value!;
+                          });
                         });
-                      },
-                    );
-                  }).toList(),
+                  }),
                   SizedBox(
                     height: 30,
                   ),
@@ -69,6 +74,7 @@ class _ProjectPost2State extends State<ProjectPost2> {
                   ),
                   SizedBox(height: 10),
                   TextField(
+                    controller: _studentNumberController,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly
@@ -85,10 +91,19 @@ class _ProjectPost2State extends State<ProjectPost2> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
-                          Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(
-                                  builder: (context) => ProjectPost3(),
-                                  maintainState: false));
+                          if (_studentNumberController.text.isNotEmpty &&
+                                  scopeType == 0 ||
+                              scopeType == 1) {
+                            Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                    builder: (context) => ProjectPost3(
+                                        title: widget.title,
+                                        scopeType: scopeType,
+                                        studentNumber: int.parse(
+                                            _studentNumberController.text)),
+                                    maintainState: false));
+                          }
+                          ;
                           // Navigator.pushNamed(context, '/project_post_3');
                         },
                         child: const Text(

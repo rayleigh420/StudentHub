@@ -1,14 +1,22 @@
 import 'package:boilerplate/core/widgets/appBar.dart';
+import 'package:boilerplate/presentation/project/company/project_post_4.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProjectPost3 extends StatefulWidget {
+  final String? title;
+  final int? scopeType;
+  final int? studentNumber;
+  // final scopeType = ['1 to 3 months', '3 to 6 months'];
+  ProjectPost3({this.title, this.scopeType, this.studentNumber});
   @override
   _ProjectPost3State createState() => _ProjectPost3State();
 }
 
 class _ProjectPost3State extends State<ProjectPost3> {
+  final TextEditingController _projectDescriptionController =
+      TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +75,7 @@ class _ProjectPost3State extends State<ProjectPost3> {
                     height: 15,
                   ),
                   TextFormField(
+                    controller: _projectDescriptionController,
                     maxLines: 10,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -83,7 +92,17 @@ class _ProjectPost3State extends State<ProjectPost3> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5))),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/project_post_4');
+                          // Navigator.pushNamed(context, '/project_post_4');
+                          Navigator.of(context, rootNavigator: true)
+                              .push(MaterialPageRoute(
+                                  builder: (context) => ProjectPost4(
+                                        title: widget.title,
+                                        scopeType: widget.scopeType,
+                                        studentNumber: widget.studentNumber,
+                                        describeProject:
+                                            _projectDescriptionController.text,
+                                      ),
+                                  maintainState: false));
                         },
                         child: const Text(
                             style: TextStyle(fontSize: 16),
