@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/experiences/experience.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile/resume_upload.dart';
@@ -27,8 +29,8 @@ const List<String> techStacks = <String>[
 ];
 
 class _ProfileInput2State extends State<ProfileInput2> {
-  String techStacksValue = techStacks.first;
-  final List<String> skillsets = [];
+  List<Experience> experiences = [];
+
   final TextEditingController skillSetTextController = TextEditingController();
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -48,6 +50,12 @@ class _ProfileInput2State extends State<ProfileInput2> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void AddExperience(Experience experience) {
+    setState(() {
+      experiences.add(experience);
+    });
   }
 
   @override
@@ -100,123 +108,13 @@ class _ProfileInput2State extends State<ProfileInput2> {
     ));
   }
 
-  void addSkillSet() {
-    final newSkillSet = skillSetTextController.text.trim();
-    if (newSkillSet.isNotEmpty && !skillsets.contains(newSkillSet)) {
-      setState(() {
-        skillsets.add(newSkillSet);
-      });
-      skillSetTextController.clear();
-      skillSetFocusNode.requestFocus();
-    }
-  }
-
-  void _removeTag(int index) {
-    setState(() {
-      skillsets.removeAt(index);
-    });
-  }
-
-  Widget buildTags(BuildContext context) {
-    return Row(
-      children: [
-        Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
-          children: List<Widget>.generate(
-            skillsets.length,
-            (i) => buildSkillsetItem(context, i),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildSkillsetSection(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: borderColor,
-          width: 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          Wrap(
-            children: [
-              for (int i = 0; i < skillsets.length; i++)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: Chip(
-                    label: Text(skillsets[i]),
-                    deleteIcon: Icon(
-                      Icons.close,
-                      size: 15,
-                    ),
-                    onDeleted: () => _removeTag(i),
-                  ),
-                ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      focusNode: skillSetFocusNode,
-                      onTapOutside: (event) {
-                        FocusScope.of(context).unfocus();
-                      },
-                      controller: skillSetTextController,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter a tag',
-                      ),
-                      onSubmitted: (_) {
-                        addSkillSet();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget buildSkillsetItem(BuildContext context, int i) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Chip(
-        label: Text(skillsets[i]),
-        deleteIcon: Icon(Icons.close),
-        onDeleted: () => _removeTag(i),
-      ),
-    );
-  }
-
   Widget buildProject(BuildContext context) {
     return ExpWidget(
       borderColor: borderColor,
       educationText: "Projects",
-      educationItems: [
-        ExpItem(
-            title: "Intelligent Taxi Dispatching system",
-            time: '9/2020 - 12/2020, 4 months',
-            description:
-                'It is the developer of a super-app for ride-hailing, food delivery, and digital payments services on mobile devices that operates in Singapore, Malaysia, ..'),
-        ExpItem(
-            title: "Intelligent Taxi Dispatching system",
-            time: '9/2020 - 12/2020, 4 months',
-            description:
-                'It is the developer of a super-app for ride-hailing, food delivery, and digital payments services on mobile devices that operates in Singapore, Malaysia, ..'),
-        ExpItem(
-            title: "Intelligent Taxi Dispatching system",
-            time: '9/2020 - 12/2020, 4 months',
-            description:
-                'It is the developer of a super-app for ride-hailing, food delivery, and digital payments services on mobile devices that operates in Singapore, Malaysia, ..'),
-      ],
       isProject: true,
+      experienceItems: experiences,
+      addExperience: AddExperience,
     );
   }
 
@@ -227,7 +125,6 @@ class _ProfileInput2State extends State<ProfileInput2> {
       children: [
         ElevatedButton(
           onPressed: () {
-            log("push");
             Navigator.of(context)
                 .pushReplacement(MaterialPageRoute(builder: (context) {
               return const ResumeUpload();
