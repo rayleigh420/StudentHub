@@ -110,16 +110,9 @@ class AppBottomNavigationBar extends StatefulWidget {
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
   bool _isStudent = false;
-  String _accessToken = "";
   static List<Widget> _widgetOptions = [];
 
-  Future<void> _loadAccessToken() async {
-    final accessToken = await getIt<SharedPreferenceHelper>().authToken;
-    setState(() {
-      _accessToken = accessToken.toString();
-      print('1');
-    });
-  }
+  
 
   @override
   void initState() {
@@ -138,26 +131,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       // ProfileScreen(),
       // HomeScreen(),
     ];
-    _loadAccessToken();
-    if (_selectedIndex == 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => new AlertDialog(
-            title: new Text("title"),
-            content: new Text("Message"),
-            actions: <Widget>[
-              new ElevatedButton(
-                child: new Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      });
-    }
+
+   
   }
 
   void _onItemTapped(int index) {
@@ -166,16 +141,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     });
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Text('StudentHub'),
-      // actions: _buildActions(context),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    log(_accessToken);
+
     return CupertinoTabScaffold(
       // appBar: _buildAppBar(),
       tabBuilder: (BuildContext context, int index) {

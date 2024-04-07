@@ -17,6 +17,8 @@ import 'package:boilerplate/data/repository/languages/language_repository_impl.d
 import 'package:boilerplate/data/repository/post/post_repository_impl.dart';
 import 'package:boilerplate/data/repository/profile/profile_company_repository_impl.dart';
 import 'package:boilerplate/data/repository/profile/profile_student_repository_impl.dart';
+import 'package:boilerplate/data/repository/profile/profile_user_repository_impl.dart';
+import 'package:boilerplate/data/repository/project/project_repository_impl.dart';
 import 'package:boilerplate/data/repository/setting/setting_repository_impl.dart';
 import 'package:boilerplate/data/repository/skillSet/skill_set_repository_impl.dart';
 import 'package:boilerplate/data/repository/project/project_repository_impl.dart';
@@ -29,6 +31,8 @@ import 'package:boilerplate/domain/repository/experiences/experience_repository.
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
@@ -100,6 +104,12 @@ mixin RepositoryModule {
     // Experience
     getIt.registerSingleton<ExperienceRepository>(ExperienceRepositoryImpl(
       getIt<ExperienceApi>(),
+    ));
+
+    // Profile User
+    getIt.registerSingleton<ProfileUserRepository>(ProfileUserRepositoryImpl(
+      getIt<ProfileApi>(),
+      getIt<SharedPreferenceHelper>(),
     ));
   }
 }

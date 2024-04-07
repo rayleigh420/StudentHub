@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:boilerplate/data/repository/profile/profile_company_repository_impl.dart';
 import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
 import 'package:boilerplate/domain/repository/educations/education_repository.dart';
 import 'package:boilerplate/domain/repository/experiences/experience_repository.dart';
@@ -9,12 +8,12 @@ import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
-import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
 import 'package:boilerplate/domain/usecase/education/get_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/education/udpate_education_by_student_id.dart';
@@ -32,7 +31,11 @@ import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecas
 
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
+import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
+
+import 'package:boilerplate/domain/usecase/project/get_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_projects_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
@@ -126,5 +129,15 @@ mixin UseCaseModule {
     getIt.registerSingleton<UpdateExperienceByStudentIdUseCase>(
       UpdateExperienceByStudentIdUseCase(getIt<ExperienceRepository>()),
     );
+
+    getIt.registerSingleton<GetProfileUseCase>(
+      GetProfileUseCase(getIt<ProfileUserRepository>()),
+    );
+
+    getIt.registerSingleton<GetCompanyProjectsUseCase>(
+      GetCompanyProjectsUseCase(getIt<ProjectRepository>()),
+    );
+    getIt.registerSingleton<PostCompanyProjectsUseCase>(
+        PostCompanyProjectsUseCase(getIt<ProjectRepository>()));
   }
 }
