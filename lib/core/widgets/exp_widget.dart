@@ -61,19 +61,21 @@ class _ExpWidgetState extends State<ExpWidget> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: widget.borderColor,
-                            width: 1,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: widget.borderColor,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(100),
                           ),
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        padding: const EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.add,
-                          size: 17,
-                        ),
-                      ),
+                          padding: const EdgeInsets.all(4.0),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.add,
+                              size: 17,
+                            ),
+                            onPressed: _addExperience,
+                          )),
                     ],
                   ),
                 ),
@@ -84,6 +86,93 @@ class _ExpWidgetState extends State<ExpWidget> {
         const SizedBox(height: 16),
         for (var item in widget.educationItems) buildExpItem(context, item),
       ],
+    );
+  }
+
+  void _addExperience() {
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController descriptionController = TextEditingController();
+
+    DateTime? startMonth;
+    DateTime? endMonth;
+
+    void _selectDate(BuildContext context, bool isStartMonth) async {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null)
+        setState(() {
+          if (isStartMonth) {
+            startMonth = picked;
+          } else {
+            endMonth = picked;
+          }
+        });
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+              child: Container(
+            child: Text(
+              'Add a experience',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          )),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 2 / 3,
+            width: MediaQuery.of(context).size.width * 14 / 15,
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(hintText: "Title"),
+                ),
+                TextField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(hintText: "Description"),
+                ),
+                TextField(
+                  readOnly: true,
+                  onTap: () => _selectDate(context, true),
+                  controller: TextEditingController(
+                      text: startMonth?.toIso8601String()),
+                  decoration: InputDecoration(hintText: "Start Month"),
+                ),
+                TextField(
+                  readOnly: true,
+                  onTap: () => _selectDate(context, false),
+                  controller:
+                      TextEditingController(text: endMonth?.toIso8601String()),
+                  decoration: InputDecoration(hintText: "End Month"),
+                ),
+                SizedBox(height: 20.0),
+                SkillSetWidget(borderColor: widget.borderColor)
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Done'),
+              onPressed: () {
+                setState(() {
+                  // Replace this with your actual code to add the experience to the list
+                  // experiences.add(Experience(
+                  //   title: titleController.text,
+                  //   description: descriptionController.text,
+                  // ));
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

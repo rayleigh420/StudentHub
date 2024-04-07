@@ -21,7 +21,6 @@ import 'package:boilerplate/data/repository/profile/profile_user_repository_impl
 import 'package:boilerplate/data/repository/project/project_repository_impl.dart';
 import 'package:boilerplate/data/repository/setting/setting_repository_impl.dart';
 import 'package:boilerplate/data/repository/skillSet/skill_set_repository_impl.dart';
-import 'package:boilerplate/data/repository/project/project_repository_impl.dart';
 import 'package:boilerplate/data/repository/techStack/tech_stack_repository_impl.dart';
 import 'package:boilerplate/data/repository/user/user_repository_impl.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
@@ -33,7 +32,6 @@ import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
-import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
@@ -94,16 +92,19 @@ mixin RepositoryModule {
     // Language
     getIt.registerSingleton<LanguageRepository>(LanguageRepositoryImpl(
       getIt<LanguageApi>(),
+      getIt<SharedPreferenceHelper>(),
     ));
 
     // Education
     getIt.registerSingleton<EducationRepository>(EducationRepositoryImpl(
       getIt<EducationApi>(),
+      getIt<SharedPreferenceHelper>(),
     ));
 
     // Experience
     getIt.registerSingleton<ExperienceRepository>(ExperienceRepositoryImpl(
       getIt<ExperienceApi>(),
+      getIt<SharedPreferenceHelper>(),
     ));
 
     // Profile User
