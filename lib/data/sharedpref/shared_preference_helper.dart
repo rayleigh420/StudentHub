@@ -16,6 +16,14 @@ class SharedPreferenceHelper {
     return _sharedPreference.getString(Preferences.auth_token);
   }
 
+  Future<int?> get currentCompanyId async {
+    return _sharedPreference.getInt(Preferences.current_company_id);
+  }
+
+  Future<int?> get currentStudentId async {
+    return _sharedPreference.getInt(Preferences.current_student_id);
+  }
+
   Future<bool> saveAuthToken(String authToken) async {
     return _sharedPreference.setString(Preferences.auth_token, authToken);
   }
@@ -49,5 +57,23 @@ class SharedPreferenceHelper {
 
   Future<void> changeLanguage(String language) {
     return _sharedPreference.setString(Preferences.current_language, language);
+  }
+
+  Future<bool> saveCurrentCompanyId(int companyId) async {
+    return _sharedPreference.setInt(
+        Preferences.current_company_id, companyId);
+  }
+
+  Future<bool> removeCurrentCompanyId() async {
+    return _sharedPreference.remove(Preferences.current_company_id);
+  }
+
+  Future<bool> saveCurrentStudentId(int userId) async {
+    return _sharedPreference.setInt(
+        Preferences.current_student_id, userId);
+  }
+
+  Future<bool> removeCurrentStudentId() async {
+    return _sharedPreference.remove(Preferences.current_student_id);
   }
 }

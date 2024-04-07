@@ -41,4 +41,12 @@ abstract class _ProjectStore with Store {
       errorStore.errorMessage = error.toString();
     });
   }
+
+  @action
+  refreshProjects() {
+    projects = null;
+    success = false;
+    errorStore.errorMessage = "";
+    getProjects();
+  }
 }
