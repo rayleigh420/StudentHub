@@ -3,7 +3,7 @@ import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 
 class Experience {
   int? id;
-  int? studentId;
+  // int? studentId;
   String? title;
   DateTime? startMonth;
   DateTime? endMonth;
@@ -12,7 +12,7 @@ class Experience {
 
   Experience({
     this.id,
-    this.studentId,
+    // this.studentId,
     this.title,
     this.startMonth,
     this.endMonth,
@@ -22,7 +22,7 @@ class Experience {
 
   factory Experience.fromMap(Map<String, dynamic> json) => Experience(
         id: json["id"],
-        studentId: json["studentId"],
+        // studentId: json["studentId"],
         title: json["title"],
         startMonth: DateTime.parse(json["startMonth"]),
         endMonth: DateTime.parse(json["endMonth"]),
@@ -35,7 +35,7 @@ class Experience {
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "studentId": studentId,
+        // "studentId": studentId,
         "title": title,
         "startMonth": startMonth!.toIso8601String(),
         "endMonth": endMonth!.toIso8601String(),
@@ -43,5 +43,47 @@ class Experience {
         "skillSets": skillSets != null
             ? List<dynamic>.from(skillSets!.map((x) => x.toMap()))
             : [],
+      };
+}
+
+class ExperienceReq {
+  int? id;
+  int? studentId;
+  String? title;
+  DateTime? startMonth;
+  DateTime? endMonth;
+  String? description;
+  List<String>? skillSets;
+
+  ExperienceReq({
+    this.id,
+    this.studentId,
+    this.title,
+    this.startMonth,
+    this.endMonth,
+    this.description,
+    this.skillSets,
+  });
+
+  factory ExperienceReq.fromMap(Map<String, dynamic> json) => ExperienceReq(
+        id: json["id"],
+        studentId: json["studentId"],
+        title: json["title"],
+        startMonth: DateTime.parse(json["startMonth"]),
+        endMonth: DateTime.parse(json["endMonth"]),
+        description: json["description"],
+        skillSets: json["skillSets"] != null
+            ? List<String>.from(json["skillSets"].map((x) => x))
+            : [],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "studentId": studentId,
+        "title": title,
+        "startMonth": startMonth!.toIso8601String(),
+        "endMonth": endMonth!.toIso8601String(),
+        "description": description,
+        "skillSets": skillSets != null ? skillSets : [],
       };
 }
