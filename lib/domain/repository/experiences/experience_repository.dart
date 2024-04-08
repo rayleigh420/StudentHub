@@ -4,5 +4,5 @@ abstract class ExperienceRepository {
   Future<ExperienceList> getExperienceByStudentId();
 
   Future<ExperienceList> updateExperienceByStudentId(
-      ExperienceList experienceList);
+      ExperienceReqList experienceList);
 }

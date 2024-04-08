@@ -5,8 +5,8 @@ class Experience {
   int? id;
   // int? studentId;
   String? title;
-  DateTime? startMonth;
-  DateTime? endMonth;
+  String? startMonth;
+  String? endMonth;
   String? description;
   List<SkillSet>? skillSets;
 
@@ -24,8 +24,8 @@ class Experience {
         id: json["id"],
         // studentId: json["studentId"],
         title: json["title"],
-        startMonth: DateTime.parse(json["startMonth"]),
-        endMonth: DateTime.parse(json["endMonth"]),
+        startMonth: json["startMonth"],
+        endMonth: json["endMonth"],
         description: json["description"],
         skillSets: json["skillSets"] != null
             ? List<SkillSet>.from(
@@ -37,8 +37,8 @@ class Experience {
         "id": id,
         // "studentId": studentId,
         "title": title,
-        "startMonth": startMonth!.toIso8601String(),
-        "endMonth": endMonth!.toIso8601String(),
+        "startMonth": startMonth,
+        "endMonth": endMonth,
         "description": description,
         "skillSets": skillSets != null
             ? List<dynamic>.from(skillSets!.map((x) => x.toMap()))
@@ -48,16 +48,16 @@ class Experience {
 
 class ExperienceReq {
   int? id;
-  int? studentId;
+  // int? studentId;
   String? title;
-  DateTime? startMonth;
-  DateTime? endMonth;
+  String? startMonth;
+  String? endMonth;
   String? description;
   List<String>? skillSets;
 
   ExperienceReq({
     this.id,
-    this.studentId,
+    // this.studentId,
     this.title,
     this.startMonth,
     this.endMonth,
@@ -67,10 +67,10 @@ class ExperienceReq {
 
   factory ExperienceReq.fromMap(Map<String, dynamic> json) => ExperienceReq(
         id: json["id"],
-        studentId: json["studentId"],
+        // studentId: json["studentId"],
         title: json["title"],
-        startMonth: DateTime.parse(json["startMonth"]),
-        endMonth: DateTime.parse(json["endMonth"]),
+        startMonth: json["startMonth"],
+        endMonth: json["endMonth"],
         description: json["description"],
         skillSets: json["skillSets"] != null
             ? List<String>.from(json["skillSets"].map((x) => x))
@@ -79,10 +79,10 @@ class ExperienceReq {
 
   Map<String, dynamic> toMap() => {
         "id": id,
-        "studentId": studentId,
+        // "studentId": studentId,
         "title": title,
-        "startMonth": startMonth!.toIso8601String(),
-        "endMonth": endMonth!.toIso8601String(),
+        "startMonth": startMonth,
+        "endMonth": endMonth,
         "description": description,
         "skillSets": skillSets != null ? skillSets : [],
       };

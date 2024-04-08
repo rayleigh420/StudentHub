@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/experiences/experience.dart';
+import 'package:boilerplate/domain/entity/experiences/experience_list.dart';
+import 'package:boilerplate/domain/usecase/experience/udpate_experience_by_student_id.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile/resume_upload.dart';
@@ -29,6 +31,8 @@ const List<String> techStacks = <String>[
 ];
 
 class _ProfileInput2State extends State<ProfileInput2> {
+  final UpdateExperienceByStudentIdUseCase updateExperienceByStudentIdUseCase =
+      getIt<UpdateExperienceByStudentIdUseCase>();
   List<Experience> experiences = [];
 
   final TextEditingController skillSetTextController = TextEditingController();
@@ -56,6 +60,39 @@ class _ProfileInput2State extends State<ProfileInput2> {
     setState(() {
       experiences.add(experience);
     });
+  }
+
+  void RemoveExperience(Experience experience) {
+    setState(() {
+      experiences.remove(experience);
+    });
+  }
+
+  void UpdateExperienceByStudentId() async {
+    print('Updating experiences:');
+    for (var experience in experiences) {
+      print('Title: ${experience.title}');
+      print('Description: ${experience.description}');
+      print('Start Month: ${experience.startMonth}');
+      print('End Month: ${experience.endMonth}');
+      print(
+          'Skill Sets: ${experience.skillSets!.map((e) => e.id.toString()).join(', ')}');
+      print('---');
+    }
+
+    final result = await updateExperienceByStudentIdUseCase.call(
+        params: ExperienceReqList(
+      experiences: experiences.map((experience) {
+        return ExperienceReq(
+          id: null,
+          title: experience.title,
+          description: experience.description,
+          startMonth: experience.startMonth,
+          endMonth: experience.endMonth,
+          skillSets: experience.skillSets!.map((e) => e.id.toString()).toList(),
+        );
+      }).toList(),
+    ));
   }
 
   @override
@@ -125,6 +162,7 @@ class _ProfileInput2State extends State<ProfileInput2> {
       children: [
         ElevatedButton(
           onPressed: () {
+            UpdateExperienceByStudentId();
             Navigator.of(context)
                 .pushReplacement(MaterialPageRoute(builder: (context) {
               return const ResumeUpload();
