@@ -9,8 +9,8 @@ import 'package:boilerplate/presentation/login/login.dart';
 import 'package:boilerplate/presentation/login/store/login_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
-import 'package:boilerplate/presentation/profile_input/profile_input_1.dart';
-import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_2.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/presentation/project/company/project_post_2.dart';
 import 'package:boilerplate/presentation/project/company/project_post_3.dart';
@@ -24,10 +24,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../di/service_locator.dart';
-import 'package:boilerplate/presentation/profile/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
-import 'package:boilerplate/presentation/profile/profile_company_input_account.dart';
-import 'package:boilerplate/presentation/profile/resume_upload.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_input_account.dart';
+import 'package:boilerplate/presentation/profile_input/student/resume_upload.dart';
 // import 'package:boilerplate/presentation/companyReview/companyDashboard.dart';
 import 'package:boilerplate/presentation/companyReview/project_detail.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
             // Built-in localization of basic text for Cupertino widgets
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: ProfileInput2(),
+          home: InputLogin(),
         );
       },
     );
