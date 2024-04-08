@@ -17,3 +17,21 @@ class ExperienceList {
     );
   }
 }
+
+class ExperienceReqList {
+  final List<ExperienceReq>? experiences;
+
+  ExperienceReqList({
+    this.experiences,
+  });
+
+  factory ExperienceReqList.fromJson(Map<String, dynamic> json) {
+    List<ExperienceReq> experiences = <ExperienceReq>[];
+    experiences = List.from(
+        json['result'].map((experience) => ExperienceReq.fromMap(experience)));
+
+    return ExperienceReqList(
+      experiences: experiences,
+    );
+  }
+}

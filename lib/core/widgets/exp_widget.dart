@@ -99,8 +99,8 @@ class _ExpWidgetState extends State<ExpWidget> {
     final TextEditingController descriptionController = TextEditingController();
     List<SkillSet> skills = [];
 
-    DateTime? startMonth;
-    DateTime? endMonth;
+    String? startMonth;
+    String? endMonth;
 
     final startMonthController = TextEditingController();
     final endMonthController = TextEditingController();
@@ -115,11 +115,11 @@ class _ExpWidgetState extends State<ExpWidget> {
       if (picked != null)
         setState(() {
           if (isStartMonth) {
-            startMonth = picked;
-            startMonthController.text = DateFormat('yyyy-MM-dd').format(picked);
+            startMonth = DateFormat('MM-yyyy').format(picked);
+            startMonthController.text = DateFormat('MM-yyyy').format(picked);
           } else {
-            endMonth = picked;
-            endMonthController.text = DateFormat('yyyy-MM-dd').format(picked);
+            endMonth = DateFormat('MM-yyyy').format(picked);
+            endMonthController.text = DateFormat('MM-yyyy').format(picked);
           }
         });
     }
@@ -211,7 +211,7 @@ class _ExpWidgetState extends State<ExpWidget> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '${DateFormat('yyyy-MM-dd').format(item.startMonth!)} - ${DateFormat('yyyy-MM-dd').format(item.endMonth!)}',
+                      '${item.startMonth!} - ${item.endMonth!}',
                       textAlign: TextAlign.start,
                       style: TextStyle(
                         fontSize: 15,

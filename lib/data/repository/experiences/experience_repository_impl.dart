@@ -24,7 +24,7 @@ class ExperienceRepositoryImpl extends ExperienceRepository {
 
   @override
   Future<ExperienceList> updateExperienceByStudentId(
-      ExperienceList experienceList) async {
+      ExperienceReqList experienceList) async {
     try {
       int? studentId = await _sharedPrefsHelper.currentStudentId;
       ExperienceList result = await _experienceApi.updateExperienceByStudentId(
