@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/domain/entity/experiences/experience_list.dart';
+import 'package:dio/dio.dart';
 
 class ExperienceApi {
   // dio instance
@@ -22,10 +25,10 @@ class ExperienceApi {
   }
 
   Future<ExperienceList> updateExperienceByStudentId(
-      int studentId, ExperienceList experienceList) async {
+      int studentId, ExperienceReqList experienceList) async {
     try {
       final res = await _dioClient.dio
-          .put('${Endpoints.updateLanguage}/$studentId', data: {
+          .put('${Endpoints.updateExperience}/$studentId', data: {
         'experience': experienceList.experiences!.map((e) => e.toMap()).toList()
       });
       return ExperienceList.fromJson(res.data);
