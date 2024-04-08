@@ -7,7 +7,7 @@ import 'package:boilerplate/domain/entity/experiences/experience_list.dart';
 import 'package:boilerplate/domain/usecase/experience/udpate_experience_by_student_id.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
-import 'package:boilerplate/presentation/profile/resume_upload.dart';
+import 'package:boilerplate/presentation/profile_input/student/resume_upload.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

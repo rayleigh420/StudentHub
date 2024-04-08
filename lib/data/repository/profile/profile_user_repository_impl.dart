@@ -25,6 +25,7 @@ class ProfileUserRepositoryImpl extends ProfileUserRepository {
         _sharedPrefsHelper.saveCurrentStudentId(res.student!.id);
         _sharedPrefsHelper.removeCurrentCompanyId();
       }
+      _sharedPrefsHelper.saveRolesUser(res.roles);
       return res;
     } catch (e) {
       log("cc");
