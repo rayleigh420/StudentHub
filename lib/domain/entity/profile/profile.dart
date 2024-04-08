@@ -4,7 +4,7 @@ import 'package:boilerplate/domain/entity/profile/student.dart';
 class Profile {
   int id;
   String fullname;
-  List<String> roles;
+  List<int> roles;
   Student? student;
   Company? company;
   Profile({
@@ -19,7 +19,7 @@ class Profile {
     return Profile(
       id: map['id'],
       fullname: map['fullname'],
-      roles: List<String>.from(map['roles']),
+      roles: List<int>.from(map['roles']),
       student: map['student'] != null ? Student.fromJson(map['student']) : null,
       company: map['company'] != null ? Company.fromJson(map['company']) : null,
     );

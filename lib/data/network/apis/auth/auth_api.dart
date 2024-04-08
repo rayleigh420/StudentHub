@@ -8,11 +8,12 @@ import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/post/post_list.dart';
 import 'package:boilerplate/domain/entity/user/user.dart';
+import 'package:dio/dio.dart';
 
 class AuthApi {
   // dio instance
   final DioClient _dioClient;
-  
+
   // injecting dio instance
   AuthApi(this._dioClient);
 
@@ -29,20 +30,36 @@ class AuthApi {
 
   Future<String> logIn(String email, String password) async {
     try {
-      final res = await _dioClient.dio.post(Endpoints.logIn, data: {
-        'email': email,
-        'password': password,
-      });
+      final res = await _dioClient.dio.post(Endpoints.logIn,
+          data: {
+            'email': email,
+            'password': password,
+          },
+          options: Options(
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
+          ));
+      if (res.statusCode == 404) {
+        throw Exception("Wrong email or password");
+      }
       log("cout<<login response");
       log(res.data.toString());
       return res.data['result']['token'].toString();
-    } catch (e) {
-      throw new Exception(e.toString());
+    } on DioException catch (e) {
+      if (e.response!.statusCode == 404) {
+        log("dio exception");
+        throw e;
+      } else {
+        log(e.message.toString());
+      }
     }
+    throw Exception("Failed to log in");
   }
 
-  Future<String> signUp(String email, String password, String fullName,
-      int role) async {
+  Future<bool> signUp(
+      String email, String password, String fullName, int role) async {
     try {
       final res = await _dioClient.dio.post(Endpoints.signUp, data: {
         'email': email,
@@ -53,8 +70,7 @@ class AuthApi {
       log("cout<<signup response");
       log(res.statusCode.toString());
       if (res.statusCode.toString() == "201") {
-        final String token = await logIn(email, password);
-        return token;
+        return true;
       } else
         throw Exception("Failed to sign up");
     } catch (e) {
@@ -62,8 +78,9 @@ class AuthApi {
       throw e;
     }
   }
+
   Future<String> testToken() async {
-    try { 
+    try {
       final token = await getIt<SharedPreferenceHelper>().authToken;
       final authToken = "Bearer ${token}";
       log(token.toString());
@@ -73,6 +90,7 @@ class AuthApi {
       throw new Exception(e.toString());
     }
   }
+
   /// sample api call with default rest client
 //  Future<PostsList> getPosts() {
 //

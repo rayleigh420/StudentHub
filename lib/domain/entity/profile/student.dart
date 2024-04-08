@@ -1,3 +1,8 @@
+import 'package:boilerplate/domain/entity/educations/education.dart';
+import 'package:boilerplate/domain/entity/experiences/experience.dart';
+import 'package:boilerplate/domain/entity/language/Language.dart';
+import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
+
 class Student {
   int id;
   DateTime createdAt;
@@ -5,18 +10,27 @@ class Student {
   DateTime? deletedAt;
   int userId;
   int techStackId;
+  TechStack? techStack;
+  List<dynamic>? proposals;
+  List<Education> educations;
+  List<Language> languages;
+  List<Experience> experiences;
   dynamic resume;
   dynamic transcript;
-  Student({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    this.deletedAt,
-    required this.userId,
-    required this.techStackId,
-    this.resume,
-    this.transcript,
-  });
+  Student(
+      {required this.id,
+      required this.createdAt,
+      required this.updatedAt,
+      this.deletedAt,
+      required this.userId,
+      required this.techStackId,
+      this.resume,
+      this.transcript,
+      this.techStack,
+      this.proposals,
+      required this.educations,
+      required this.languages,
+      required this.experiences});
 
   factory Student.fromJson(Map<String, dynamic> map) {
     return Student(
@@ -28,6 +42,17 @@ class Student {
       userId: map['userId'],
       techStackId: map['techStackId'],
       resume: map['resume'],
+      transcript: map['transcript'],
+      techStack:
+          map['techStack'] != null ? TechStack.fromMap(map['techStack']) : null,
+      proposals: map['proposals'],
+      educations: List<Education>.from(
+          map['educations']?.map((x) => Education.fromMap(x))?.toList() ?? []),
+      languages: List<Language>.from(
+          map['languages']?.map((x) => Language.fromMap(x))?.toList() ?? []),
+      experiences: List<Experience>.from(
+          map['experiences']?.map((x) => Experience.fromMap(x))?.toList() ??
+              []),
     );
   }
 
@@ -40,6 +65,12 @@ class Student {
       'userId': userId,
       'techStackId': techStackId,
       'resume': resume,
+      'transcript': transcript,
+      'techStack': techStack?.toMap(),
+      'proposals': proposals,
+      'educations': educations.map((x) => x.toMap()).toList(),
+      'languages': languages.map((x) => x.toMap()).toList(),
+      'experiences': experiences.map((x) => x.toMap()).toList(),
     };
   }
 }
