@@ -1,8 +1,9 @@
 import 'package:boilerplate/core/widgets/filter_search_project_modal.dart';
 import 'package:boilerplate/core/widgets/project_item.dart';
-import 'package:boilerplate/core/widgets/search_project_modal.dart';
+
 import 'package:boilerplate/di/service_locator.dart';
-import 'package:boilerplate/domain/entity/project/project.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
+
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
@@ -45,25 +46,22 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
     "createdDate": DateTime.now().add(Duration(days: -3)),
     "proposal": 6
   };
-  final projDat = Project(
-      title: "Senior frontend developer (Fintech)",
-      props: [
-        "Students are looking for",
-        "Clear expectation about your project or deliverables",
-        "React",
-        "Redux",
-        "TypeScript",
-        "GraphQL",
-        "Node.js",
-        "AWS",
-      ],
-      scopeFrom: 1,
-      scopeFrom2: "month",
-      scopeTo: 3,
-      scopeTo2: "month",
-      proposal: 6,
-      createdDate: DateTime.now().add(Duration(days: -3)),
-      isSaved: false);
+  final projDat = Project.fromJson({
+    "id": 25,
+    "createdAt": "2024-04-08T11:10:58.223Z",
+    "updatedAt": "2024-04-08T11:10:58.223Z",
+    "deletedAt": null,
+    "companyId": "31",
+    "projectScopeFlag": 0,
+    "title": "Backend dev",
+    "description": "Node",
+    "numberOfStudents": 5,
+    "typeFlag": 0,
+    "proposals": [],
+    "countProposals": 0,
+    "countMessages": 0,
+    "countHired": 0
+  });
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -133,7 +131,7 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
               initialValue: searchQuery,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                
+
                 // hintText: "Search for projects âs",
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),

@@ -24,8 +24,11 @@ class SharedPreferenceHelper {
     return _sharedPreference.getInt(Preferences.current_student_id);
   }
 
-  Future<List<String>?> get roles async {
-    return _sharedPreference.getStringList(Preferences.roles);
+  Future<List<int>?> get roles async {
+    return _sharedPreference
+        .getStringList(Preferences.roles)
+        ?.map((e) => int.parse(e))
+        .toList();
   }
 
   Future<bool> saveAuthToken(String authToken) async {
@@ -81,8 +84,9 @@ class SharedPreferenceHelper {
   }
 
   // Roles User
-  Future<bool> saveRolesUser(List<String> roles) async {
-    return _sharedPreference.setStringList(Preferences.roles, roles);
+  Future<bool> saveRolesUser(List<int> roles) async {
+    return _sharedPreference.setStringList(
+        Preferences.roles, roles.map((e) => e.toString()).toList());
   }
 
   Future<bool> removeRolesUser() async {

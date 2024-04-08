@@ -1,8 +1,7 @@
 import 'package:boilerplate/core/widgets/appBar.dart';
 import 'package:boilerplate/presentation/project/company/project_post_4.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class ProjectPost3 extends StatefulWidget {
   final String? title;

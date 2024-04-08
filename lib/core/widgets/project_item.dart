@@ -1,6 +1,7 @@
 import 'package:boilerplate/core/widgets/project_modal.dart';
-import 'package:boilerplate/domain/entity/project/project.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
+// import 'package:boilerplate/domain/entity/project/project.dart';
+
 import 'package:flutter/material.dart';
 
 class ProjectItem extends StatefulWidget {
@@ -56,15 +57,17 @@ class _ProjectItemState extends State<ProjectItem> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Created ${dateDiff(DateTime.now(), widget.projDat.createdDate!)} days ago",
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
+                    widget.projDat.createdAt != null
+                        ? Text(
+                            "Created ${dateDiff(DateTime.now(), widget.projDat.createdAt!)} days ago",
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          )
+                        : Container(),
                     const SizedBox(
                       height: 5,
                     ),
                     Text(
-                      widget.projDat.title,
+                      widget.projDat.title!,
                       style: TextStyle(
                           fontSize: 16,
                           color: Colors.blueAccent,
@@ -76,12 +79,17 @@ class _ProjectItemState extends State<ProjectItem> {
                     Row(
                       children: [
                         Text(
-                            "${widget.projDat.scopeFrom} ${widget.projDat.scopeFrom2} - ${widget.projDat.scopeTo} ${widget.projDat.scopeTo2}",
-                            style: TextStyle(fontSize: 13,color: Colors.black)),
-                        Text(", ", style: TextStyle(fontSize: 13,color: Colors.black)),
+                            // "${widget.projDat.scopeFrom} ${widget.projDat.scopeFrom2} - ${widget.projDat.scopeTo} ${widget.projDat.scopeTo2}",
+                            "${widget.projDat.projectScopeFlag == 0 ? "One to three months" : "Three to six months"}",
+                            style:
+                                TextStyle(fontSize: 13, color: Colors.black)),
+                        Text(", ",
+                            style:
+                                TextStyle(fontSize: 13, color: Colors.black)),
                         Text(
-                            "${widget.projDat.quantityRequired != null ? widget.projDat.quantityRequired : 0}  students",
-                            style: TextStyle(fontSize: 13,color: Colors.black)),
+                            "${widget.projDat.numberOfStudents} ${widget.projDat.numberOfStudents! > 1 ? "students" : "student"}",
+                            style:
+                                TextStyle(fontSize: 13, color: Colors.black)),
                       ],
                     ),
                     const SizedBox(
@@ -92,19 +100,22 @@ class _ProjectItemState extends State<ProjectItem> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: 3,
+                      itemCount: 1,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 5.0),
-                          child: Text("-   ${widget.projDat.props[index]}",
-                              style: TextStyle(fontSize: 13, color: Colors.black)),
+                          child: Text(
+                              "${widget.projDat.description != null ? "-   Student who can ${widget.projDat.description!}" : "Everyone"}",
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.black)),
                         );
                       },
                     ),
                     const SizedBox(
                       height: 5,
                     ),
-                    Text("Proposals: ${widget.projDat.proposal} proposals",
+                    Text("Proposals: 0 proposals",
+                        // "Proposals: ${widget.projDat.proposals != null ? widget.projDat.proposals : 0} proposals",
                         style: TextStyle(fontSize: 13, color: Colors.black)),
                   ],
                 ),
@@ -119,7 +130,7 @@ class _ProjectItemState extends State<ProjectItem> {
 
   Widget buildFavorite(BuildContext context) {
     Widget content;
-    if (widget.projDat.isSaved!) {
+    if (widget.projDat.isSaved != null) {
       content = Container(
         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
         child: Icon(Icons.favorite, color: Color(0xFFF9187F), size: 25),
