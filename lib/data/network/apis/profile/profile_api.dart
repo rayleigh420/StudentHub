@@ -71,6 +71,7 @@ class ProfileApi {
   Future<Profile> getProfile() async {
     try {
       // final authToken = "Bearer ${token}";
+      print("Auth/me");
       final res = await _dioClient.dio.get(Endpoints.getProfile);
       log("cout<<getProfile response");
       print(res.data["result"].toString());

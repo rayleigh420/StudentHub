@@ -1,5 +1,5 @@
 import 'package:boilerplate/di/service_locator.dart';
-import 'package:boilerplate/presentation/profile/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

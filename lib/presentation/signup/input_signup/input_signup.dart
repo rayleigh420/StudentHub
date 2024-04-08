@@ -6,8 +6,8 @@ import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
-import 'package:boilerplate/presentation/profile/profile_company_input.dart';
-import 'package:boilerplate/presentation/profile_input/profile_input_1.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -107,20 +107,21 @@ class _InputSignUpState extends State<InputSignUp> {
                       _passwordController.text,
                       _fullNameController.text,
                       widget.type);
-                  if (widget.type == 1) {
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
-                      return ProfileCompanyInput();
-                      // return AppBottomNavigationBar(
-                      //   selectedIndex: 0,
-                      //   isStudent: false,
-                      // );
-                    }));
-                  } else {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => ProfileInput1()));
-                    ;
-                  }
+                  Navigator.of(context).pushReplacementNamed('/login');
+                  // if (widget.type == 1) {
+                  //   Navigator.of(context)
+                  //       .pushReplacement(MaterialPageRoute(builder: (context) {
+                  //     return ProfileCompanyInput();
+                  //     // return AppBottomNavigationBar(
+                  //     //   selectedIndex: 0,
+                  //     //   isStudent: false,
+                  //     // );
+                  //   }));
+                  // } else {
+                  //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  //       builder: (context) => ProfileInput1()));
+                  //   ;
+                  // }
                 } catch (e) {
                   throw Exception(e.toString());
                 }

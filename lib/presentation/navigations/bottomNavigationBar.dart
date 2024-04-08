@@ -112,11 +112,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   bool _isStudent = false;
   static List<Widget> _widgetOptions = [];
 
-  
-
   @override
   void initState() {
     super.initState();
+    testRole();
     _isStudent = widget.isStudent;
     _selectedIndex = widget.selectedIndex;
     _widgetOptions = <Widget>[
@@ -131,8 +130,20 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       // ProfileScreen(),
       // HomeScreen(),
     ];
+  }
 
-   
+  void testRole() async {
+    // List<String>? roles = await getIt<SharedPreferenceHelper>().roles;
+
+    // int? currentCompanyId =
+    //     await getIt<SharedPreferenceHelper>().currentCompanyId;
+
+    int? currentStudentId =
+        await getIt<SharedPreferenceHelper>().currentStudentId;
+
+    // print("roles: $roles");
+    // print("currentCompanyId: $currentCompanyId");
+    print("currentStudentId: $currentStudentId");
   }
 
   void _onItemTapped(int index) {
@@ -141,10 +152,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return CupertinoTabScaffold(
       // appBar: _buildAppBar(),
       tabBuilder: (BuildContext context, int index) {

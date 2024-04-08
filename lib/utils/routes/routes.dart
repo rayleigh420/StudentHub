@@ -7,6 +7,10 @@ import 'package:boilerplate/presentation/login/login.dart';
 import 'package:boilerplate/presentation/message/message.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_2.dart';
+import 'package:boilerplate/presentation/profile_input/student/resume_upload.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/presentation/project/company/project_post_2.dart';
 import 'package:boilerplate/presentation/project/company/project_post_3.dart';
@@ -26,7 +30,7 @@ class Routes {
   static const String splash = '/splash';
   static const String login_boilerplate = '/login_boilerplate';
   static const String home = '/post';
-  static const String login = 'login';
+  static const String login = '/login';
   static const String signup = '/signup';
   static const String identity_signup = '/identity_signup';
   static const String saved_project = '/saved_project';
@@ -44,6 +48,12 @@ class Routes {
   static const String project_detail = '/project_detail';
   static const String hire_offer = '/hire_offer';
   static const String submit_project = '/submit_project';
+
+  static const String student_profile_input_1 = '/student_profile_input_1';
+  static const String student_profile_input_2 = '/student_profile_input_2';
+  static const String student_profile_input_3 = '/student_profile_input_3';
+
+  static const String company_profile_input_1 = '/company_profile_input_1';
 
   static final routes = <String, WidgetBuilder>{
     login_boilerplate: (BuildContext context) => LoginScreen(),
@@ -68,5 +78,11 @@ class Routes {
     project_detail: (context) => ProjectDetail(),
     hire_offer: (context) => HireOffer(),
     submit_project: (context) => SubmitProject(),
+
+    student_profile_input_1: (context) => ProfileInput1(),
+    student_profile_input_2: (context) => ProfileInput2(),
+    student_profile_input_3: (context) => ResumeUpload(),
+
+    company_profile_input_1: (context) => ProfileCompanyInput(),
   };
 }
