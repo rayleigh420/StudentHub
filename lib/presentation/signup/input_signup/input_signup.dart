@@ -1,13 +1,12 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
-import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
-import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
+
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
-import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
-import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
+import 'package:boilerplate/presentation/input_login/input_login.dart';
+import 'package:boilerplate/presentation/signup/input_signup/verify_screen.dart';
+
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,7 @@ class _InputSignUpState extends State<InputSignUp> {
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6e6e6e);
   }
 
-  Future<String> signUp(
+  Future<bool> signUp(
       String email, String password, String fullName, int role) async {
     try {
       final response = await _authRepository.call(
@@ -45,11 +44,11 @@ class _InputSignUpState extends State<InputSignUp> {
               password: password,
               fullName: fullName,
               role: role));
-      log(response);
+      log(response.toString());
       return response;
     } catch (e) {
       log(e.toString());
-      return e.toString();
+      throw e;
     }
   }
 
@@ -102,12 +101,18 @@ class _InputSignUpState extends State<InputSignUp> {
               buildLaunchButton(context, () async {
                 log('Login pressed');
                 try {
-                  final token = await signUp(
+                  final res = await signUp(
                       _emailController.text,
                       _passwordController.text,
                       _fullNameController.text,
                       widget.type);
-                  Navigator.of(context).pushReplacementNamed('/login');
+                  log(res.toString());
+                  Navigator.of(context)
+                      .pushReplacement(MaterialPageRoute(builder: (context) {
+                    return VerifyScreen();
+                  }));
+
+                  // Navigator.of(context).pushReplacementNamed('/login');
                   // if (widget.type == 1) {
                   //   Navigator.of(context)
                   //       .pushReplacement(MaterialPageRoute(builder: (context) {
@@ -123,7 +128,7 @@ class _InputSignUpState extends State<InputSignUp> {
                   //   ;
                   // }
                 } catch (e) {
-                  throw Exception(e.toString());
+                  throw e;
                 }
               }),
               // buildSignupSection(context)
@@ -178,7 +183,7 @@ class _InputSignUpState extends State<InputSignUp> {
                 borderSide: const BorderSide(color: Colors.red, width: 0.0),
               ),
               border: OutlineInputBorder(borderSide: BorderSide.none),
-              hintText: 'Enter your email',
+              hintText: 'Enter your name',
               hintStyle: TextStyle(
                 //fontFamily: "GGX88Reg_Light",
 
