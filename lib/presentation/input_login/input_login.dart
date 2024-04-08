@@ -8,6 +8,7 @@ import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:flutter/material.dart';
 
 class InputLogin extends StatefulWidget {
@@ -121,47 +122,50 @@ class _InputLoginState extends State<InputLogin> {
                     // lnduy20@clc.fitus.edu.vn
                     // Password123
 
-                    // List<String>? roles =
-                    //     await getIt<SharedPreferenceHelper>().roles;
+                    List<int>? roles =
+                        await getIt<SharedPreferenceHelper>().roles;
 
-                    // int? currentCompanyId =
-                    //     await getIt<SharedPreferenceHelper>().currentCompanyId;
+                    int? currentCompanyId =
+                        await getIt<SharedPreferenceHelper>().currentCompanyId;
 
-                    // int? currentStudentId =
-                    //     await getIt<SharedPreferenceHelper>().currentStudentId;
+                    int? currentStudentId =
+                        await getIt<SharedPreferenceHelper>().currentStudentId;
 
-                    // print("roles: $roles");
-                    // print("currentCompanyId: $currentCompanyId");
-                    // print("currentStudentId: $currentStudentId");
+                    print("roles from sign in: ${roles![0]}");
+                    print("currentCompanyId: $currentCompanyId");
+                    print("currentStudentId: $currentStudentId");
 
-                    // if (currentStudentId == null && currentCompanyId == null) {
-                    //   if (roles![0] == 0) {
-                    //     Navigator.of(context)
-                    //         .pushReplacementNamed('/student_profile_input_1');
-                    //   } else if (roles[0] == 1) {
-                    //     Navigator.of(context)
-                    //         .pushReplacementNamed('/company_profile_input_1');
-                    //   }
-                    // } else {
-                    //   Navigator.of(context)
-                    //       .pushReplacement(MaterialPageRoute(builder: (context) {
-                    //     return AppBottomNavigationBar(
-                    //       isStudent: roles![0] == 0 ? true : false,
-                    //       selectedIndex: 4,
-                    //     );
-                    //   }));
-                    // }
+                    if (currentStudentId == null && currentCompanyId == null) {
+                      if (roles![0] == 0) {
+                        Navigator.of(context)
+                            .pushReplacementNamed('/student_profile_input_1');
+                      } else if (roles![0] == 1) {
+                        Navigator.of(context)
+                            .pushReplacementNamed('/company_profile_input_1');
+                      }
+                    } else {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return AppBottomNavigationBar(
+                          isStudent: roles![0] == 0 ? true : false,
+                          selectedIndex: 0,
+                        );
+                      }));
+                    }
 
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
-                      return AppBottomNavigationBar(
-                        isStudent: true,
-                        selectedIndex: 4,
-                      );
-                    }));
+                    // Navigator.of(context)
+                    //     .pushReplacementNamed('/student_profile_input_1');
 
-                    log("123");
-                    log(token);
+                    // Navigator.of(context)
+                    //     .pushReplacement(MaterialPageRoute(builder: (context) {
+                    //   return AppBottomNavigationBar(
+                    //     isStudent: true,
+                    //     selectedIndex: 0,
+                    //   );
+                    // }));
+
+                    // log("123");
+                    // log(token);
                     // int role = handleRole(token);
                     // print(role);
                     // if (role == 0) {
