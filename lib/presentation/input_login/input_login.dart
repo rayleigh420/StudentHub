@@ -54,10 +54,10 @@ class _InputLoginState extends State<InputLogin> {
       print('Payload: ${jwt.payload}');
       print('roles: ${jwt.payload['roles'][0]}');
       // return jwt.payload['roles'][0];
-      String roleString = jwt.payload['roles'][0];
-      int role = int.parse(roleString);
-      print(role);
-      return role;
+      int roleString = jwt.payload['roles'][0];
+      // int role = int.parse(roleString);
+      print(roleString);
+      return roleString;
     } catch (e) {
       throw e;
     }
@@ -122,36 +122,36 @@ class _InputLoginState extends State<InputLogin> {
                     // lnduy20@clc.fitus.edu.vn
                     // Password123
 
-                    List<int>? roles =
-                        await getIt<SharedPreferenceHelper>().roles;
+                    // List<int>? roles =
+                    //     await getIt<SharedPreferenceHelper>().roles;//null
 
-                    int? currentCompanyId =
-                        await getIt<SharedPreferenceHelper>().currentCompanyId;
+                    // int? currentCompanyId =
+                    //     await getIt<SharedPreferenceHelper>().currentCompanyId;
 
-                    int? currentStudentId =
-                        await getIt<SharedPreferenceHelper>().currentStudentId;
+                    // int? currentStudentId =
+                    //     await getIt<SharedPreferenceHelper>().currentStudentId;
 
-                    print("roles from sign in: ${roles![0]}");
-                    print("currentCompanyId: $currentCompanyId");
-                    print("currentStudentId: $currentStudentId");
+                    // print("roles from sign in: ${roles![0]}");
+                    // print("currentCompanyId: $currentCompanyId");
+                    // print("currentStudentId: $currentStudentId");
 
-                    if (currentStudentId == null && currentCompanyId == null) {
-                      if (roles![0] == 0) {
-                        Navigator.of(context)
-                            .pushReplacementNamed('/student_profile_input_1');
-                      } else if (roles![0] == 1) {
-                        Navigator.of(context)
-                            .pushReplacementNamed('/company_profile_input_1');
-                      }
-                    } else {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) {
-                        return AppBottomNavigationBar(
-                          isStudent: roles![0] == 0 ? true : false,
-                          selectedIndex: 0,
-                        );
-                      }));
-                    }
+                    // if (currentStudentId == null && currentCompanyId == null) {
+                    //   if (roles[0] == 0) {
+                    //     Navigator.of(context)
+                    //         .pushReplacementNamed('/student_profile_input_1');
+                    //   } else if (roles[0] == 1) {
+                    //     Navigator.of(context)
+                    //         .pushReplacementNamed('/company_profile_input_1');
+                    //   }
+                    // } else {
+                    //   Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(builder: (context) {
+                    //     return AppBottomNavigationBar(
+                    //       isStudent: roles[0] == 0 ? true : false,
+                    //       selectedIndex: 0,
+                    //     );
+                    //   }));
+                    // }
 
                     // Navigator.of(context)
                     //     .pushReplacementNamed('/student_profile_input_1');
@@ -164,27 +164,27 @@ class _InputLoginState extends State<InputLogin> {
                     //   );
                     // }));
 
-                    // log("123");
-                    // log(token);
-                    // int role = handleRole(token);
-                    // print(role);
-                    // if (role == 0) {
-                    //   Navigator.of(context)
-                    //       .pushReplacement(MaterialPageRoute(builder: (context) {
-                    //     return AppBottomNavigationBar(
-                    //       isStudent: true,
-                    //       selectedIndex: 4,
-                    //     );
-                    //   }));
-                    // } else {
-                    //   Navigator.of(context)
-                    //       .pushReplacement(MaterialPageRoute(builder: (context) {
-                    //     return AppBottomNavigationBar(
-                    //       isStudent: false,
-                    //       selectedIndex: 4,
-                    //     );
-                    //   }));
-                    // }
+                    log("123");
+                    log(token);
+                    int role = handleRole(token);
+                    print(role);
+                    if (role == 0) {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return AppBottomNavigationBar(
+                          isStudent: true,
+                          selectedIndex: 4,
+                        );
+                      }));
+                    } else {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return AppBottomNavigationBar(
+                          isStudent: false,
+                          selectedIndex: 4,
+                        );
+                      }));
+                    }
                     // log(token);
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   const SnackBar(content: Text('Processing Data')),
