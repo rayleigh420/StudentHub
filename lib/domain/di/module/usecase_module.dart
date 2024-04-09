@@ -5,13 +5,15 @@ import 'package:boilerplate/domain/repository/educations/education_repository.da
 import 'package:boilerplate/domain/repository/experiences/experience_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
-import 'package:boilerplate/domain/repository/profile/profle_company_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
+import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
-import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
 import 'package:boilerplate/domain/usecase/education/get_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/education/udpate_education_by_student_id.dart';
@@ -24,10 +26,18 @@ import 'package:boilerplate/domain/usecase/post/find_post_by_id_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/insert_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/udpate_post_usecase.dart';
-import 'package:boilerplate/domain/usecase/profile/create_profile_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/create_profile_company_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecase.dart';
 
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
+import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
+import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
+import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
+
+import 'package:boilerplate/domain/usecase/project/get_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_projects_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
@@ -73,22 +83,30 @@ mixin UseCaseModule {
       StudentHubSignupUC(getIt<AuthRepository>()),
     );
 
-    //profile
+    // Profile:--------------------------------------------------------------------
     getIt.registerSingleton<ProfileTestUC>(
       ProfileTestUC(getIt<AuthRepository>()),
     );
     getIt.registerSingleton<CreateProfileCompanyUC>(
       CreateProfileCompanyUC(getIt<ProfileCompanyRepository>()),
     );
+    getIt.registerSingleton<CreateProfileStudentUC>(
+      CreateProfileStudentUC(getIt<ProfileStudentRepository>()),
+    );
 
-    //projects
+    // Project:--------------------------------------------------------------------
     getIt.registerSingleton<GetProjectsUseCase>(
       GetProjectsUseCase(getIt<ProjectRepository>()),
     );
-    // techstack:--------------------------------------------------------------------
+
+    // Techstack:--------------------------------------------------------------------
     getIt.registerSingleton<GetTechStackUseCase>(
       GetTechStackUseCase(getIt<TechStackRepository>()),
     );
+
+    // SkillSet:--------------------------------------------------------------------
+    getIt.registerSingleton<GetSkillSetUC>(
+        GetSkillSetUC(getIt<SkillSetRepository>()));
 
     // Language:--------------------------------------------------------------------
     getIt.registerSingleton<GetLanguageByStudentIdUseCase>(
@@ -113,5 +131,19 @@ mixin UseCaseModule {
     getIt.registerSingleton<UpdateExperienceByStudentIdUseCase>(
       UpdateExperienceByStudentIdUseCase(getIt<ExperienceRepository>()),
     );
+
+    getIt.registerSingleton<GetProfileUseCase>(
+      GetProfileUseCase(getIt<ProfileUserRepository>()),
+    );
+
+    getIt.registerSingleton<GetCompanyProjectsUseCase>(
+      GetCompanyProjectsUseCase(getIt<ProjectRepository>()),
+    );
+    getIt.registerSingleton<PostCompanyProjectsUseCase>(
+        PostCompanyProjectsUseCase(getIt<ProjectRepository>()));
+    getIt.registerSingleton<UpdateProjectsUseCase>(
+        UpdateProjectsUseCase(getIt<ProjectRepository>()));
+    getIt.registerSingleton<DeleteProjectsUseCase>(
+        DeleteProjectsUseCase(getIt<ProjectRepository>()));
   }
 }

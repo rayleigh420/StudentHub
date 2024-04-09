@@ -15,13 +15,13 @@ class SignUpParams {
   });
 }
 
-class StudentHubSignupUC extends UseCase<String, SignUpParams> {
+class StudentHubSignupUC extends UseCase<bool, SignUpParams> {
   final AuthRepository _authRepository;
 
   StudentHubSignupUC(this._authRepository);
 
   @override
-  Future<String> call({required params}) {
+  Future<bool> call({required params}) {
     return _authRepository.signUpStudentHub(
         params.email, params.password, params.fullName, params.role);
   }

@@ -1,20 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
-
 // import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/di/service_locator.dart';
-
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:flutter/material.dart';
-
-import 'package:http/http.dart' as http;
 
 class InputLogin extends StatefulWidget {
   const InputLogin({super.key});
@@ -24,20 +20,17 @@ class InputLogin extends StatefulWidget {
 }
 
 class _InputLoginState extends State<InputLogin> {
+  bool _loginFail = false;
+  String _loginFailText = '';
   bool _showPassword = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final StudentHubLoginUC _authRepository = getIt<StudentHubLoginUC>();
   //------
   final ThemeStore _themeStore = getIt<ThemeStore>();
-
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    _themeStore.changeBrightnessToDark(false);
-  }
+  final GetProfileUseCase _getProfileUseCase = getIt<GetProfileUseCase>();
 
   Future<String> handleLogin(String email, String password) async {
     try {
@@ -47,6 +40,13 @@ class _InputLoginState extends State<InputLogin> {
 
       return a;
     } catch (e) {
+      setState(
+        () {
+          _loginFail = true;
+          _loginFailText = e.toString();
+        },
+      );
+
       throw new Exception(e.toString());
     }
   }
@@ -57,12 +57,12 @@ class _InputLoginState extends State<InputLogin> {
       print('Payload: ${jwt.payload}');
       print('roles: ${jwt.payload['roles'][0]}');
       // return jwt.payload['roles'][0];
-      String roleString = jwt.payload['roles'][0];
-      int role = int.parse(roleString);
-      print(role);
-      return role;
+      int roleString = jwt.payload['roles'][0];
+      // int role = int.parse(roleString);
+      print(roleString);
+      return roleString;
     } catch (e) {
-      throw new Exception(e.toString());
+      throw e;
     }
   }
 
@@ -117,33 +117,94 @@ class _InputLoginState extends State<InputLogin> {
               buildLaunchButton(context, () async {
                 if (_formKey.currentState!.validate()) {
                   // DeviceUtils.hideKeyboard(context);
-                  log("pressed");
-                  String token = await handleLogin(
-                      _emailController.text, _passwordController.text);
-                  log("123");
-                  log(token);
-                  int role = handleRole(token);
-                  if (role == 0) {
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
-                      return AppBottomNavigationBar(
-                        isStudent: true,
-                        selectedIndex: 4,
-                      );
-                    }));
-                  } else {
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
-                      return AppBottomNavigationBar(
-                        isStudent: false,
-                        selectedIndex: 4,
-                      );
-                    }));
+
+                  try {
+                    String token = await handleLogin(
+                        _emailController.text, _passwordController.text);
+
+                    // lnduy20@clc.fitus.edu.vn
+                    // Password123
+
+                    if (token.isNotEmpty) {
+                      print("token: $token");
+
+                      await _getProfileUseCase.call(params: null);
+
+                      List<int>? roles =
+                          await getIt<SharedPreferenceHelper>().roles;
+
+                      int? currentCompanyId =
+                          await getIt<SharedPreferenceHelper>()
+                              .currentCompanyId;
+
+                      int? currentStudentId =
+                          await getIt<SharedPreferenceHelper>()
+                              .currentStudentId;
+
+                      print("roles from sign in: $roles");
+                      print("currentCompanyId: $currentCompanyId");
+                      print("currentStudentId: $currentStudentId");
+
+                      if (currentStudentId == null &&
+                          currentCompanyId == null) {
+                        if (roles![0] == 0) {
+                          Navigator.of(context)
+                              .pushReplacementNamed('/student_profile_input_1');
+                        } else if (roles![0] == 1) {
+                          print("company");
+                          Navigator.of(context)
+                              .pushReplacementNamed('/company_profile_input_1');
+                        }
+                      } else {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) {
+                          return AppBottomNavigationBar(
+                            isStudent: false,
+                            selectedIndex: 2,
+                          );
+                        }));
+                      }
+                    }
+
+                    // Navigator.of(context)
+                    //     .pushReplacementNamed('/student_profile_input_1');
+
+                    // Navigator.of(context)
+                    //     .pushReplacement(MaterialPageRoute(builder: (context) {
+                    //   return AppBottomNavigationBar(
+                    //     isStudent: true,
+                    //     selectedIndex: 0,
+                    //   );
+                    // }));
+
+                    log("123");
+                    log(token);
+                    int role = handleRole(token);
+                    print(role);
+                    if (role == 0) {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return AppBottomNavigationBar(
+                          isStudent: true,
+                          selectedIndex: 4,
+                        );
+                      }));
+                    } else {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return AppBottomNavigationBar(
+                          isStudent: false,
+                          selectedIndex: 4,
+                        );
+                      }));
+                    }
+                    // log(token);
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   const SnackBar(content: Text('Processing Data')),
+                    // );
+                  } catch (e) {
+                    throw e;
                   }
-                  // log(token);
-                  // ScaffoldMessenger.of(context).showSnackBar(
-                  //   const SnackBar(content: Text('Processing Data')),
-                  // );
                 }
               }),
               const SizedBox(height: 30),
@@ -293,6 +354,19 @@ class _InputLoginState extends State<InputLogin> {
                 return null;
               },
             ),
+            SizedBox(
+              height: 16.0,
+            ),
+            _loginFail
+                ? Container(
+                    height: 20,
+                    child: Text(
+                      "Error: ${_loginFailText}",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.bold),
+                    ))
+                : Container()
           ],
         ));
   }

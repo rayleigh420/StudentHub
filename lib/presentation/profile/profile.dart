@@ -1,5 +1,9 @@
-import 'package:boilerplate/presentation/profile/profile_company_input.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile/store/profile_store.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -7,6 +11,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final ProfileStore _profileStore = getIt<ProfileStore>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // check to see if already called api
+    if (!_profileStore.loading) {
+      _profileStore.getProfile();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,57 +32,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Container(
           padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
-          child: Column(
-            children: [
-              AccountSection(
-                  title: UserAva(
-                    name: "Duy Le",
-                    company: 'Company',
-                  ),
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: UserAva(
-                        name: "Nhat Duy",
-                        company: 'Student',
-                      ),
-                    ),
-                  ]),
-              AccountSection(
-                  title: Text(
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                      'Account Setting'),
-                  children: [
-                    AccountItem(
-                      icon: Icons.manage_accounts_sharp,
-                      title: 'Profile',
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                          return const ProfileCompanyInput();
-                        }));
-                        // Xử lý khi người dùng nhấn vào Profile
-                      },
-                    ),
-                    AccountItem(
-                      icon: Icons.settings,
-                      title: 'Settings',
-                      onTap: () {
-                        // Xử lý khi người dùng nhấn vào Settings
-                      },
-                    ),
-                    AccountItem(
-                      icon: Icons.logout,
-                      title: 'Logout',
-                      onTap: () {
-                        // Xử lý khi người dùng nhấn vào Logout
-                      },
-                    ),
-                  ])
-            ],
-          )),
+          child: buildMainContent(context)),
     ));
+  }
+
+  Widget buildMainContent(BuildContext context) {
+    return Observer(
+      builder: (context) {
+        return _profileStore.loading
+            ? Center(child: CircularProgressIndicator())
+            : buildProfileContent(context);
+      },
+    );
+  }
+
+  Widget buildProfileContent(BuildContext context) {
+    return Column(
+      children: [
+        AccountSection(
+            title: UserAva(
+              name: _profileStore.profile!.fullname,
+              company:
+                  _profileStore.profile!.roles[0] == 0 ? 'Student' : 'Company',
+            ),
+            children: [
+              // Container(
+              //   margin: EdgeInsets.only(left: 20),
+              //   child: UserAva(
+              //     name: "Nhat Duy",
+              //     company: 'Student',
+              //   ),
+              // ),
+            ]),
+        AccountSection(
+            title: Text(
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                'Account Setting'),
+            children: [
+              AccountItem(
+                icon: Icons.manage_accounts_sharp,
+                title: 'Profile',
+                onTap: () {
+                  if (_profileStore.profile!.roles[0] == 1) {
+                    Navigator.of(context, rootNavigator: false).push(
+                        MaterialPageRoute(
+                            builder: (context) => ProfileCompanyInput(),
+                            maintainState: false));
+                  } else {
+                    Navigator.of(context, rootNavigator: false).push(
+                        MaterialPageRoute(
+                            builder: (context) => ProfileInput1(),
+                            maintainState: false));
+                  }
+
+                  // Navigator.of(context)
+                  //     .pushReplacement(MaterialPageRoute(builder: (context) {
+                  //   return const ProfileCompanyInput();
+                  // }));
+                  // Xử lý khi người dùng nhấn vào Profile
+                },
+              ),
+              AccountItem(
+                icon: Icons.settings,
+                title: 'Settings',
+                onTap: () {
+                  // Xử lý khi người dùng nhấn vào Settings
+                },
+              ),
+              AccountItem(
+                icon: Icons.logout,
+                title: 'Logout',
+                onTap: () {
+                  // Xử lý khi người dùng nhấn vào Logout
+                },
+              ),
+            ])
+      ],
+    );
   }
 }
 

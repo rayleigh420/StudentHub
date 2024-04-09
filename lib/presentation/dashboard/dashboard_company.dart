@@ -1,9 +1,12 @@
 import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class DashboardCompanyScreen extends StatefulWidget {
   @override
@@ -11,6 +14,16 @@ class DashboardCompanyScreen extends StatefulWidget {
 }
 
 class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
+  final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_projectCompanyStore.loading) {
+      _projectCompanyStore.getCompanyProjects();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -41,35 +54,54 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
                           style: TextStyle(fontSize: 16), "Post a job")),
                 ],
               ),
-              // Row(
-              //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   mainAxisSize: MainAxisSize.min,
-              //   children: [
-              //   ],
-              // ),
+
               Container(
                 margin: EdgeInsets.only(top: 20),
                 child: FilterButtons(),
               ),
-              // ProjectItem(),
-              ListProjectCompany(),
-              Container(
-                margin: EdgeInsets.only(
-                    top: DeviceUtils.getScaledHeight(context, 0.35)),
-                child: Center(
-                    child: Column(
-                  children: [
-                    const Text(
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                        "Welcome Duy!"),
-                    const Text(
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                        "You have no jobs!"),
-                  ],
-                )),
+              const SizedBox(
+                height: 16,
               ),
+              // ProjectItem(),
+              // ListProjectCompany(),
+              buildProjectsContent(),
+              // Container(
+              //   margin: EdgeInsets.only(
+              //       top: DeviceUtils.getScaledHeight(context, 0.35)),
+              //   child: Center(
+              //       child: Column(
+              //     children: [
+              //       const Text(
+              //           style: TextStyle(fontWeight: FontWeight.w500),
+              //           "Welcome Duy!"),
+              //       const Text(
+              //           style: TextStyle(fontWeight: FontWeight.w500),
+              //           "You have no jobs!"),
+              //     ],
+              //   )),
+              // ),
             ],
           )),
     )));
+  }
+
+  Widget buildProjectsContent() {
+    return Observer(builder: (context) {
+      return _projectCompanyStore.loading
+          ? Center(child: CircularProgressIndicator())
+          : buildProjectsList();
+    });
+  }
+
+  Widget buildProjectsList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: _projectCompanyStore.companyProjects!.projects!.length,
+      itemBuilder: (context, index) {
+        return ProjectItemCompany(
+          project: _projectCompanyStore.companyProjects!.projects![index],
+        );
+      },
+    );
   }
 }

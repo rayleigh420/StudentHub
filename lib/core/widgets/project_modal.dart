@@ -1,5 +1,6 @@
 import 'package:boilerplate/di/service_locator.dart';
-import 'package:boilerplate/domain/entity/project/project.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
+// import 'package:boilerplate/domain/entity/project/project.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/project/student/submit_project.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
@@ -104,9 +105,13 @@ class _ProjectModalState extends State<ProjectModal> {
               const SizedBox(
                 height: 10,
               ),
-              Text(
-                widget.project.title,
-                // style: TextStyle(fontSize: 14),
+              SizedBox(
+                width: DeviceUtils.getScaledWidth(context, 0.7),
+                child: Text(
+                  widget.project.title!,
+                  overflow: TextOverflow.fade,
+                  // style: TextStyle(fontSize: 14),
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -214,7 +219,8 @@ class _ProjectModalState extends State<ProjectModal> {
             width: 10,
           ),
           Text(
-              "${widget.project.scopeFrom} ${widget.project.scopeFrom2} - ${widget.project.scopeTo} ${widget.project.scopeTo2}"),
+            "${widget.project.projectScopeFlag == 0 ? "One to three months" : "Three to six months"}",
+          ),
         ],
       ),
     );
@@ -222,12 +228,12 @@ class _ProjectModalState extends State<ProjectModal> {
 
   Widget buildStudentNumber(BuildContext context) {
     String studentStr;
-    if (widget.project.quantityRequired == 1) {
+    if (widget.project.numberOfStudents == 1) {
       studentStr = "1 - 1 student";
-    } else if (widget.project.quantityRequired == null) {
+    } else if (widget.project.numberOfStudents == null) {
       studentStr = "0 student";
     } else {
-      studentStr = "1 - ${widget.project.quantityRequired} students";
+      studentStr = "1 - ${widget.project.numberOfStudents} students";
     }
     return Container(
       child: Row(

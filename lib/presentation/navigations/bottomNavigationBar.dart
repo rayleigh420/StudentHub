@@ -92,6 +92,7 @@ import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/presentation/message/message.dart';
 import 'package:boilerplate/presentation/notification/noti_list.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
+import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/presentation/project/project.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -110,16 +111,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
   bool _isStudent = false;
-  String _accessToken = "";
   static List<Widget> _widgetOptions = [];
-
-  Future<void> _loadAccessToken() async {
-    final accessToken = await getIt<SharedPreferenceHelper>().authToken;
-    setState(() {
-      _accessToken = accessToken.toString();
-      print('1');
-    });
-  }
 
   @override
   void initState() {
@@ -128,37 +120,26 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     _selectedIndex = widget.selectedIndex;
     _widgetOptions = <Widget>[
       BrowseProjectScreen(),
-      // MeetingScreen(),
       MessageList(),
-      // true ? DashboardStudentScreen() : DashboardCompanyScreen(),
-      !_isStudent ? DashboardCompanyScreen() : DashboardStudentScreen(),
+      _isStudent ? DashboardStudentScreen() : DashboardCompanyScreen(),
       NotiList(),
       ProfileScreen()
-      // DashboardScreen(),
-      // ProfileScreen(),
-      // HomeScreen(),
     ];
-    _loadAccessToken();
-    if (_selectedIndex == 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => new AlertDialog(
-            title: new Text("title"),
-            content: new Text("Message"),
-            actions: <Widget>[
-              new ElevatedButton(
-                child: new Text("OK"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      });
-    }
   }
+
+  // void testRole() async {
+  //   List<int>? roles = await getIt<SharedPreferenceHelper>().roles;
+
+  //   int? currentCompanyId =
+  //       await getIt<SharedPreferenceHelper>().currentCompanyId;
+
+  //   int? currentStudentId =
+  //       await getIt<SharedPreferenceHelper>().currentStudentId;
+
+  //   print("roles from tab: $roles");
+  //   print("currentCompanyId: $currentCompanyId");
+  //   print("currentStudentId: $currentStudentId");
+  // }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -166,16 +147,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     });
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      title: Text('StudentHub'),
-      // actions: _buildActions(context),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    log(_accessToken);
     return CupertinoTabScaffold(
       // appBar: _buildAppBar(),
       tabBuilder: (BuildContext context, int index) {

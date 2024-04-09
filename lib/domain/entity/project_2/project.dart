@@ -8,7 +8,12 @@ class Project {
   String? title;
   String? description;
   int? typeFlag;
-
+  int? numberOfStudents;
+  // List<dynamic>? proposals;
+  int? countProposals;
+  int? countMessages;
+  int? countHired;
+  bool? isSaved;
   Project({
     this.id,
     this.createdAt,
@@ -19,6 +24,12 @@ class Project {
     this.title,
     this.description,
     this.typeFlag,
+    this.numberOfStudents,
+    // this.proposals,
+    this.countProposals,
+    this.countMessages,
+    this.countHired,
+    this.isSaved,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +43,12 @@ class Project {
       'title': title,
       'description': description,
       'typeFlag': typeFlag,
+      'numberOfStudents': numberOfStudents,
+      // 'proposals': proposals,
+      'countProposals': countProposals,
+      'countMessages': countMessages,
+      'countHired': countHired,
+      'isSaved': isSaved ?? false,
     };
   }
 
@@ -47,6 +64,12 @@ class Project {
       title: map['title'],
       description: map['description'],
       typeFlag: map['typeFlag'],
+      numberOfStudents: map['numberOfStudents'],
+      // proposals: List<dynamic>.from(map['proposals']),
+      countProposals: map['countProposals'],
+      countMessages: map['countMessages'],
+      countHired: map['countHired'],
+      isSaved: map['isSaved'],
     );
   }
 }
