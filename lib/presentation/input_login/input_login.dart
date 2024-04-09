@@ -3,6 +3,7 @@ import 'dart:developer';
 // import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
@@ -28,6 +29,8 @@ class _InputLoginState extends State<InputLogin> {
   //------
   final ThemeStore _themeStore = getIt<ThemeStore>();
   final _formKey = GlobalKey<FormState>();
+
+  final GetProfileUseCase _getProfileUseCase = getIt<GetProfileUseCase>();
 
   Future<String> handleLogin(String email, String password) async {
     try {
@@ -122,36 +125,46 @@ class _InputLoginState extends State<InputLogin> {
                     // lnduy20@clc.fitus.edu.vn
                     // Password123
 
-                    // List<int>? roles =
-                    //     await getIt<SharedPreferenceHelper>().roles;//null
+                    if (token.isNotEmpty) {
+                      print("token: $token");
 
-                    // int? currentCompanyId =
-                    //     await getIt<SharedPreferenceHelper>().currentCompanyId;
+                      await _getProfileUseCase.call(params: null);
 
-                    // int? currentStudentId =
-                    //     await getIt<SharedPreferenceHelper>().currentStudentId;
+                      List<int>? roles =
+                          await getIt<SharedPreferenceHelper>().roles;
 
-                    // print("roles from sign in: ${roles![0]}");
-                    // print("currentCompanyId: $currentCompanyId");
-                    // print("currentStudentId: $currentStudentId");
+                      int? currentCompanyId =
+                          await getIt<SharedPreferenceHelper>()
+                              .currentCompanyId;
 
-                    // if (currentStudentId == null && currentCompanyId == null) {
-                    //   if (roles[0] == 0) {
-                    //     Navigator.of(context)
-                    //         .pushReplacementNamed('/student_profile_input_1');
-                    //   } else if (roles[0] == 1) {
-                    //     Navigator.of(context)
-                    //         .pushReplacementNamed('/company_profile_input_1');
-                    //   }
-                    // } else {
-                    //   Navigator.of(context).pushReplacement(
-                    //       MaterialPageRoute(builder: (context) {
-                    //     return AppBottomNavigationBar(
-                    //       isStudent: roles[0] == 0 ? true : false,
-                    //       selectedIndex: 0,
-                    //     );
-                    //   }));
-                    // }
+                      int? currentStudentId =
+                          await getIt<SharedPreferenceHelper>()
+                              .currentStudentId;
+
+                      print("roles from sign in: $roles");
+                      print("currentCompanyId: $currentCompanyId");
+                      print("currentStudentId: $currentStudentId");
+
+                      if (currentStudentId == null &&
+                          currentCompanyId == null) {
+                        if (roles![0] == 0) {
+                          Navigator.of(context)
+                              .pushReplacementNamed('/student_profile_input_1');
+                        } else if (roles![0] == 1) {
+                          print("company");
+                          Navigator.of(context)
+                              .pushReplacementNamed('/company_profile_input_1');
+                        }
+                      } else {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) {
+                          return AppBottomNavigationBar(
+                            isStudent: false,
+                            selectedIndex: 2,
+                          );
+                        }));
+                      }
+                    }
 
                     // Navigator.of(context)
                     //     .pushReplacementNamed('/student_profile_input_1');
