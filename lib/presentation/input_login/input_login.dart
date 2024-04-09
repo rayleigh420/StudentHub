@@ -151,6 +151,7 @@ class _InputLoginState extends State<InputLogin> {
                           Navigator.of(context)
                               .pushReplacementNamed('/student_profile_input_1');
                         } else if (roles![0] == 1) {
+                          print("company");
                           Navigator.of(context)
                               .pushReplacementNamed('/company_profile_input_1');
                         }
