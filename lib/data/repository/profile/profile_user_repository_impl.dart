@@ -17,6 +17,7 @@ class ProfileUserRepositoryImpl extends ProfileUserRepository {
       // final token = await _sharedPrefsHelper.authToken;
       final res = await _profileApi.getProfile();
       log("profile from profile user rep imp");
+      print("profile from profile user rep imp");
       res.getTypes();
       if (res.company != null) {
         _sharedPrefsHelper.saveCurrentCompanyId(res.company!.userId);
