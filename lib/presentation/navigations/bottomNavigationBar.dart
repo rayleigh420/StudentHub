@@ -122,8 +122,8 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       BrowseProjectScreen(),
       // MeetingScreen(),
       MessageList(),
-      // true ? DashboardStudentScreen() : DashboardCompanyScreen(),
-      DashboardStudentScreen(),
+      widget.isStudent ? DashboardStudentScreen() : DashboardCompanyScreen(),
+      // DashboardStudentScreen(),
       NotiList(),
       ProfileScreen()
       // DashboardScreen(),
