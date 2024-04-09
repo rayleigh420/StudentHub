@@ -93,13 +93,17 @@ class ProjectApi {
       throw new Exception(e.toString());
     }
   }
-  Future<Project> updateProject(String token,int id , int typeFlag)async{
+  Future<Project> updateProject(String token,Project project)async{
     try {
       final authToken = "Bearer ${token}";
       final res = await _dioClient.dio.patch(
-        Endpoints.updateProject + "/" + id.toString(),
+        Endpoints.updateProject + "/" + project.id.toString(),
         data: jsonEncode({
-          "typeFlag": typeFlag
+           "projectScopeFlag": project.projectScopeFlag,
+            "title": project.title,
+            "description": project.description,
+            "numberOfStudents": project.numberOfStudents,
+            "typeFlag": 1
         }),
         options: Options(
           headers: {
