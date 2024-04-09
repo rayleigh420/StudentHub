@@ -1,6 +1,7 @@
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -11,6 +12,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileStore _profileStore = getIt<ProfileStore>();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -30,29 +32,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Container(
           padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
-          child: buildMainContent()),
+          child: buildMainContent(context)),
     ));
   }
 
-  Widget buildMainContent() {
+  Widget buildMainContent(BuildContext context) {
     return Observer(
       builder: (context) {
         return _profileStore.loading
             ? Center(child: CircularProgressIndicator())
-            : buildProfileContent();
+            : buildProfileContent(context);
       },
     );
   }
 
-  Widget buildProfileContent() {
+  Widget buildProfileContent(BuildContext context) {
     return Column(
       children: [
         AccountSection(
             title: UserAva(
               name: _profileStore.profile!.fullname,
-              company: _profileStore.profile!.student != null
-                  ? 'Student'
-                  : 'Company',
+              company:
+                  _profileStore.profile!.roles[0] == 0 ? 'Student' : 'Company',
             ),
             children: [
               // Container(
@@ -72,10 +73,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: Icons.manage_accounts_sharp,
                 title: 'Profile',
                 onTap: () {
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(builder: (context) {
-                    return const ProfileCompanyInput();
-                  }));
+                  if (_profileStore.profile!.roles[0] == 1) {
+                    Navigator.of(context, rootNavigator: false).push(
+                        MaterialPageRoute(
+                            builder: (context) => ProfileCompanyInput(),
+                            maintainState: false));
+                  } else {
+                    Navigator.of(context, rootNavigator: false).push(
+                        MaterialPageRoute(
+                            builder: (context) => ProfileInput1(),
+                            maintainState: false));
+                  }
+
+                  // Navigator.of(context)
+                  //     .pushReplacement(MaterialPageRoute(builder: (context) {
+                  //   return const ProfileCompanyInput();
+                  // }));
                   // Xử lý khi người dùng nhấn vào Profile
                 },
               ),

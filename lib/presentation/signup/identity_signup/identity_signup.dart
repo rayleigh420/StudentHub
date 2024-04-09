@@ -70,14 +70,10 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             // const SizedBox(height: 17.0),
             buildForm(context),
             const SizedBox(height: 30),
-            buildLaunchButton(
-                context,
-                (selected == 0)
-                    ? null
-                    : () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => InputSignUp(type: selected)));
-                      }),
+            buildLaunchButton(context, () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => InputSignUp(type: selected)));
+            }),
             const SizedBox(height: 30),
             buildSignupSection(context)
           ],
@@ -105,7 +101,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               height: x,
               width: y,
             ),
-            boxValue: 2,
+            boxValue: 0,
             text: "I am a student, find company for experience (money)"),
       ],
     );
@@ -124,7 +120,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             minimumSize: Size(MediaQuery.of(context).size.width * 1,
                 MediaQuery.of(context).size.height * 0.06),
           ),
-          onPressed: (selected == 0) ? null : onPress,
+          onPressed: onPress,
           child: const Text(
             'Create Account',
             style: TextStyle(
