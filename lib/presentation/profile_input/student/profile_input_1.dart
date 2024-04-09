@@ -1,13 +1,24 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/educations/education.dart';
+import 'package:boilerplate/domain/entity/language/language_student.dart';
+import 'package:boilerplate/domain/entity/language/language_student_list.dart';
+import 'package:boilerplate/domain/entity/educations/education_list.dart';
+import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
+import 'package:boilerplate/domain/usecase/education/udpate_education_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
+import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
 import 'package:boilerplate/domain/usecase/education/get_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
-import 'package:boilerplate/presentation/profile_input/profile_input_2.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_2.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,17 +46,40 @@ class _ProfileInput1State extends State<ProfileInput1> {
   List<TechStack> techStacks = [];
   int? techStacksValue;
 
+  final GetSkillSetUC _getSkillSetUC = getIt<GetSkillSetUC>();
+  List<SkillSet> skillSets = [];
+  int? skillSetId;
+  final List<SkillSet> skills = [];
+
   final GetLanguageByStudentIdUseCase _getLanguageByStudentIdUseCase =
       getIt<GetLanguageByStudentIdUseCase>();
+
+  final UpdateLanguageByStudentIdUseCase _updateLanguageByStudentIdUseCase =
+      getIt<UpdateLanguageByStudentIdUseCase>();
 
   final GetEducationByStudentIdUseCase _getEducationByStudentIdUseCase =
       getIt<GetEducationByStudentIdUseCase>();
 
-  final List<String> skillsets = [];
+  final UpdateEducationByStudentIdUseCase _updateEducationByStudentIdUseCase =
+      getIt<UpdateEducationByStudentIdUseCase>();
+
+  final GetExperienceByStudentIdUseCase _getExperienceByStudentIdUseCase =
+      getIt<GetExperienceByStudentIdUseCase>();
+
+  final CreateProfileStudentUC _createProfileStudentUC =
+      getIt<CreateProfileStudentUC>();
+
   final TextEditingController skillSetTextController = TextEditingController();
+
+  final LanguageStudentList languages =
+      LanguageStudentList(languageStudents: []);
+
+  final EducationList educations = EducationList(educations: []);
+
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   Color borderColor = Colors.black;
+
   @override
   void initState() {
     super.initState();
@@ -57,9 +91,14 @@ class _ProfileInput1State extends State<ProfileInput1> {
       borderColor = Colors.black;
     }
 
-    // getTechStacks();
-    getLanguageByStudentId();
-    getEducationByStudentId();
+    getTechStacks();
+    getSkillSet();
+
+    // getLanguageByStudentId();
+    // getEducationByStudentId();
+    // getExperienceByStudentId();
+
+    // createProfileStudent();
   }
 
   void getTechStacks() async {
@@ -87,9 +126,53 @@ class _ProfileInput1State extends State<ProfileInput1> {
     // });
   }
 
+  void getExperienceByStudentId() async {
+    final experienceList =
+        await _getExperienceByStudentIdUseCase.call(params: null);
+    // setState(() {
+    //   experienceList = experienceList;
+    // });
+  }
+
+  void updateLanguageByStudentId() async {
+    final result =
+        await _updateLanguageByStudentIdUseCase.call(params: languages);
+  }
+
+  void updateEducationByStudentId() async {
+    final result =
+        await _updateEducationByStudentIdUseCase.call(params: educations);
+  }
+
+  void createProfileStudent() async {
+    final result = await _createProfileStudentUC.call(
+        params: CreateProfileStudentParams(
+      techStackId: techStacksValue!,
+      skillSets: skills.map((skill) => skill.id!.toString()).toList(),
+    ));
+
+    if (result) {
+      updateLanguageByStudentId();
+      updateEducationByStudentId();
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
+  }
+
+  // void handlePress() {
+  //   _profileTestUC.call();
+  // }
+
+  void getSkillSet() async {
+    final skillSetList = await _getSkillSetUC.call(params: null);
+
+    setState(() {
+      skillSets = skillSetList.SkillSets!;
+    });
+    // log(techStackList.techStacks.toString());
   }
 
   @override
@@ -236,18 +319,23 @@ class _ProfileInput1State extends State<ProfileInput1> {
 
   void addSkillSet() {
     final newSkillSet = skillSetTextController.text.trim();
-    if (newSkillSet.isNotEmpty && !skillsets.contains(newSkillSet)) {
+    if (newSkillSet.isNotEmpty &&
+        skillSets.any((skill) => skill.name == newSkillSet) &&
+        !skills.any((skill) => skill.name == newSkillSet)) {
+      print("Hello");
       setState(() {
-        skillsets.add(newSkillSet);
+        skills.add(skillSets.firstWhere((skill) => skill.name == newSkillSet));
       });
       skillSetTextController.clear();
       skillSetFocusNode.requestFocus();
     }
+    skillSetTextController.clear();
+    skillSetFocusNode.requestFocus();
   }
 
   void _removeTag(int index) {
     setState(() {
-      skillsets.removeAt(index);
+      skills.removeWhere((skill) => skill.id! == index);
     });
   }
 
@@ -258,7 +346,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
           spacing: 8.0,
           runSpacing: 8.0,
           children: List<Widget>.generate(
-            skillsets.length,
+            skills.length,
             (i) => buildSkillsetItem(context, i),
           ),
         ),
@@ -279,16 +367,16 @@ class _ProfileInput1State extends State<ProfileInput1> {
         children: [
           Wrap(
             children: [
-              for (int i = 0; i < skillsets.length; i++)
+              for (int i = 0; i < skills.length; i++)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Chip(
-                    label: Text(skillsets[i]),
+                    label: Text(skills[i].name!),
                     deleteIcon: Icon(
                       Icons.close,
                       size: 15,
                     ),
-                    onDeleted: () => _removeTag(i),
+                    onDeleted: () => _removeTag(skills[i].id!),
                   ),
                 ),
               Row(
@@ -322,9 +410,9 @@ class _ProfileInput1State extends State<ProfileInput1> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Chip(
-        label: Text(skillsets[i]),
+        label: Text(skills[i].name!),
         deleteIcon: Icon(Icons.close),
-        onDeleted: () => _removeTag(i),
+        onDeleted: () => _removeTag(skills[i].id!),
       ),
     );
   }
@@ -366,10 +454,20 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.add,
-                          size: 17,
-                        ),
+                        child: IconButton(
+                            icon: Icon(Icons.add, size: 17),
+                            onPressed: _addLanguage),
+                        // ElevatedButton(
+                        //     child: Icon(Icons.add, size: 17),
+                        //     onPressed: _addLanguage,
+                        //     style: ButtonStyle(
+                        //       shape: MaterialStateProperty.all<
+                        //           RoundedRectangleBorder>(
+                        //         RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(999),
+                        //         ),
+                        //       ),
+                        //     )),
                       ),
                       const SizedBox(width: 10),
                       Container(
@@ -393,14 +491,18 @@ class _ProfileInput1State extends State<ProfileInput1> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        const Text(
-          'Ennglish: Native',
-          textAlign: TextAlign.start,
-          style: TextStyle(
-            fontSize: 15,
-          ),
-        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: languages.languageStudents!.map((language) {
+            return Text(
+              '${language.languageName}: ${language.level}',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            );
+          }).toList(),
+        )
       ],
     );
   }
@@ -442,10 +544,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         padding: const EdgeInsets.all(4.0),
-                        child: Icon(
-                          Icons.add,
-                          size: 17,
-                          weight: 100,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.add,
+                            size: 17,
+                            weight: 100,
+                          ),
+                          onPressed: _addEducation,
                         ),
                       ),
                     ],
@@ -456,13 +561,127 @@ class _ProfileInput1State extends State<ProfileInput1> {
           ),
         ),
         const SizedBox(height: 16),
-        buildEducationItem(context, 1),
-        buildEducationItem(context, 2)
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: educations.educations!.map((education) {
+            return buildEducationItem(context, education);
+          }).toList(),
+        )
       ],
     );
   }
 
-  Widget buildEducationItem(BuildContext context, int index) {
+  void _addLanguage() {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController levelController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+              child: Container(
+            child: Text(
+              'Add a language',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          )),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 2 / 3,
+            width: MediaQuery.of(context).size.width * 14 / 15,
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(hintText: "Language name"),
+                ),
+                TextField(
+                  controller: levelController,
+                  decoration: InputDecoration(hintText: "Language level"),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Done'),
+              onPressed: () {
+                setState(() {
+                  // Replace this with your actual code to add the language to the list
+                  languages.languageStudents!.add(LanguageStudent(
+                    id: null,
+                    languageName: nameController.text,
+                    level: levelController.text,
+                  ));
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _addEducation() {
+    final TextEditingController schoolController = TextEditingController();
+    final TextEditingController startYearController = TextEditingController();
+    final TextEditingController endYearController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(
+              child: Container(
+            child: Text(
+              'Add a education',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+          )),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 2 / 3,
+            width: MediaQuery.of(context).size.width * 14 / 15,
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: schoolController,
+                  decoration: InputDecoration(hintText: "School name"),
+                ),
+                TextField(
+                  controller: startYearController,
+                  decoration: InputDecoration(hintText: "Start year"),
+                ),
+                TextField(
+                  controller: endYearController,
+                  decoration: InputDecoration(hintText: "End year"),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Done'),
+              onPressed: () {
+                setState(() {
+                  // Replace this with your actual code to add the education to the list
+                  educations.educations!.add(Education(
+                    id: null,
+                    schoolName: schoolController.text,
+                    startYear: DateTime(int.parse(startYearController.text)),
+                    endYear: DateTime(int.parse(endYearController.text)),
+                  ));
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildEducationItem(BuildContext context, Education education) {
     return Container(
       margin: EdgeInsets.only(bottom: 15),
       child: Row(
@@ -471,7 +690,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Le Hong Phong High School',
+                education.schoolName!,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 15,
@@ -479,7 +698,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
               ),
               const SizedBox(height: 10),
               Text(
-                '2009-2010',
+                '${education.startYear!.year} - ${education.endYear!.year}',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 15,
@@ -519,10 +738,18 @@ class _ProfileInput1State extends State<ProfileInput1> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                     padding: const EdgeInsets.all(4.0),
-                    child: Icon(
-                      Icons.delete,
-                      size: 17,
-                      weight: 100,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        size: 17,
+                        weight: 100,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          educations.educations!.removeWhere((item) =>
+                              item.schoolName == education.schoolName);
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -542,6 +769,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
         children: [
           ElevatedButton(
             onPressed: () {
+              createProfileStudent();
               log("push");
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {

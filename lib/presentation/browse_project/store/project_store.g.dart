@@ -72,6 +72,20 @@ mixin _$ProjectStore on _ProjectStore, Store {
     return _$getProjectsAsyncAction.run(() => super.getProjects());
   }
 
+  late final _$_ProjectStoreActionController =
+      ActionController(name: '_ProjectStore', context: context);
+
+  @override
+  dynamic refreshProjects() {
+    final _$actionInfo = _$_ProjectStoreActionController.startAction(
+        name: '_ProjectStore.refreshProjects');
+    try {
+      return super.refreshProjects();
+    } finally {
+      _$_ProjectStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

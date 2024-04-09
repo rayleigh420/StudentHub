@@ -24,9 +24,10 @@ class EducationApi {
   Future<EducationList> updateEducationByStudentId(
       int studentId, EducationList educationList) async {
     try {
-      final res = await _dioClient.dio.put(
-          '${Endpoints.getEducations}/$studentId',
-          data: educationList.educations!.map((e) => e.toMap()).toList());
+      final res = await _dioClient.dio
+          .put('${Endpoints.updateEducation}/$studentId', data: {
+        'education': educationList.educations!.map((e) => e.toMap()).toList()
+      });
       return EducationList.fromJson(res.data);
     } catch (e) {
       print(e.toString());

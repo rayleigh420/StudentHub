@@ -1,24 +1,29 @@
+import 'package:boilerplate/core/widgets/project_item.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Project {
-  final String name;
-  final String day;
-  final List<String> criteria;
-  final int proposals;
-  final int messages;
-  final int hired;
+// class Project {
+//   final String name;
+//   final String day;
+//   final List<String> criteria;
+//   final int proposals;
+//   final int messages;
+//   final int hired;
 
-  Project(
-      {required this.name,
-      required this.day,
-      required this.criteria,
-      required this.proposals,
-      required this.messages,
-      required this.hired});
-}
+//   Project(
+//       {required this.name,
+//       required this.day,
+//       required this.criteria,
+//       required this.proposals,
+//       required this.messages,
+//       required this.hired});
+// }
 
 class ProjectItemCompany extends StatefulWidget {
   final Project project;
@@ -30,14 +35,14 @@ class ProjectItemCompany extends StatefulWidget {
 }
 
 class _ProjectItemCompanyState extends State<ProjectItemCompany> {
+  DeleteProjectsUseCase deleteProjectsUseCase = getIt<DeleteProjectsUseCase>();
+  UpdateProjectsUseCase updateProjectsUseCase = getIt<UpdateProjectsUseCase>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        Navigator.of(context, rootNavigator: false).push(
-                  MaterialPageRoute(
-                      builder: (context) => HireOffer(),
-                      maintainState: false));
+      onTap: () {
+        Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+            builder: (context) => HireOffer(), maintainState: false));
       },
       child: Container(
           margin: EdgeInsets.only(bottom: 20),
@@ -54,11 +59,11 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.project.name,
+                        widget.project.title!,
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        widget.project.day,
+                        "${dateDiff(DateTime.now(), widget.project.createdAt!).toString()} day ago",
                         style: TextStyle(fontSize: 13),
                       )
                     ],
@@ -79,13 +84,17 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                     "Students are looking for",
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  if (widget.project.criteria.isNotEmpty)
-                    ...widget.project.criteria
-                        .map((criteria) => Text(
-                              criteria,
-                              style: TextStyle(fontSize: 14),
-                            ))
-                        .toList(),
+                  Text(
+                    "Everyone",
+                    style: TextStyle(fontSize: 14),
+                  )
+                  // if (widget.project.criteria.isNotEmpty)
+                  //   ...widget.project.criteria
+                  //       .map((criteria) => Text(
+                  //             criteria,
+                  //             style: TextStyle(fontSize: 14),
+                  //           ))
+                  //       .toList(),
                 ],
               ),
               SizedBox(height: 20),
@@ -130,6 +139,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
   }
 
   void buildModal(BuildContext context) {
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -164,7 +174,16 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ListTile(
                   leading: Icon(Icons.delete),
                   title: Text('Remove posting'),
-                  onTap: () => {},
+                  onTap: () => {
+                    deleteProjectsUseCase.call(params:widget.project.id!)
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.close),
+                  title: Text('Close posting'),
+                  onTap: () => {
+                    updateProjectsUseCase.call(params: widget.project)
+                  },
                 ),
               ],
             ),

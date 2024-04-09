@@ -42,14 +42,12 @@ class AuthRepositoryImpl extends AuthRepository {
   }
 
   @override
-  Future<String> signUpStudentHub(String email, String password,
-      String fullName, int roles) async {
+  Future<bool> signUpStudentHub(
+      String email, String password, String fullName, int roles) async {
     try {
-      final token = await _authApi.signUp(email, password, fullName, roles);
+      final res = await _authApi.signUp(email, password, fullName, roles);
 
-      _sharedPrefsHelper.saveAuthToken(token);
-      _sharedPrefsHelper.saveIsLoggedIn(true);
-      return token;
+      return res;
     } catch (e) {
       throw new Exception(e.toString());
     }
@@ -61,6 +59,7 @@ class AuthRepositoryImpl extends AuthRepository {
     _sharedPrefsHelper.saveIsLoggedIn(value);
     throw UnimplementedError();
   }
+
   @override
   Future<String> testToken() async {
     try {
