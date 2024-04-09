@@ -27,6 +27,7 @@ class ExperienceRepositoryImpl extends ExperienceRepository {
       ExperienceReqList experienceList) async {
     try {
       int? studentId = await _sharedPrefsHelper.currentStudentId;
+      print(studentId);
       ExperienceList result = await _experienceApi.updateExperienceByStudentId(
           studentId!, experienceList);
       return result;

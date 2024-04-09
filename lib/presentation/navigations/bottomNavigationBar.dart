@@ -124,7 +124,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       MessageList(),
       _isStudent ? DashboardStudentScreen() : DashboardCompanyScreen(),
       DashboardStudentScreen(),
-      NotiList(),
+      // NotiList(),
       ProfileScreen()
       // DashboardScreen(),
       // ProfileScreen(),
