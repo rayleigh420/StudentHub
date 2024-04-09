@@ -115,7 +115,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   void initState() {
     super.initState();
-    testRole();
+    // testRole();
     _isStudent = widget.isStudent;
     _selectedIndex = widget.selectedIndex;
     _widgetOptions = <Widget>[
@@ -123,7 +123,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       // MeetingScreen(),
       MessageList(),
       // true ? DashboardStudentScreen() : DashboardCompanyScreen(),
-      !_isStudent ? DashboardCompanyScreen() : DashboardStudentScreen(),
+      DashboardStudentScreen(),
       NotiList(),
       ProfileScreen()
       // DashboardScreen(),
@@ -132,19 +132,19 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     ];
   }
 
-  void testRole() async {
-    // List<String>? roles = await getIt<SharedPreferenceHelper>().roles;
+  // void testRole() async {
+  //   List<int>? roles = await getIt<SharedPreferenceHelper>().roles;
 
-    // int? currentCompanyId =
-    //     await getIt<SharedPreferenceHelper>().currentCompanyId;
+  //   // int? currentCompanyId =
+  //   //     await getIt<SharedPreferenceHelper>().currentCompanyId;
 
-    int? currentStudentId =
-        await getIt<SharedPreferenceHelper>().currentStudentId;
+  //   int? currentStudentId =
+  //       await getIt<SharedPreferenceHelper>().currentStudentId;
 
-    // print("roles: $roles");
-    // print("currentCompanyId: $currentCompanyId");
-    print("currentStudentId: $currentStudentId");
-  }
+  //   print("roles from tab: ${roles![0]}");
+  //   // print("currentCompanyId: $currentCompanyId");
+  //   print("currentStudentId: $currentStudentId");
+  // }
 
   void _onItemTapped(int index) {
     setState(() {
