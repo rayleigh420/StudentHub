@@ -92,6 +92,7 @@ import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/presentation/message/message.dart';
 import 'package:boilerplate/presentation/notification/noti_list.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
+import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/presentation/project/project.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,20 +116,14 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   void initState() {
     super.initState();
-    // testRole();
     _isStudent = widget.isStudent;
     _selectedIndex = widget.selectedIndex;
     _widgetOptions = <Widget>[
       BrowseProjectScreen(),
-      // MeetingScreen(),
       MessageList(),
-      // true ? DashboardStudentScreen() : DashboardCompanyScreen(),
-      DashboardStudentScreen(),
+      _isStudent ? DashboardStudentScreen() : DashboardCompanyScreen(),
       NotiList(),
       ProfileScreen()
-      // DashboardScreen(),
-      // ProfileScreen(),
-      // HomeScreen(),
     ];
   }
 

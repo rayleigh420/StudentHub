@@ -60,7 +60,7 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
                             // ProjectItem(projDat: projDat),
                             // ProjectItem(projDat: projDat),
                             // Text("hi"),
-                            buildProjectContent(),
+                            buildProjectContent(context),
                             const SizedBox(
                               height: 16,
                             ),
@@ -89,10 +89,9 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context, rootNavigator: false).push(
-                  MaterialPageRoute(
-                      builder: (context) => SearchProjectInput(),
-                      maintainState: false));
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  builder: (context) => SearchProjectInput(),
+                  maintainState: true));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -150,15 +149,15 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
     return difference.inDays;
   }
 
-  Widget buildProjectContent() {
+  Widget buildProjectContent(BuildContext context) {
     return Observer(builder: (context) {
       return _projectStore.loading
           ? Text("Fetching data...")
-          : buildListProjects();
+          : buildListProjects(context);
     });
   }
 
-  Widget buildListProjects() {
+  Widget buildListProjects(BuildContext context) {
     return _projectStore.projects != null
         ? ListView.builder(
             shrinkWrap: true,
