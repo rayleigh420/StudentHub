@@ -24,4 +24,72 @@ class ProjectRepositoryImpl extends ProjectRepository {
       throw new Exception(e.toString());
     }
   }
+
+  @override
+  Future<ProjectList> getCompanyProjects() async {
+    try {
+      final id = await _sharedPreferenceHelper.currentCompanyId;
+      if (id == false) {
+        throw new Exception("Company id is null");
+      } else {
+        return await _projectApi.getProjectsCompany(id!);
+      }
+      // return _projectApi.getProjectsCompany(1);
+    } catch (e) {
+      log("error");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<Project> postProject(String title, int scopeType, int studentNumber,
+      String describeProject) async {
+    try {
+      final id = await _sharedPreferenceHelper.currentCompanyId;
+      if (id == false) {
+        throw new Exception("Company id is null");
+      } else {
+        return await _projectApi.postProject(
+            title, scopeType, studentNumber, describeProject, id!);
+      }
+      // return _projectApi.getProjectsCompany(1);
+    } catch (e) {
+      log("error");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
+  
+  @override
+  Future<bool> deleteProject(int id) async{
+     try {
+      final token = await _sharedPreferenceHelper.authToken;
+      log("token");
+      final res = await _projectApi.deleteProject(token!,id);
+
+      return res;
+    } catch (e) {
+      log("error");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+
+  }
+  
+  @override
+  Future<Project> updateProject(Project project) async {
+    // TODO: implement updateProject
+     try {
+      final token = await _sharedPreferenceHelper.authToken;
+      log("token");
+      final res = await _projectApi.updateProject(token!,project);
+
+      return res;
+    } catch (e) {
+      log("error");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
 }

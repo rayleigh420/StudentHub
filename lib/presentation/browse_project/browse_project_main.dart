@@ -1,4 +1,3 @@
-import 'package:boilerplate/core/widgets/progress_indicator_widget.dart';
 import 'package:boilerplate/core/widgets/project_item.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project/project.dart';
@@ -6,8 +5,7 @@ import 'package:boilerplate/presentation/browse_project/store/project_store.dart
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/saved_project/saved_project.dart';
 import 'package:boilerplate/presentation/search_project_screen/search_project_input.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -19,52 +17,12 @@ class BrowseProjectScreen extends StatefulWidget {
 }
 
 class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
-  final data = {
-    "title": "Senior frontend developer (Fintech)",
-    "props": [
-      "Students are looking for",
-      "Clear expectation about your project or deliverables",
-      "React",
-      "Redux",
-      "TypeScript",
-      "GraphQL",
-      "Node.js",
-      "AWS",
-    ],
-    "scopeFrom": 1,
-    "scopeFrom2": "month",
-    "scopeTo": 3,
-    "scopeTo2": "months",
-    "quantityRequired": "6",
-    "createdDate": DateTime.now().add(Duration(days: -3)),
-    "proposal": 6
-  };
-  final projDat = Project(
-      title: "Senior frontend developer (Fintech)",
-      props: [
-        "Students are looking for",
-        "Clear expectation about your project or deliverables",
-        "React",
-        "Redux",
-        "TypeScript",
-        "GraphQL",
-        "Node.js",
-        "AWS",
-      ],
-      scopeFrom: 1,
-      scopeFrom2: "month",
-      scopeTo: 3,
-      scopeTo2: "month",
-      proposal: 6,
-      createdDate: DateTime.now().add(Duration(days: -3)),
-      isSaved: false);
   final ThemeStore _themeStore = getIt<ThemeStore>();
   final ProjectStore _projectStore = getIt<ProjectStore>();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     // check to see if already called api
     if (!_projectStore.loading) {
       _projectStore.getProjects();
@@ -102,7 +60,7 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
                             // ProjectItem(projDat: projDat),
                             // ProjectItem(projDat: projDat),
                             // Text("hi"),
-                            buildProjectContent(),
+                            buildProjectContent(context),
                             const SizedBox(
                               height: 16,
                             ),
@@ -131,10 +89,9 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context, rootNavigator: false).push(
-                  MaterialPageRoute(
-                      builder: (context) => SearchProjectInput(),
-                      maintainState: false));
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  builder: (context) => SearchProjectInput(),
+                  maintainState: true));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -192,22 +149,23 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
     return difference.inDays;
   }
 
-  Widget buildProjectContent() {
+  Widget buildProjectContent(BuildContext context) {
     return Observer(builder: (context) {
       return _projectStore.loading
           ? Text("Fetching data...")
-          : buildListProjects();
+          : buildListProjects(context);
     });
   }
 
-  Widget buildListProjects() {
+  Widget buildListProjects(BuildContext context) {
     return _projectStore.projects != null
         ? ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemCount: _projectStore.projects!.projects!.length,
             itemBuilder: (context, index) {
-              return ProjectItem(projDat: projDat);
+              return ProjectItem(
+                  projDat: _projectStore.projects!.projects![index]);
             },
           )
         : Center(

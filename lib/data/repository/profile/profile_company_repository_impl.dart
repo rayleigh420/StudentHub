@@ -1,6 +1,6 @@
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
-import 'package:boilerplate/domain/repository/profile/profle_company_repository.dart';
+import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 
 class ProfileCompanyRepositoryImpl extends ProfileCompanyRepository {
   final ProfileApi _profileApi;
@@ -25,7 +25,6 @@ class ProfileCompanyRepositoryImpl extends ProfileCompanyRepository {
         token!,
       );
       return res;
-
     } catch (e) {
       throw new Exception(e.toString());
     }

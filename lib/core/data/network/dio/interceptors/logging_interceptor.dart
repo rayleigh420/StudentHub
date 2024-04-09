@@ -175,14 +175,14 @@ class LoggingInterceptor extends Interceptor {
 
   @override
   void onError(
-    DioError err,
+    DioException err,
     ErrorInterceptorHandler handler,
   ) {
     if (level == Level.none) {
       return handler.next(err);
     }
 
-    logPrint('[DIO]<-- HTTP FAILED: $err');
+    logPrint('[DIO]<-- HTTP FAILED: ${err.response!.statusCode}');
 
     return handler.next(err);
   }

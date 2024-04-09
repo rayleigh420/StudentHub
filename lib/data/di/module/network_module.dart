@@ -8,6 +8,7 @@ import 'package:boilerplate/data/network/apis/experiences/experience_api.dart';
 import 'package:boilerplate/data/network/apis/languages/language_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
+import 'package:boilerplate/data/network/apis/skillSet/skill_set_api.dart';
 import 'package:boilerplate/data/network/apis/project/project_api.dart';
 import 'package:boilerplate/data/network/apis/techStacks/tech_stack_api.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
@@ -65,6 +66,8 @@ mixin NetworkModule {
     getIt.registerSingleton(ProjectApi(getIt<DioClient>()));
 
     getIt.registerSingleton<TechStackApi>(TechStackApi(getIt<DioClient>()));
+
+    getIt.registerSingleton<SkillSetApi>(SkillSetApi(getIt<DioClient>()));
 
     getIt.registerSingleton<LanguageApi>(LanguageApi(getIt<DioClient>()));
 
