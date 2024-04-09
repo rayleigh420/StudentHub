@@ -78,12 +78,12 @@ class ProjectRepositoryImpl extends ProjectRepository {
   }
   
   @override
-  Future<Project> updateProject(int id, int typeFlag) async {
+  Future<Project> updateProject(Project project) async {
     // TODO: implement updateProject
      try {
       final token = await _sharedPreferenceHelper.authToken;
       log("token");
-      final res = await _projectApi.updateProject(token!,id,typeFlag);
+      final res = await _projectApi.updateProject(token!,project);
 
       return res;
     } catch (e) {
