@@ -72,4 +72,49 @@ class ProjectApi {
       throw new Exception(e.toString());
     }
   }
+  Future<bool>deleteProject(String token,int id) async {
+    try {
+       final authToken = "Bearer ${token}";
+      final res = await _dioClient.dio.delete(
+        Endpoints.deleteProject + "/" + id.toString(),
+        options: Options(
+          headers: {
+            'Authorization': authToken,
+          },
+        ),
+      );
+      log("cdc2");
+      log(res.data["result"].toString());
+      log(res.data["result"].runtimeType.toString());
+      return true;
+    } catch (e) {
+      log("error in delete projects api");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
+  Future<Project> updateProject(String token,int id , int typeFlag)async{
+    try {
+      final authToken = "Bearer ${token}";
+      final res = await _dioClient.dio.patch(
+        Endpoints.updateProject + "/" + id.toString(),
+        data: jsonEncode({
+          "typeFlag": typeFlag
+        }),
+        options: Options(
+          headers: {
+            'Authorization': authToken,
+          },
+        ),
+      );
+      log("cdc2");
+      log(res.data["result"].toString());
+      log(res.data["result"].runtimeType.toString());
+      return Project.fromJson(res.data["result"]);
+    } catch (e) {
+      log("error in update projects api");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
 }
