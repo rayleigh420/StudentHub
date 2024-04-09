@@ -11,6 +11,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileStore _profileStore = getIt<ProfileStore>();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -50,9 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         AccountSection(
             title: UserAva(
               name: _profileStore.profile!.fullname,
-              company: _profileStore.profile!.student != null
-                  ? 'Student'
-                  : 'Company',
+              company: true ? 'Student' : 'Company',
             ),
             children: [
               // Container(

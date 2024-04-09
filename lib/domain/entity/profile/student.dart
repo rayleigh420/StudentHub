@@ -1,6 +1,8 @@
 import 'package:boilerplate/domain/entity/educations/education.dart';
 import 'package:boilerplate/domain/entity/experiences/experience.dart';
 import 'package:boilerplate/domain/entity/language/Language.dart';
+import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
+import 'package:boilerplate/domain/entity/skillSet/skillSet_list.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 
 class Student {
@@ -15,6 +17,7 @@ class Student {
   List<Education> educations;
   List<Language> languages;
   List<Experience> experiences;
+  List<SkillSet> skillSets;
   dynamic resume;
   dynamic transcript;
   Student(
@@ -30,7 +33,8 @@ class Student {
       this.proposals,
       required this.educations,
       required this.languages,
-      required this.experiences});
+      required this.experiences,
+      required this.skillSets});
 
   factory Student.fromJson(Map<String, dynamic> map) {
     return Student(
@@ -53,6 +57,8 @@ class Student {
       experiences: List<Experience>.from(
           map['experiences']?.map((x) => Experience.fromMap(x))?.toList() ??
               []),
+      skillSets: List<SkillSet>.from(
+          map['skillSets']?.map((x) => SkillSet.fromMap(x))?.toList() ?? []),
     );
   }
 
@@ -71,6 +77,7 @@ class Student {
       'educations': educations.map((x) => x.toMap()).toList(),
       'languages': languages.map((x) => x.toMap()).toList(),
       'experiences': experiences.map((x) => x.toMap()).toList(),
+      'skillSets': skillSets.map((x) => x.toMap()).toList(),
     };
   }
 }

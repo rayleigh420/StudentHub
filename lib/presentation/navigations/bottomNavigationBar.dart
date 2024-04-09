@@ -135,14 +135,14 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   // void testRole() async {
   //   List<int>? roles = await getIt<SharedPreferenceHelper>().roles;
 
-  //   // int? currentCompanyId =
-  //   //     await getIt<SharedPreferenceHelper>().currentCompanyId;
+  //   int? currentCompanyId =
+  //       await getIt<SharedPreferenceHelper>().currentCompanyId;
 
   //   int? currentStudentId =
   //       await getIt<SharedPreferenceHelper>().currentStudentId;
 
-  //   print("roles from tab: ${roles![0]}");
-  //   // print("currentCompanyId: $currentCompanyId");
+  //   print("roles from tab: $roles");
+  //   print("currentCompanyId: $currentCompanyId");
   //   print("currentStudentId: $currentStudentId");
   // }
 
