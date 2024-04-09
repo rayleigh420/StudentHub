@@ -21,9 +21,12 @@ class ProfileUserRepositoryImpl extends ProfileUserRepository {
       if (res.company != null) {
         _sharedPrefsHelper.saveCurrentCompanyId(res.company!.id);
         _sharedPrefsHelper.removeCurrentStudentId();
-      } else {
+      } else if (res.student != null) {
         _sharedPrefsHelper.saveCurrentStudentId(res.student!.id);
         _sharedPrefsHelper.removeCurrentCompanyId();
+      } else {
+        _sharedPrefsHelper.removeCurrentCompanyId();
+        _sharedPrefsHelper.removeCurrentStudentId();
       }
       _sharedPrefsHelper.saveRolesUser(res.roles);
       return res;
