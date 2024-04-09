@@ -1,5 +1,8 @@
 import 'package:boilerplate/core/widgets/project_item.dart';
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +35,8 @@ class ProjectItemCompany extends StatefulWidget {
 }
 
 class _ProjectItemCompanyState extends State<ProjectItemCompany> {
+  DeleteProjectsUseCase deleteProjectsUseCase = getIt<DeleteProjectsUseCase>();
+  UpdateProjectsUseCase updateProjectsUseCase = getIt<UpdateProjectsUseCase>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -134,6 +139,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
   }
 
   void buildModal(BuildContext context) {
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -168,7 +174,16 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ListTile(
                   leading: Icon(Icons.delete),
                   title: Text('Remove posting'),
-                  onTap: () => {},
+                  onTap: () => {
+                    deleteProjectsUseCase.call(params:widget.project.id!)
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.close),
+                  title: Text('Close posting'),
+                  onTap: () => {
+                    updateProjectsUseCase.call(params: widget.project)
+                  },
                 ),
               ],
             ),

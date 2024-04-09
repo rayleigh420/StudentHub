@@ -6,4 +6,6 @@ abstract class ProjectRepository {
   Future<ProjectList> getCompanyProjects();
   Future<Project> postProject(
       String title, int scopeType, int studentNumber, String describeProject);
+  Future<bool> deleteProject(int id);
+  Future<Project> updateProject(Project project);
 }
