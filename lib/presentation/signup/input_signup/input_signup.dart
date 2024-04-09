@@ -352,7 +352,9 @@ class _InputSignUpState extends State<InputSignUp> {
                 MediaQuery.of(context).size.height * 0.06),
           ),
           onPressed: () {
-            onPress();
+            if (_agreeToApply) {
+              onPress();
+            }
           },
           child: const Text(
             'Create Account',
@@ -380,12 +382,12 @@ class _InputSignUpState extends State<InputSignUp> {
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
                 return InputSignUp(
-                  type: (widget.type == 1) ? 2 : 1,
+                  type: (widget.type == 1) ? 0 : 1,
                 );
               }));
             },
             child: Text(
-              " Apply as ${(widget.type == 1) ? 'Student' : 'Company'}",
+              " Apply as ${(widget.type == 1) ? 'Company' : 'Student'}",
               style: const TextStyle(
                 color: Color(0xFF4285F4),
                 fontWeight: FontWeight.bold,

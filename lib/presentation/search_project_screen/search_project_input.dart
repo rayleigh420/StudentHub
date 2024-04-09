@@ -85,7 +85,7 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
               borderRadius: BorderRadius.circular(100),
             ),
             child: TextField(
-              onTapOutside: (event){
+              onTapOutside: (event) {
                 DeviceUtils.hideKeyboard(context);
               },
               focusNode: focusNode,
@@ -95,16 +95,16 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),
               onSubmitted: (value) {
-                Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-                    builder: (context) => SearchProjectScreen(),
-                    maintainState: false));
+                Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute(
+                        builder: (context) => SearchProjectScreen(),
+                        maintainState: true));
               },
             ),
           )),
           GestureDetector(
               onTap: () {
-               
-                Navigator.of(context, rootNavigator: false).pop();
+                Navigator.of(context, rootNavigator: true).pop();
               },
               child: Container(
                 padding: EdgeInsets.all(5),
@@ -123,6 +123,4 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
     Duration difference = date1.difference(date2);
     return difference.inDays;
   }
-
- 
 }
