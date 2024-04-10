@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
 import 'package:boilerplate/domain/repository/educations/education_repository.dart';
 import 'package:boilerplate/domain/repository/experiences/experience_repository.dart';
+import 'package:boilerplate/domain/repository/favorite/favorite_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
@@ -19,6 +20,7 @@ import 'package:boilerplate/domain/usecase/education/get_education_by_student_id
 import 'package:boilerplate/domain/usecase/education/udpate_education_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/experience/udpate_experience_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
@@ -139,11 +141,17 @@ mixin UseCaseModule {
     getIt.registerSingleton<GetCompanyProjectsUseCase>(
       GetCompanyProjectsUseCase(getIt<ProjectRepository>()),
     );
+
     getIt.registerSingleton<PostCompanyProjectsUseCase>(
         PostCompanyProjectsUseCase(getIt<ProjectRepository>()));
     getIt.registerSingleton<UpdateProjectsUseCase>(
         UpdateProjectsUseCase(getIt<ProjectRepository>()));
     getIt.registerSingleton<DeleteProjectsUseCase>(
         DeleteProjectsUseCase(getIt<ProjectRepository>()));
+
+    // Favorite:--------------------------------------------------------------------
+    getIt.registerSingleton<AddFavoriteByStudentIdUseCase>(
+      AddFavoriteByStudentIdUseCase(getIt<FavoriteRepository>()),
+    );
   }
 }
