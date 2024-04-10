@@ -139,7 +139,6 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
   }
 
   void buildModal(BuildContext context) {
-
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -175,15 +174,15 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                   leading: Icon(Icons.delete),
                   title: Text('Remove posting'),
                   onTap: () => {
-                    deleteProjectsUseCase.call(params:widget.project.id!)
+                    deleteProjectsUseCase.call(
+                        params: widget.project.projectId!)
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.close),
                   title: Text('Close posting'),
-                  onTap: () => {
-                    updateProjectsUseCase.call(params: widget.project)
-                  },
+                  onTap: () =>
+                      {updateProjectsUseCase.call(params: widget.project)},
                 ),
               ],
             ),
