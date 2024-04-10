@@ -50,4 +50,8 @@ class Endpoints {
       baseUrl + "/api/experience/getByStudentId";
   static const String updateExperience =
       baseUrl + "/api/experience/updateByStudentId";
+
+  // Favorite endpoints
+  static const String getFavorites = baseUrl + "/api/favoriteProject";
+  static const String addFavorite = baseUrl + "/api/favoriteProject";
 }
