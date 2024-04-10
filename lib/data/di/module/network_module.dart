@@ -5,6 +5,7 @@ import 'package:boilerplate/core/data/network/dio/interceptors/logging_intercept
 import 'package:boilerplate/data/network/apis/auth/auth_api.dart';
 import 'package:boilerplate/data/network/apis/educations/education_api.dart';
 import 'package:boilerplate/data/network/apis/experiences/experience_api.dart';
+import 'package:boilerplate/data/network/apis/favorite/favorite_api.dart';
 import 'package:boilerplate/data/network/apis/languages/language_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
@@ -74,5 +75,7 @@ mixin NetworkModule {
     getIt.registerSingleton<EducationApi>(EducationApi(getIt<DioClient>()));
 
     getIt.registerSingleton<ExperienceApi>(ExperienceApi(getIt<DioClient>()));
+
+    getIt.registerSingleton<FavoriteApi>(FavoriteApi(getIt<DioClient>()));
   }
 }

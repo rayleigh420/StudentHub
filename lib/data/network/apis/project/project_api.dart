@@ -72,9 +72,10 @@ class ProjectApi {
       throw new Exception(e.toString());
     }
   }
-  Future<bool>deleteProject(String token,int id) async {
+
+  Future<bool> deleteProject(String token, int id) async {
     try {
-       final authToken = "Bearer ${token}";
+      final authToken = "Bearer ${token}";
       final res = await _dioClient.dio.delete(
         Endpoints.deleteProject + "/" + id.toString(),
         options: Options(
@@ -93,17 +94,18 @@ class ProjectApi {
       throw new Exception(e.toString());
     }
   }
-  Future<Project> updateProject(String token,Project project)async{
+
+  Future<Project> updateProject(String token, Project project) async {
     try {
       final authToken = "Bearer ${token}";
       final res = await _dioClient.dio.patch(
-        Endpoints.updateProject + "/" + project.id.toString(),
+        Endpoints.updateProject + "/" + project.projectId.toString(),
         data: jsonEncode({
-           "projectScopeFlag": project.projectScopeFlag,
-            "title": project.title,
-            "description": project.description,
-            "numberOfStudents": project.numberOfStudents,
-            "typeFlag": 1
+          "projectScopeFlag": project.projectScopeFlag,
+          "title": project.title,
+          "description": project.description,
+          "numberOfStudents": project.numberOfStudents,
+          "typeFlag": 1
         }),
         options: Options(
           headers: {
