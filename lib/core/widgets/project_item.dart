@@ -1,5 +1,7 @@
 import 'package:boilerplate/core/widgets/project_modal.dart';
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.dart';
 // import 'package:boilerplate/domain/entity/project/project.dart';
 
 import 'package:flutter/material.dart';
@@ -12,6 +14,9 @@ class ProjectItem extends StatefulWidget {
 }
 
 class _ProjectItemState extends State<ProjectItem> {
+  AddFavoriteByStudentIdUseCase _addFavoriteByStudentIdUseCase =
+      getIt<AddFavoriteByStudentIdUseCase>();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -143,6 +148,10 @@ class _ProjectItemState extends State<ProjectItem> {
     }
     return GestureDetector(
       onTap: () {
+        _addFavoriteByStudentIdUseCase.call(
+            params: AddProjectParams(
+                projectId: widget.projDat.projectId!,
+                disableFlag: widget.projDat.isFavorite! ? 1 : 0));
         setState(() {
           widget.projDat.isFavorite = !widget.projDat.isFavorite!;
         });

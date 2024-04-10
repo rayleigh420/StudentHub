@@ -20,10 +20,10 @@ class ProfileUserRepositoryImpl extends ProfileUserRepository {
       print("profile from profile user rep imp");
       res.getTypes();
       if (res.company != null) {
-        _sharedPrefsHelper.saveCurrentCompanyId(res.company!.userId);
+        _sharedPrefsHelper.saveCurrentCompanyId(res.company!.id);
         _sharedPrefsHelper.removeCurrentStudentId();
       } else if (res.student != null) {
-        _sharedPrefsHelper.saveCurrentStudentId(res.student!.userId);
+        _sharedPrefsHelper.saveCurrentStudentId(res.student!.id);
         _sharedPrefsHelper.removeCurrentCompanyId();
       } else {
         _sharedPrefsHelper.removeCurrentCompanyId();
