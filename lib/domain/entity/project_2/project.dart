@@ -13,7 +13,7 @@ class Project {
   int? countProposals;
   int? countMessages;
   int? countHired;
-  bool? isSaved;
+  bool? isFavorite;
   Project({
     this.id,
     this.createdAt,
@@ -29,7 +29,7 @@ class Project {
     this.countProposals,
     this.countMessages,
     this.countHired,
-    this.isSaved,
+    this.isFavorite,
   });
 
   Map<String, dynamic> toJson() {
@@ -48,7 +48,7 @@ class Project {
       'countProposals': countProposals,
       'countMessages': countMessages,
       'countHired': countHired,
-      'isSaved': isSaved ?? false,
+      'isFavorite': isFavorite ?? false,
     };
   }
 
@@ -69,7 +69,7 @@ class Project {
       countProposals: map['countProposals'],
       countMessages: map['countMessages'],
       countHired: map['countHired'],
-      isSaved: map['isSaved'],
+      isFavorite: map['isFavorite'],
     );
   }
 }
