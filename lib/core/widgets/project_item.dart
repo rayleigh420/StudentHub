@@ -130,7 +130,7 @@ class _ProjectItemState extends State<ProjectItem> {
 
   Widget buildFavorite(BuildContext context) {
     Widget content;
-    if (widget.projDat.isSaved != null) {
+    if (widget.projDat.isFavorite != false) {
       content = Container(
         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
         child: Icon(Icons.favorite, color: Color(0xFFF9187F), size: 25),
@@ -144,7 +144,7 @@ class _ProjectItemState extends State<ProjectItem> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          widget.projDat.isSaved = !widget.projDat.isSaved!;
+          widget.projDat.isFavorite = !widget.projDat.isFavorite!;
         });
       },
       child: content,
