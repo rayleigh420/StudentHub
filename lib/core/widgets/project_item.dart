@@ -2,6 +2,7 @@ import 'package:boilerplate/core/widgets/project_modal.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/favorite/get_favorite_by_student_id.dart';
 // import 'package:boilerplate/domain/entity/project/project.dart';
 
 import 'package:flutter/material.dart';
