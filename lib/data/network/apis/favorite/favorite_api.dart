@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
+import 'package:boilerplate/domain/entity/project_2/project_list.dart';
 
 class FavoriteApi {
   // dio instance
@@ -10,7 +11,17 @@ class FavoriteApi {
   // injecting dio instance
   FavoriteApi(this._dioClient);
 
-  /// Returns list of post in response
+  Future<ProjectList> getFavoriteProject(int studentId) async {
+    try {
+      final res =
+          await _dioClient.dio.get('${Endpoints.addFavorite}/$studentId');
+      return ProjectList.fromJson_project(res.data["result"]);
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
   Future<bool> addFavorite(
       int studentId, int projectId, int disableFlag) async {
     try {
