@@ -21,6 +21,7 @@ import 'package:boilerplate/domain/usecase/education/udpate_education_by_student
 import 'package:boilerplate/domain/usecase/experience/get_experience_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/experience/udpate_experience_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/favorite/get_favorite_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
@@ -134,14 +135,14 @@ mixin UseCaseModule {
       UpdateExperienceByStudentIdUseCase(getIt<ExperienceRepository>()),
     );
 
+    // Profile:----------------------------------------------------------------------
     getIt.registerSingleton<GetProfileUseCase>(
       GetProfileUseCase(getIt<ProfileUserRepository>()),
     );
 
+    // Project:----------------------------------------------------------------------
     getIt.registerSingleton<GetCompanyProjectsUseCase>(
-      GetCompanyProjectsUseCase(getIt<ProjectRepository>()),
-    );
-
+        GetCompanyProjectsUseCase(getIt<ProjectRepository>()));
     getIt.registerSingleton<PostCompanyProjectsUseCase>(
         PostCompanyProjectsUseCase(getIt<ProjectRepository>()));
     getIt.registerSingleton<UpdateProjectsUseCase>(
@@ -152,6 +153,9 @@ mixin UseCaseModule {
     // Favorite:--------------------------------------------------------------------
     getIt.registerSingleton<AddFavoriteByStudentIdUseCase>(
       AddFavoriteByStudentIdUseCase(getIt<FavoriteRepository>()),
+    );
+    getIt.registerSingleton<GetFavoriteByStudentIdUseCase>(
+      GetFavoriteByStudentIdUseCase(getIt<FavoriteRepository>()),
     );
   }
 }
