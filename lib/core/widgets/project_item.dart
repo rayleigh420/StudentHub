@@ -151,7 +151,9 @@ class _ProjectItemState extends State<ProjectItem> {
       onTap: () {
         _addFavoriteByStudentIdUseCase.call(
             params: AddProjectParams(
-                projectId: widget.projDat.projectId!,
+                projectId: widget.projDat.projectId != null
+                    ? widget.projDat.projectId!
+                    : widget.projDat.id!,
                 disableFlag: widget.projDat.isFavorite! ? 1 : 0));
         setState(() {
           widget.projDat.isFavorite = !widget.projDat.isFavorite!;
