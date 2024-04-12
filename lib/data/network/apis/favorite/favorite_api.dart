@@ -14,7 +14,7 @@ class FavoriteApi {
   Future<ProjectList> getFavoriteProject(int studentId) async {
     try {
       final res =
-          await _dioClient.dio.get('${Endpoints.addFavorite}/$studentId');
+          await _dioClient.dio.get('${Endpoints.getFavorites}/$studentId');
       return ProjectList.fromJson_project(res.data["result"]);
     } catch (e) {
       print(e.toString());

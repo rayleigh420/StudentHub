@@ -1,4 +1,5 @@
 class Project {
+  int? id;
   int? projectId;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -15,6 +16,7 @@ class Project {
   int? countHired;
   bool? isFavorite;
   Project({
+    this.id,
     this.projectId,
     this.createdAt,
     this.updatedAt,
@@ -34,6 +36,7 @@ class Project {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'projectId': projectId,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
@@ -54,6 +57,7 @@ class Project {
 
   factory Project.fromJson(Map<String, dynamic> map) {
     return Project(
+      id: map['id'],
       projectId: map['projectId'],
       createdAt: DateTime.parse(map['createdAt']),
       updatedAt: DateTime.parse(map['updatedAt']),
