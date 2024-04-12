@@ -59,6 +59,8 @@ class _SavedProjectState extends State<SavedProject> {
   @override
   void initState() {
     super.initState();
+
+    getFavoriteProjectByStudentId();
   }
 
   void getFavoriteProjectByStudentId() async {
@@ -97,12 +99,9 @@ class _SavedProjectState extends State<SavedProject> {
                             const SizedBox(
                               height: 16,
                             ),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
+                            ...projects
+                                .map((project) => ProjectItem(projDat: project))
+                                .toList(),
 
                             const SizedBox(
                               height: 16,
