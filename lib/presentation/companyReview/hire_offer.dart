@@ -1,20 +1,35 @@
+import 'dart:developer';
+
+
+import 'package:boilerplate/core/widgets/proposal/proposalItem.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
+import 'package:boilerplate/domain/entity/proposal/proposal.dart';
+import 'package:boilerplate/domain/usecase/proposal/get_proposal_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:boilerplate/core/widgets/toggle_button.dart';
+
 
 class HireOffer extends StatefulWidget {
   @override
   _HireOfferState createState() => _HireOfferState();
 }
 
+
 class _HireOfferState extends State<HireOffer> {
+    final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
+      getIt<GetProposalsByProjectIdUseCase>();
+      List<ItemProposal> listItemProposal=[];
   int selectedIndex = 0;
   List<Widget> _widgetOptions = [];
   @override
   void initState() {
     super.initState();
+    getItem();
     _widgetOptions = <Widget>[
-      Proposal(
+      Proposal1(
+        listItem: listItemProposal,
         // selected: selectedIndex,
         setSelected: (p0) {
           print(p0);
@@ -35,6 +50,14 @@ class _HireOfferState extends State<HireOffer> {
       Text("Message"),
       Text("Hired"),
     ];
+  }
+  void getItem() async{
+      final res= await _getProposalsByProjectIdUseCase.call(params: 53);
+      setState(() {
+        listItemProposal=res.items!;
+        log(listItemProposal.toString());
+      });
+    
   }
 
   @override
@@ -68,6 +91,7 @@ class _HireOfferState extends State<HireOffer> {
                         ),
                       ),
                     ),
+                   
                     SizedBox(
                       height: 5,
                     ),
@@ -94,9 +118,10 @@ class _HireOfferState extends State<HireOffer> {
   }
 }
 
-class Proposal extends StatelessWidget {
+class Proposal1 extends StatelessWidget {
   final Function(int) setSelected;
-  const Proposal({super.key, required this.setSelected});
+  final List<ItemProposal> listItem;
+  Proposal1({super.key, required this.setSelected, required this.listItem});
 
   @override
   Widget build(BuildContext context) {
@@ -136,273 +161,9 @@ class Proposal extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-            margin: const EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 1.0),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      child: Icon(
-                        Icons.person,
-                        size: 70,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Hung Le",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "4th year student",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Full Stack Engineer",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "Excellent",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  child: Text(
-                    "I have gone through your project and it seem like a great project. I will commit for your project... ",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 160,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side: BorderSide(color: Colors.black))),
-                          onPressed: () {
-                            setSelected(2);
-                          },
-                          child: const Text(
-                              style: TextStyle(fontSize: 16), "Message")),
-                    ),
-                    SizedBox(
-                      height: 30,
-                      width: 160,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side: BorderSide(color: Colors.black))),
-                          onPressed: () {
-                            // setSelected(3);
-                            showCupertinoDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CupertinoAlertDialog(
-                                    title: Text("Hired offer"),
-                                    content: Text(
-                                        "Do you really want to send hired offer for student to do this project?"),
-                                    actions: <Widget>[
-                                      CupertinoDialogAction(
-                                        child: Text("Cancel", style: TextStyle(color: Colors.red)),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      CupertinoDialogAction(
-                                        child: Text("Send"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          setSelected(3);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: const Text(
-                              style: TextStyle(fontSize: 16), "Hire")),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
-            )),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-            margin: const EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 1.0),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      child: Icon(
-                        Icons.person,
-                        size: 70,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Quan Nguyen",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            "3th year student",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Full Stack Engineer",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      "Excellent",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  child: Text(
-                    "I have gone through your project and it seem like a great project. I will commit for your project... ",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 30,
-                      width: 160,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side: BorderSide(color: Colors.black))),
-                          onPressed: () {
-                            setSelected(2);
-                          },
-                          child: const Text(
-                              style: TextStyle(fontSize: 16), "Message")),
-                    ),
-                    SizedBox(
-                      height: 30,
-                      width: 160,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side: BorderSide(color: Colors.black))),
-                          onPressed: () {
-                            // setSelected(3);
-                            showCupertinoDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CupertinoAlertDialog(
-                                    title: Text("Hired offer"),
-                                    content: Text(
-                                        "Do you really want to send hired offer for student to do this project?"),
-                                    actions: <Widget>[
-                                      CupertinoDialogAction(
-                                        child: Text("Cancel", style: TextStyle(color: Colors.red)),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      CupertinoDialogAction(
-                                        child: Text("Send"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          setSelected(3);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: const Text(
-                              style: TextStyle(fontSize: 16), "Hired")),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
-            )),
+        ...listItem.map((e) => ProposalItems(itemProposal: e)).toList(),
+        //ProposalItems(itemProposal: listItem[0]),
+       
         SizedBox(
           height: 50,
         ),
