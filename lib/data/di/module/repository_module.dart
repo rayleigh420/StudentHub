@@ -8,6 +8,7 @@ import 'package:boilerplate/data/network/apis/favorite/favorite_api.dart';
 import 'package:boilerplate/data/network/apis/languages/language_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
+import 'package:boilerplate/data/network/apis/proposal/proposal_api.dart';
 import 'package:boilerplate/data/network/apis/skillSet/skill_set_api.dart';
 import 'package:boilerplate/data/network/apis/project/project_api.dart';
 import 'package:boilerplate/data/repository/auth/auth_repository_impl.dart';
@@ -21,6 +22,7 @@ import 'package:boilerplate/data/repository/profile/profile_company_repository_i
 import 'package:boilerplate/data/repository/profile/profile_student_repository_impl.dart';
 import 'package:boilerplate/data/repository/profile/profile_user_repository_impl.dart';
 import 'package:boilerplate/data/repository/project/project_repository_impl.dart';
+import 'package:boilerplate/data/repository/proposal/proposal_repository_impl.dart';
 import 'package:boilerplate/data/repository/setting/setting_repository_impl.dart';
 import 'package:boilerplate/data/repository/skillSet/skill_set_repository_impl.dart';
 import 'package:boilerplate/data/repository/techStack/tech_stack_repository_impl.dart';
@@ -36,6 +38,7 @@ import 'package:boilerplate/domain/repository/profile/profile_student_repository
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
+import 'package:boilerplate/domain/repository/proposal/proposal_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
 import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
@@ -119,6 +122,11 @@ mixin RepositoryModule {
     // Favorite
     getIt.registerSingleton<FavoriteRepository>(FavoriteRepositoryImpl(
       getIt<FavoriteApi>(),
+      getIt<SharedPreferenceHelper>(),
+    ));
+    // Proposal
+    getIt.registerSingleton<ProposalRepository>(ProposalRepositoryImpl(
+      getIt<ProposalApi>(),
       getIt<SharedPreferenceHelper>(),
     ));
   }
