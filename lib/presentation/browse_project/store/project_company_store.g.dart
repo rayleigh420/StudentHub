@@ -84,6 +84,26 @@ mixin _$ProjectCompanyStore on _ProjectCompanyStore, Store {
         .postCompanyProjects(title, scopeType, studentNumber, describeProject));
   }
 
+  late final _$updateCompanyProjectsAsyncAction = AsyncAction(
+      '_ProjectCompanyStore.updateCompanyProjects',
+      context: context);
+
+  @override
+  Future<dynamic> updateCompanyProjects(Project project) {
+    return _$updateCompanyProjectsAsyncAction
+        .run(() => super.updateCompanyProjects(project));
+  }
+
+  late final _$deleteCompanyProjectsAsyncAction = AsyncAction(
+      '_ProjectCompanyStore.deleteCompanyProjects',
+      context: context);
+
+  @override
+  Future<dynamic> deleteCompanyProjects(int projectId) {
+    return _$deleteCompanyProjectsAsyncAction
+        .run(() => super.deleteCompanyProjects(projectId));
+  }
+
   late final _$_ProjectCompanyStoreActionController =
       ActionController(name: '_ProjectCompanyStore', context: context);
 

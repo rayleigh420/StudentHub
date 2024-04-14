@@ -1,12 +1,18 @@
+import 'dart:developer';
+
 import 'package:boilerplate/core/widgets/project_item.dart';
+import 'package:boilerplate/core/widgets/projects/project_company_edit_modal.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
+import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 // class Project {
 //   final String name;
@@ -37,6 +43,7 @@ class ProjectItemCompany extends StatefulWidget {
 class _ProjectItemCompanyState extends State<ProjectItemCompany> {
   DeleteProjectsUseCase deleteProjectsUseCase = getIt<DeleteProjectsUseCase>();
   UpdateProjectsUseCase updateProjectsUseCase = getIt<UpdateProjectsUseCase>();
+  final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -168,21 +175,46 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ListTile(
                   leading: Icon(Icons.edit),
                   title: Text('Edit posting'),
-                  onTap: () => {},
+                  onTap: () {
+                    showModalBottomSheet(
+                      isDismissible: true,
+                      context: context,
+                      isScrollControlled: true,
+                      useRootNavigator: true,
+                      enableDrag: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return ProjectCompanyEditModal(
+                          project: widget.project,
+                        );
+                      },
+                    );
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.delete),
                   title: Text('Remove posting'),
-                  onTap: () => {
-                    deleteProjectsUseCase.call(
-                        params: widget.project.projectId!)
+                  // onTap: () => {
+                  //   deleteProjectsUseCase.call(
+                  //       params: widget.project.projectId!)
+                  // },
+                  onTap: () {
+                    log(widget.project.id.toString());
+                    _projectCompanyStore
+                        .deleteCompanyProjects(widget.project.id!);
+                    Navigator.of(context).pop();
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.close),
                   title: Text('Close posting'),
-                  onTap: () =>
-                      {updateProjectsUseCase.call(params: widget.project)},
+                  // onTap: () =>
+                  //     {updateProjectsUseCase.call(params: widget.project)},
+                  onTap: () {
+                    Project newProject = widget.project;
+                    newProject.typeFlag = 1;
+                    _projectCompanyStore.updateCompanyProjects(newProject);
+                  },
                 ),
               ],
             ),
