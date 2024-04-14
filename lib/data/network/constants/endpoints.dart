@@ -54,4 +54,6 @@ class Endpoints {
   // Favorite endpoints
   static const String getFavorites = baseUrl + "/api/favoriteProject";
   static const String addFavorite = baseUrl + "/api/favoriteProject";
+  // Proposal endpoints
+  static const String getProposals = baseUrl + "/api/proposal/getByProjectId";
 }
