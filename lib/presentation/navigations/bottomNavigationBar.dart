@@ -77,6 +77,7 @@
 //     );
 //   }
 // }
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
@@ -87,6 +88,7 @@ import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/presentation/dashboard/dashboard_company.dart';
 import 'package:boilerplate/presentation/dashboard/dashboard_student.dart';
 import 'package:boilerplate/presentation/home/home.dart';
+import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/login/login.dart';
 import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/presentation/message/message.dart';
@@ -95,8 +97,10 @@ import 'package:boilerplate/presentation/profile/profile.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/presentation/project/project.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
@@ -110,21 +114,58 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
-  bool _isStudent = false;
+  // bool _isStudent = false;
   static List<Widget> _widgetOptions = [];
 
   @override
   void initState() {
     super.initState();
-    _isStudent = widget.isStudent;
+    // _isStudent = widget.isStudent;
     _selectedIndex = widget.selectedIndex;
-    _widgetOptions = <Widget>[
-      BrowseProjectScreen(),
-      MessageList(),
-      _isStudent ? DashboardStudentScreen() : DashboardCompanyScreen(),
-      NotiList(),
-      ProfileScreen()
-    ];
+    // _widgetOptions = <Widget>[
+    //   BrowseProjectScreen(),
+    //   MessageList(),
+    //   _isStudent ? DashboardStudentScreen() : DashboardCompanyScreen(),
+    //   NotiList(),
+    //   ProfileScreen()
+    // ];
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkAuthToken();
+    });
+  }
+
+  void checkAuthToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('authToken');
+    if (authToken == null) {
+      @override
+      void run() {
+        scheduleMicrotask(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => InputLogin()),
+          );
+        });
+      }
+      run();
+    } else {
+      final jwt = JWT.decode(authToken);
+      print('Payload: ${jwt.payload}');
+      print('roles: ${jwt.payload['roles'][0]}');
+      // return jwt.payload['roles'][0];
+      int roleString = jwt.payload['roles'][0];
+      // int role = int.parse(roleString);
+      print(roleString);
+      setState(() {
+        _widgetOptions = <Widget>[
+          BrowseProjectScreen(),
+          MessageList(),
+          roleString == 0 ? DashboardStudentScreen() : DashboardCompanyScreen(),
+          NotiList(),
+          ProfileScreen()
+        ];
+      });
+    }
   }
 
   // void testRole() async {
