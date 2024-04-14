@@ -1,10 +1,9 @@
-import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
-import 'package:boilerplate/utils/device/device_utils.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -94,12 +93,16 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
   }
 
   Widget buildProjectsList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: _projectCompanyStore.companyProjects!.projects!.length,
-      itemBuilder: (context, index) {
-        return ProjectItemCompany(
-          project: _projectCompanyStore.companyProjects!.projects![index],
+    return Observer(
+      builder: (context) {
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: _projectCompanyStore.companyProjects!.projects!.length,
+          itemBuilder: (context, index) {
+            return ProjectItemCompany(
+              project: _projectCompanyStore.companyProjects!.projects![index],
+            );
+          },
         );
       },
     );
