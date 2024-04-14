@@ -6,9 +6,11 @@ import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
+import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
@@ -77,6 +79,8 @@ mixin StoreModule {
       ProjectCompanyStore(
         getIt<GetCompanyProjectsUseCase>(),
         getIt<PostCompanyProjectsUseCase>(),
+        getIt<UpdateProjectsUseCase>(),
+        getIt<DeleteProjectsUseCase>(),
         getIt<ErrorStore>(),
       ),
     );
