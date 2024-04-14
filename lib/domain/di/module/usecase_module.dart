@@ -8,6 +8,7 @@ import 'package:boilerplate/domain/repository/languages/language_repository.dart
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
+import 'package:boilerplate/domain/repository/proposal/proposal_repository.dart';
 import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
@@ -35,6 +36,7 @@ import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecas
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
+import 'package:boilerplate/domain/usecase/proposal/get_proposal_usecase.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 
@@ -156,6 +158,10 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<GetFavoriteByStudentIdUseCase>(
       GetFavoriteByStudentIdUseCase(getIt<FavoriteRepository>()),
+    );
+    //Propsal:--------------------------------------------------------------------
+    getIt.registerSingleton<GetProposalsByProjectIdUseCase>(
+      GetProposalsByProjectIdUseCase(getIt<ProposalRepository>()),
     );
   }
 }
