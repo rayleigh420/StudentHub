@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:boilerplate/core/stores/error/error_store.dart';
 import 'package:boilerplate/domain/entity/profile/profile.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/entity/project_2/project_list.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
+import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
 import 'package:boilerplate/utils/dio/dio_error_util.dart';
 import 'package:mobx/mobx.dart';
 
@@ -14,9 +19,16 @@ class ProjectCompanyStore = _ProjectCompanyStore with _$ProjectCompanyStore;
 abstract class _ProjectCompanyStore with Store {
   final GetCompanyProjectsUseCase _getCompanyProjectsUseCase;
   final PostCompanyProjectsUseCase _postCompanyProjectsUseCase;
+  final UpdateProjectsUseCase _updateProjectsUseCase;
+  final DeleteProjectsUseCase _deleteProjectsUseCase;
+
   final ErrorStore errorStore;
-  _ProjectCompanyStore(this._getCompanyProjectsUseCase,
-      this._postCompanyProjectsUseCase, this.errorStore);
+  _ProjectCompanyStore(
+      this._getCompanyProjectsUseCase,
+      this._postCompanyProjectsUseCase,
+      this._updateProjectsUseCase,
+      this._deleteProjectsUseCase,
+      this.errorStore);
 
   static ObservableFuture<ProjectList?> emptyProfileResponse =
       ObservableFuture.value(null);
@@ -56,6 +68,37 @@ abstract class _ProjectCompanyStore with Store {
             studentNumber: studentNumber,
             describeProject: describeProject));
     companyProjects?.projects!.add(newProject);
+    log(companyProjects!.projects!.length.toString());
+  }
+
+  @action
+  Future updateCompanyProjects(Project project) async {
+    final updatedProject = await _updateProjectsUseCase.call(params: project);
+    final index =
+        companyProjects?.projects?.indexWhere((p) => p.id == project.id);
+    if (index != null && index >= 0) {
+      companyProjects?.projects![index] = updatedProject;
+      companyProjects = companyProjects;
+    }
+  }
+
+  @action
+  Future deleteCompanyProjects(int projectId) async {
+    // log("delete project id: $projectId");
+    // await _deleteProjectsUseCase.call(params: projectId);
+    // companyProjects?.projects?.removeWhere((p) => p.id == projectId);
+    // companyProjects = companyProjects;
+    // log("company projects:");
+    // log(companyProjects!.projects!.length.toString());
+    log("delete project id: $projectId");
+    await _deleteProjectsUseCase.call(params: projectId);
+    final x = companyProjects!.projects!;
+    final updatedCompanyProjects = x;
+    updatedCompanyProjects.removeWhere((p) => p.id == projectId);
+    final newProjectList = ProjectList(projects: updatedCompanyProjects);
+    companyProjects = newProjectList;
+    log("company projects:");
+    log(companyProjects!.projects!.length.toString());
   }
 
   @action
