@@ -65,7 +65,8 @@ class ProjectApi {
       log("cdc2");
       log(res.data["result"].toString());
       log(res.data["result"].runtimeType.toString());
-      res.data["result"]["companyId"] = res.data["result"]["companyId"].toString();
+      res.data["result"]["companyId"] =
+          res.data["result"]["companyId"].toString();
       return Project.fromJson(res.data["result"]);
     } catch (e) {
       log("error in get projects api");
@@ -100,13 +101,13 @@ class ProjectApi {
     try {
       final authToken = "Bearer ${token}";
       final res = await _dioClient.dio.patch(
-        Endpoints.updateProject + "/" + project.projectId.toString(),
+        Endpoints.updateProject + "/" + project.id.toString(),
         data: jsonEncode({
           "projectScopeFlag": project.projectScopeFlag,
           "title": project.title,
           "description": project.description,
           "numberOfStudents": project.numberOfStudents,
-          "typeFlag": 1
+          "typeFlag": project.typeFlag
         }),
         options: Options(
           headers: {

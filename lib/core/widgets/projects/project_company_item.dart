@@ -184,7 +184,9 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                       enableDrag: true,
                       backgroundColor: Colors.transparent,
                       builder: (context) {
-                        return ProjectCompanyEditModal();
+                        return ProjectCompanyEditModal(
+                          project: widget.project,
+                        );
                       },
                     );
                   },
@@ -209,7 +211,9 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                   // onTap: () =>
                   //     {updateProjectsUseCase.call(params: widget.project)},
                   onTap: () {
-                    _projectCompanyStore.updateCompanyProjects(widget.project);
+                    Project newProject = widget.project;
+                    newProject.typeFlag = 1;
+                    _projectCompanyStore.updateCompanyProjects(newProject);
                   },
                 ),
               ],
