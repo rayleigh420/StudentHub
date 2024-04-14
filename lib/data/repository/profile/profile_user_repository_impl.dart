@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/domain/entity/profile/profile.dart';
