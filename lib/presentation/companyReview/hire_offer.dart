@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-
 import 'package:boilerplate/core/widgets/proposal/proposalItem.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
@@ -10,54 +9,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:boilerplate/core/widgets/toggle_button.dart';
 
-
 class HireOffer extends StatefulWidget {
   @override
   _HireOfferState createState() => _HireOfferState();
 }
 
-
 class _HireOfferState extends State<HireOffer> {
-    final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
+  final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
       getIt<GetProposalsByProjectIdUseCase>();
-      List<ItemProposal> listItemProposal=[];
+  List<ItemProposal> listItemProposal = [];
   int selectedIndex = 0;
-  List<Widget> _widgetOptions = [];
   @override
   void initState() {
     super.initState();
     getItem();
-    _widgetOptions = <Widget>[
-      Proposal1(
-        listItem: listItemProposal,
-        // selected: selectedIndex,
-        setSelected: (p0) {
-          print(p0);
-          setState(() {
-            selectedIndex = p0;
-          });
-        },
-      ),
-      ProjectDetail_2(
-        selected: selectedIndex,
-        setSelected: (p0) {
-          print(p0);
-          setState(() {
-            selectedIndex = p0;
-          });
-        },
-      ),
-      Text("Message"),
-      Text("Hired"),
-    ];
   }
-  void getItem() async{
-      final res= await _getProposalsByProjectIdUseCase.call(params: 53);
-      setState(() {
-        listItemProposal=res.items!;
-        log(listItemProposal.toString());
-      });
-    
+
+  void getItem() async {
+    print("Hello");
+    final res = await _getProposalsByProjectIdUseCase.call(params: 53);
+    setState(() {
+      listItemProposal = res.items!;
+      log(listItemProposal.toString());
+    });
   }
 
   @override
@@ -91,7 +65,6 @@ class _HireOfferState extends State<HireOffer> {
                         ),
                       ),
                     ),
-                   
                     SizedBox(
                       height: 5,
                     ),
@@ -107,8 +80,19 @@ class _HireOfferState extends State<HireOffer> {
                         },
                       ),
                     ),
-                    // Proposal()
-                    _widgetOptions[selectedIndex]
+                    selectedIndex == 0
+                        ? Proposal1(
+                            listItem: listItemProposal,
+                          )
+                        : ProjectDetail_2(
+                            selected: selectedIndex,
+                            setSelected: (p0) {
+                              print(p0);
+                              setState(() {
+                                selectedIndex = p0;
+                              });
+                            },
+                          )
                   ],
                 ),
               )),
@@ -119,51 +103,17 @@ class _HireOfferState extends State<HireOffer> {
 }
 
 class Proposal1 extends StatelessWidget {
-  final Function(int) setSelected;
   final List<ItemProposal> listItem;
-  Proposal1({super.key, required this.setSelected, required this.listItem});
+  Proposal1({
+    super.key,
+    required this.listItem,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          margin: EdgeInsets.only(top: 15),
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(width: 1.0), top: BorderSide(width: 1.0)),
-          ),
-          child: Wrap(
-            children: [
-              Text(
-                "Students are looking for",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Text(
-                "- Clear expectation about your project or deliverables",
-                style: TextStyle(fontSize: 14),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "- The skills required for your project",
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                "- Detail about your project",
-                style: TextStyle(fontSize: 14),
-              )
-            ],
-          ),
-        ),
         ...listItem.map((e) => ProposalItems(itemProposal: e)).toList(),
-        //ProposalItems(itemProposal: listItem[0]),
-       
         SizedBox(
           height: 50,
         ),
