@@ -77,19 +77,16 @@ abstract class _ProjectCompanyStore with Store {
     final index =
         companyProjects?.projects?.indexWhere((p) => p.id == project.id);
     if (index != null && index >= 0) {
-      companyProjects?.projects![index] = updatedProject;
-      companyProjects = companyProjects;
+      final x = companyProjects?.projects;
+      x![index] = updatedProject;
+      final updatedCompanyProjects = x;
+      final newProjectList = ProjectList(projects: updatedCompanyProjects);
+      companyProjects = newProjectList;
     }
   }
 
   @action
   Future deleteCompanyProjects(int projectId) async {
-    // log("delete project id: $projectId");
-    // await _deleteProjectsUseCase.call(params: projectId);
-    // companyProjects?.projects?.removeWhere((p) => p.id == projectId);
-    // companyProjects = companyProjects;
-    // log("company projects:");
-    // log(companyProjects!.projects!.length.toString());
     log("delete project id: $projectId");
     await _deleteProjectsUseCase.call(params: projectId);
     final x = companyProjects!.projects!;
