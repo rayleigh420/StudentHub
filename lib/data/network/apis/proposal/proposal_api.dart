@@ -22,11 +22,11 @@ class ProposalApi {
           },
         ),
       );
-      log("getProposalsByProjectId");
-      log(res.data["result"].runtimeType.toString());
+      // log("getProposalsByProjectId");
+      // log(res.data["result"].runtimeType.toString());
       return Proposal.fromJson(res.data["result"]);
-    }  catch (e) {
-       log("error in get projects api");
+    } catch (e) {
+      log("error in get projects api");
       log(e.toString());
       throw new Exception(e.toString());
     }

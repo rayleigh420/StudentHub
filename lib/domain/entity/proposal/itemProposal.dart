@@ -8,7 +8,7 @@ class ItemProposal {
   DateTime? deletedAt;
   int projectId;
   int? studentId;
-  String coverLetter;
+  String? coverLetter;
   int statusFlag;
   int disableFlag;
   Student? student;
@@ -32,14 +32,12 @@ class ItemProposal {
       deletedAt:
           map['deletedAt'] != null ? DateTime.parse(map['deletedAt']) : null,
       projectId: map['projectId'],
-      studentId: map['studentId']!=null ? map['studentId']:null,
+      studentId: map['studentId'] != null ? map['studentId'] : null,
       coverLetter: map['coverLetter'],
       statusFlag: map['statusFlag'],
       disableFlag: map['disableFlag'],
-      student:
-          map['student'] != null ? Student.fromJson(map['student']) : null,
+      student: map['student'] != null ? Student.fromJson(map['student']) : null,
     );
-    
   }
   Map<String, dynamic> toJson() {
     return {
@@ -55,5 +53,4 @@ class ItemProposal {
       "student": student?.toJson(),
     };
   }
-  
 }
