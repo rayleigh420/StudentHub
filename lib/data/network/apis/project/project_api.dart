@@ -65,6 +65,7 @@ class ProjectApi {
       log("cdc2");
       log(res.data["result"].toString());
       log(res.data["result"].runtimeType.toString());
+      res.data["result"]["companyId"] = res.data["result"]["companyId"].toString();
       return Project.fromJson(res.data["result"]);
     } catch (e) {
       log("error in get projects api");
