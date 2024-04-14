@@ -3,8 +3,8 @@ import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 
 class Proposal {
   bool hasNext;
-  String offset;
-  String limit;
+  String? offset;
+  String? limit;
   int total;
   List<ItemProposal>? items;
   Proposal({
@@ -30,10 +30,7 @@ class Proposal {
       "offset": offset,
       "limit": limit,
       "total": total,
-      "items": items != null
-          ? items!.map((x) => x.toJson()).toList()
-          : null,
+      "items": items != null ? items!.map((x) => x.toJson()).toList() : null,
     };
   }
-  
 }
