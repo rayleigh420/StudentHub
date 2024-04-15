@@ -49,7 +49,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-            builder: (context) => HireOffer(), maintainState: false));
+            builder: (context) => HireOffer(project: widget.project),
+            maintainState: false));
       },
       child: Container(
           margin: EdgeInsets.only(bottom: 20),
