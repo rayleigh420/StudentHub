@@ -86,18 +86,25 @@ class _HireOfferState extends State<HireOffer> {
                     ),
                     selectedIndex == 0
                         ? Proposal1(
-                            listItem: listItemProposal,
+                            listItem: listItemProposal
+                                .where((item) => item.statusFlag != 3)
+                                .toList(),
                           )
-                        : ProjectDetail_2(
-                            project: widget.project,
-                            selected: selectedIndex,
-                            setSelected: (p0) {
-                              print(p0);
-                              setState(() {
-                                selectedIndex = p0;
-                              });
-                            },
-                          )
+                        : selectedIndex == 1
+                            ? ProjectDetail_2(
+                                project: widget.project,
+                                selected: selectedIndex,
+                                setSelected: (p0) {
+                                  print(p0);
+                                  setState(() {
+                                    selectedIndex = p0;
+                                  });
+                                },
+                              )
+                            : Proposal1(
+                                listItem: listItemProposal
+                                    .where((item) => item.statusFlag == 3)
+                                    .toList()),
                   ],
                 ),
               )),
