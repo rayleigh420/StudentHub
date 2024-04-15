@@ -38,6 +38,7 @@ import 'package:boilerplate/domain/usecase/project/delete_company_project_usecas
 import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/proposal/create_proposal.dart';
 import 'package:boilerplate/domain/usecase/proposal/get_proposal_usecase.dart';
+import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 
@@ -166,6 +167,9 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<CreateProposalUseCase>(
       CreateProposalUseCase(getIt<ProposalRepository>()),
+    );
+    getIt.registerSingleton<UpdateProposalUseCase>(
+      UpdateProposalUseCase(getIt<ProposalRepository>()),
     );
   }
 }

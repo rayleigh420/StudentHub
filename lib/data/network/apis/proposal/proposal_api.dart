@@ -53,4 +53,24 @@ class ProposalApi {
       throw new Exception(e.toString());
     }
   }
+
+  Future<bool> udpateProposalById(
+      int id, String coverLetter, int statusFlag) async {
+    try {
+      final res = await _dioClient.dio.patch(Endpoints.updateProposal + "/$id",
+          data: jsonEncode({
+            "coverLetter": coverLetter,
+            "statusFlag": statusFlag,
+            "disableFlag": 0
+          }));
+      if (res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
 }
