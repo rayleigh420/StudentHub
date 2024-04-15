@@ -1,4 +1,6 @@
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
+import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +13,12 @@ class ProposalItems extends StatefulWidget {
 }
 
 class _ProposalItemsState extends State<ProposalItems> {
+  UpdateProposalUseCase _updateProposalUseCase = getIt<UpdateProposalUseCase>();
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(child:
-            Container(
+    return SafeArea(
+        child: Container(
             margin: const EdgeInsets.only(top: 20),
             decoration: BoxDecoration(
               border: Border(
@@ -63,7 +67,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Full Stack Engineer",
+                      widget.itemProposal!.student!.techStack!.name!,
                       style: TextStyle(fontSize: 16),
                     ),
                     Text(
@@ -77,7 +81,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                 ),
                 Container(
                   child: Text(
-                    "I have gone through your project and it seem like a great project. I will commit for your project... ",
+                    widget.itemProposal!.coverLetter!,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
@@ -97,48 +101,74 @@ class _ProposalItemsState extends State<ProposalItems> {
                                   side: BorderSide(color: Colors.black))),
                           onPressed: () {
                             //setSelected(2);
+                            _updateProposalUseCase.call(
+                                params: UpdateProposalParam(
+                                    widget.itemProposal!.id,
+                                    widget.itemProposal!.coverLetter!,
+                                    1));
                           },
                           child: const Text(
                               style: TextStyle(fontSize: 16), "Message")),
                     ),
                     SizedBox(
-                      height: 30,
-                      width: 160,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side: BorderSide(color: Colors.black))),
-                          onPressed: () {
-                            // setSelected(3);
-                            showCupertinoDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CupertinoAlertDialog(
-                                    title: Text("Hired offer"),
-                                    content: Text(
-                                        "Do you really want to send hired offer for student to do this project?"),
-                                    actions: <Widget>[
-                                      CupertinoDialogAction(
-                                        child: Text("Cancel", style: TextStyle(color: Colors.red)),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      CupertinoDialogAction(
-                                        child: Text("Send"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          //setSelected(3);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: const Text(
-                              style: TextStyle(fontSize: 16), "Hire")),
-                    ),
+                        height: 30,
+                        width: 160,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    side: BorderSide(color: Colors.black))),
+                            onPressed: () {
+                              // setSelected(3);
+                              widget.itemProposal?.statusFlag == 0
+                                  ? showCupertinoDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CupertinoAlertDialog(
+                                          title: Text("Hired offer"),
+                                          content: Text(
+                                              "Do you really want to send hired offer for student to do this project?"),
+                                          actions: <Widget>[
+                                            CupertinoDialogAction(
+                                              child: Text("Cancel",
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            CupertinoDialogAction(
+                                              child: Text("Send"),
+                                              onPressed: () {
+                                                _updateProposalUseCase.call(
+                                                    params: UpdateProposalParam(
+                                                        widget.itemProposal!.id,
+                                                        widget.itemProposal!
+                                                            .coverLetter!,
+                                                        2));
+                                                Navigator.of(context).pop();
+                                                //setSelected(3);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      })
+                                  : null;
+                            },
+                            child: widget.itemProposal?.statusFlag == 0
+                                ? const Text(
+                                    style: TextStyle(fontSize: 16), "Hire")
+                                : widget.itemProposal?.statusFlag == 2
+                                    ? const Text(
+                                        style: TextStyle(fontSize: 16),
+                                        "Send offer")
+                                    : widget.itemProposal?.statusFlag == 1
+                                        ? const Text(
+                                            style: TextStyle(fontSize: 16),
+                                            "Messaged")
+                                        : const Text(
+                                            style: TextStyle(fontSize: 16),
+                                            "Hired"))),
                   ],
                 ),
                 SizedBox(
