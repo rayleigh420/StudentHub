@@ -76,7 +76,10 @@ class Routes {
     project_post_3: (context) => ProjectPost3(),
     project_post_4: (context) => ProjectPost4(),
     project_detail: (context) => ProjectDetail(),
-    hire_offer: (context) => HireOffer(project: null),
+    hire_offer: (context) => HireOffer(
+          project: null,
+          selected: 0,
+        ),
     submit_project: (context) => SubmitProject(
           projectId: null,
         ),

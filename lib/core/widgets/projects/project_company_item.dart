@@ -49,7 +49,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-            builder: (context) => HireOffer(project: widget.project),
+            builder: (context) =>
+                HireOffer(project: widget.project, selected: 0),
             maintainState: false));
       },
       child: Container(
@@ -112,7 +113,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("0"),
+                      Text(widget.project.countProposals.toString()),
                       Text(
                         "Proposals",
                         style: TextStyle(fontWeight: FontWeight.w600),
@@ -122,7 +123,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("2"),
+                      Text(widget.project.countMessages.toString()),
                       Text(
                         "Messages",
                         style: TextStyle(fontWeight: FontWeight.w600),
@@ -132,7 +133,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("8"),
+                      Text(widget.project.countHired.toString()),
                       Text(
                         "Hired",
                         style: TextStyle(fontWeight: FontWeight.w600),
@@ -156,7 +157,13 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ListTile(
                   leading: Icon(Icons.assignment),
                   title: Text('View Proposals'),
-                  onTap: () => {},
+                  onTap: () => {
+                    Navigator.of(context, rootNavigator: false).push(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                HireOffer(project: widget.project, selected: 0),
+                            maintainState: false))
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.message),
@@ -166,12 +173,28 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ListTile(
                   leading: Icon(Icons.person),
                   title: Text('View hired'),
-                  onTap: () => {},
+                  onTap: () => {
+                    Navigator.of(context, rootNavigator: false)
+                        .push(MaterialPageRoute(
+                            builder: (context) => HireOffer(
+                                  project: widget.project,
+                                  selected: 3,
+                                ),
+                            maintainState: false))
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.post_add),
                   title: Text('View Job posting'),
-                  onTap: () => {},
+                  onTap: () => {
+                    Navigator.of(context, rootNavigator: false)
+                        .push(MaterialPageRoute(
+                            builder: (context) => HireOffer(
+                                  project: widget.project,
+                                  selected: 1,
+                                ),
+                            maintainState: false))
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.edit),
