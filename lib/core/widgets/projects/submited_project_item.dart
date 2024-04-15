@@ -1,6 +1,10 @@
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:flutter/material.dart';
 
 class SubmitedProjectItem extends StatefulWidget {
+  final Project projDat;
+  const SubmitedProjectItem({Key? key, required this.projDat})
+      : super(key: key);
   @override
   _SubmitedProjectItemState createState() => _SubmitedProjectItemState();
 }
@@ -39,7 +43,7 @@ class _SubmitedProjectItemState extends State<SubmitedProjectItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Senior frontend developer (Fintech)",
+                    widget.projDat.title!,
                     style: TextStyle(
                         fontSize: 16,
                         color: Colors.blueAccent,
@@ -67,8 +71,7 @@ class _SubmitedProjectItemState extends State<SubmitedProjectItem> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 5.0),
-                        child: Text(
-                            "-   Clear expectation about your project or deliverables",
+                        child: Text("-   ${widget.projDat.description!}",
                             style: TextStyle(fontSize: 13)),
                       );
                     },
