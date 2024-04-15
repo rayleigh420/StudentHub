@@ -1,5 +1,6 @@
 import 'package:boilerplate/data/network/apis/proposal/proposal_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 import 'package:boilerplate/domain/entity/proposal/proposal.dart';
 import 'package:boilerplate/domain/repository/proposal/proposal_repository.dart';
 
@@ -43,6 +44,19 @@ class ProposalRepositoryImpl implements ProposalRepository {
     try {
       bool result =
           await _proposalApi.udpateProposalById(id, coverLetter, statusFlag);
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  Future<List<ItemProposal>> getProposalStudent() async {
+    try {
+      int? studentId = await _sharedPreferenceHelper.currentStudentId;
+      List<ItemProposal> result =
+          await _proposalApi.getProposalStudent(studentId!);
 
       return result;
     } catch (e) {
