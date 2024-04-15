@@ -12,7 +12,8 @@ import 'package:boilerplate/core/widgets/toggle_button.dart';
 
 class HireOffer extends StatefulWidget {
   final Project? project;
-  HireOffer({required this.project});
+  final int selected;
+  HireOffer({required this.project, required this.selected});
   @override
   _HireOfferState createState() => _HireOfferState();
 }
@@ -25,6 +26,9 @@ class _HireOfferState extends State<HireOffer> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      selectedIndex = widget.selected;
+    });
     getItem();
   }
 

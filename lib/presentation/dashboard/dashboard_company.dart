@@ -1,6 +1,8 @@
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
+import 'package:boilerplate/core/widgets/toggle_button.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 
@@ -14,6 +16,7 @@ class DashboardCompanyScreen extends StatefulWidget {
 
 class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
   final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
+  int? selectedIndex = 0;
 
   @override
   void didChangeDependencies() {
@@ -21,6 +24,11 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
     if (!_projectCompanyStore.loading) {
       _projectCompanyStore.getCompanyProjects();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -56,14 +64,21 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
 
               Container(
                 margin: EdgeInsets.only(top: 20),
-                child: FilterButtons(),
+                child: ToggleButtonsCompany(
+                  selected: selectedIndex!,
+                  setSelected: (index) {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                  },
+                ),
               ),
               const SizedBox(
                 height: 16,
               ),
               // ProjectItem(),
               // ListProjectCompany(),
-              buildProjectsContent(),
+              buildProjectsContent(selectedIndex!),
               // Container(
               //   margin: EdgeInsets.only(
               //       top: DeviceUtils.getScaledHeight(context, 0.35)),
@@ -84,23 +99,39 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
     )));
   }
 
-  Widget buildProjectsContent() {
+  Widget buildProjectsContent(int selected) {
     return Observer(builder: (context) {
       return _projectCompanyStore.loading
           ? Center(child: CircularProgressIndicator())
-          : buildProjectsList();
+          : selectedIndex == 0 || selectedIndex == 1
+              ? buildProjectsList(_projectCompanyStore
+                  .companyProjects!.projects!
+                  .where((item) => item.typeFlag != 1)
+                  .toList())
+              : buildProjectsList(_projectCompanyStore
+                  .companyProjects!.projects!
+                  .where((item) => item.typeFlag == 1)
+                  .toList());
+      // buildProjectsList(project);
     });
   }
 
-  Widget buildProjectsList() {
+  Widget buildProjectsList(List<Project> project) {
+    // final project = selectedIndex != 1
+    //     ? _projectCompanyStore.companyProjects!.projects!
+    //         .where((item) => item.typeFlag != 1)
+    //         .toList()
+    //     : _projectCompanyStore.companyProjects!.projects!
+    //         .where((item) => item.typeFlag == 1)
+    //         .toList();
     return Observer(
       builder: (context) {
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: _projectCompanyStore.companyProjects!.projects!.length,
+          itemCount: project.length,
           itemBuilder: (context, index) {
             return ProjectItemCompany(
-              project: _projectCompanyStore.companyProjects!.projects![index],
+              project: project[index],
             );
           },
         );
