@@ -36,4 +36,17 @@ class ProposalRepositoryImpl implements ProposalRepository {
       throw e;
     }
   }
+
+  @override
+  Future<bool> udpateProposalById(
+      int id, String coverLetter, int statusFlag) async {
+    try {
+      bool result =
+          await _proposalApi.udpateProposalById(id, coverLetter, statusFlag);
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
