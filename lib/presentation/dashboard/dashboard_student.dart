@@ -3,8 +3,10 @@ import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/projects/submited_project_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 import 'package:boilerplate/domain/usecase/proposal/get_proposal_student.dart';
+import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +19,10 @@ class DashboardStudentScreen extends StatefulWidget {
 class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   GetProposalsStudentUseCase _getProposalsStudentUseCase =
       getIt<GetProposalsStudentUseCase>();
+  final ProjectStore _projectStore = getIt<ProjectStore>();
 
   List<ItemProposal> _proposals = [];
+  List<Project> _projects = [];
 
   @override
   void initState() {
@@ -30,7 +34,19 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
     final proposals = await _getProposalsStudentUseCase.call(params: null);
     setState(() {
       _proposals = proposals;
+      filterProject();
     });
+  }
+
+  void filterProject() {
+    final matchingProjects = _projectStore.projects!.projects!
+        .where((project) => _proposals
+            .any((proposal) => proposal.projectId == project.projectId))
+        .toList();
+    setState(() {
+      _projects = matchingProjects;
+    });
+    print("Filter success");
   }
 
   @override
@@ -93,10 +109,16 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                           style: TextStyle(fontSize: 15),
                         ),
                       ),
-                      SubmitedProjectItem(),
-                      SubmitedProjectItem(),
-                      SubmitedProjectItem(),
-                      SubmitedProjectItem(),
+                      if (_projects.isNotEmpty)
+                        ..._projects.map((project) => SubmitedProjectItem(
+                              projDat: project,
+                            )),
+                      // SubmitedProjectItem(
+                      //   projDat: _projects[0],
+                      // ),
+                      // SubmitedProjectItem(),
+                      // SubmitedProjectItem(),
+                      // SubmitedProjectItem(),
                       const SizedBox(height: 20),
                     ],
                   )),
