@@ -2,6 +2,9 @@ import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/projects/submited_project_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
+import 'package:boilerplate/domain/usecase/proposal/get_proposal_student.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +15,24 @@ class DashboardStudentScreen extends StatefulWidget {
 }
 
 class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
+  GetProposalsStudentUseCase _getProposalsStudentUseCase =
+      getIt<GetProposalsStudentUseCase>();
+
+  List<ItemProposal> _proposals = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getProposalStudent();
+  }
+
+  void getProposalStudent() async {
+    final proposals = await _getProposalsStudentUseCase.call(params: null);
+    setState(() {
+      _proposals = proposals;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

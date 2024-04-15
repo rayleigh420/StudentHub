@@ -58,4 +58,5 @@ class Endpoints {
   static const String getProposals = baseUrl + "/api/proposal/getByProjectId";
   static const String createProposal = baseUrl + "/api/proposal";
   static const String updateProposal = baseUrl + "/api/proposal";
+  static const String getProposalStudent = baseUrl + "/api/proposal/student";
 }
