@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
+import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 import 'package:boilerplate/domain/entity/proposal/proposal.dart';
 import 'package:dio/dio.dart';
 
@@ -68,6 +69,20 @@ class ProposalApi {
       } else {
         return false;
       }
+    } catch (e) {
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
+
+  Future<List<ItemProposal>> getProposalStudent(int id) async {
+    try {
+      final res =
+          await _dioClient.dio.get(Endpoints.getProposalStudent + "/$id");
+      return (res.data["result"] as List)
+          .map((item) => ItemProposal.fromJson(item))
+          .toList();
+      // return [ItemProposal.fromJson(res.data["result"])];
     } catch (e) {
       log(e.toString());
       throw new Exception(e.toString());
