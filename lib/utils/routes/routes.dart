@@ -77,7 +77,9 @@ class Routes {
     project_post_4: (context) => ProjectPost4(),
     project_detail: (context) => ProjectDetail(),
     hire_offer: (context) => HireOffer(),
-    submit_project: (context) => SubmitProject(),
+    submit_project: (context) => SubmitProject(
+          projectId: null,
+        ),
 
     student_profile_input_1: (context) => ProfileInput1(),
     student_profile_input_2: (context) => ProfileInput2(),
