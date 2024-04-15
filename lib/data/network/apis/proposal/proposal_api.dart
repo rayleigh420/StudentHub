@@ -11,6 +11,28 @@ class ProposalApi {
 
   ProposalApi(this._dioClient);
 
+  Future<bool> createProposal(
+      int projectId, int studentId, String coverLetter, int statusFlag) async {
+    try {
+      final res = await _dioClient.dio.post(Endpoints.createProposal,
+          data: jsonEncode({
+            "projectId": projectId,
+            "studentId": studentId,
+            "coverLetter": coverLetter,
+            "statusFlag": statusFlag,
+            "disableFlag": 0
+          }));
+      if (res.statusCode == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
+
   Future<Proposal> getProposalsByProjectId(String token, int id) async {
     try {
       final authToken = "Bearer ${token}";

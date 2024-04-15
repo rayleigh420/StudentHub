@@ -312,7 +312,9 @@ class _ProjectModalState extends State<ProjectModal> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SubmitProject()),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        SubmitProject(projectId: widget.project.projectId!)),
               );
             },
             child: Container(

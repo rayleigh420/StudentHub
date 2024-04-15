@@ -1,14 +1,26 @@
 import 'package:boilerplate/core/widgets/appBar.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/usecase/proposal/create_proposal.dart';
 import 'package:flutter/material.dart';
 
 class SubmitProject extends StatefulWidget {
-  const SubmitProject({Key? key}) : super(key: key);
+  final int? projectId;
+  const SubmitProject({required this.projectId});
 
   @override
   _SubmitProjectState createState() => _SubmitProjectState();
 }
 
 class _SubmitProjectState extends State<SubmitProject> {
+  CreateProposalUseCase _createProposalUseCase = getIt<CreateProposalUseCase>();
+  final coverLetterController = TextEditingController();
+
+  @override
+  void dispose() {
+    coverLetterController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +53,7 @@ class _SubmitProjectState extends State<SubmitProject> {
                     height: 20,
                   ),
                   TextFormField(
+                    controller: coverLetterController,
                     maxLines: 10,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -75,7 +88,10 @@ class _SubmitProjectState extends State<SubmitProject> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5))),
                             onPressed: () {
-                              // Navigator.pushNamed(context, '/project_post_4');
+                              _createProposalUseCase.call(
+                                  params: CreateProposalParam(widget.projectId!,
+                                      coverLetterController.text, 0));
+                              Navigator.pop(context);
                             },
                             child: const Text(
                                 style: TextStyle(fontSize: 16),
