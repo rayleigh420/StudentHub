@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:boilerplate/core/widgets/proposal/proposalItem.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 import 'package:boilerplate/domain/entity/proposal/proposal.dart';
 import 'package:boilerplate/domain/usecase/proposal/get_proposal_usecase.dart';
@@ -10,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:boilerplate/core/widgets/toggle_button.dart';
 
 class HireOffer extends StatefulWidget {
+  final Project? project;
+  HireOffer({required this.project});
   @override
   _HireOfferState createState() => _HireOfferState();
 }
@@ -27,7 +30,8 @@ class _HireOfferState extends State<HireOffer> {
 
   void getItem() async {
     print("Hello");
-    final res = await _getProposalsByProjectIdUseCase.call(params: 53);
+    final res =
+        await _getProposalsByProjectIdUseCase.call(params: widget.project!.id!);
     setState(() {
       listItemProposal = res.items!;
       log(listItemProposal.toString());
@@ -58,7 +62,7 @@ class _HireOfferState extends State<HireOffer> {
                     Container(
                       margin: const EdgeInsets.only(top: 20),
                       child: Text(
-                        "Senior frontend developer (Fintech)",
+                        widget.project!.title!,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
@@ -85,6 +89,7 @@ class _HireOfferState extends State<HireOffer> {
                             listItem: listItemProposal,
                           )
                         : ProjectDetail_2(
+                            project: widget.project,
                             selected: selectedIndex,
                             setSelected: (p0) {
                               print(p0);
@@ -123,10 +128,14 @@ class Proposal1 extends StatelessWidget {
 }
 
 class ProjectDetail_2 extends StatelessWidget {
+  final Project? project;
   final int selected;
   final Function(int) setSelected;
   const ProjectDetail_2(
-      {super.key, required this.selected, required this.setSelected});
+      {super.key,
+      required this.selected,
+      required this.setSelected,
+      required this.project});
 
   @override
   Widget build(BuildContext context) {
@@ -183,10 +192,15 @@ class ProjectDetail_2 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Project scope"),
-                Text(
-                  "- 3 to 6 month",
-                  style: TextStyle(fontSize: 14),
-                )
+                this.project!.projectScopeFlag == 0
+                    ? Text(
+                        "- 1 to 3 month",
+                        style: TextStyle(fontSize: 14),
+                      )
+                    : Text(
+                        "- 3 to 6 month",
+                        style: TextStyle(fontSize: 14),
+                      )
               ],
             )
           ],
@@ -209,23 +223,12 @@ class ProjectDetail_2 extends StatelessWidget {
               children: [
                 Text("Student required:"),
                 Text(
-                  "- 6 students",
+                  "- ${this.project!.numberOfStudents} students",
                   style: TextStyle(fontSize: 14),
                 )
               ],
             ),
           ],
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 30),
-          alignment: Alignment.bottomRight,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      side: BorderSide(color: Colors.black))),
-              onPressed: () {},
-              child: const Text(style: TextStyle(fontSize: 16), "Post job")),
         ),
       ],
     );
