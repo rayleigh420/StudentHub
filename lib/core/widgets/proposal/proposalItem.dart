@@ -111,51 +111,64 @@ class _ProposalItemsState extends State<ProposalItems> {
                               style: TextStyle(fontSize: 16), "Message")),
                     ),
                     SizedBox(
-                      height: 30,
-                      width: 160,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side: BorderSide(color: Colors.black))),
-                          onPressed: () {
-                            // setSelected(3);
-                            showCupertinoDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CupertinoAlertDialog(
-                                    title: Text("Hired offer"),
-                                    content: Text(
-                                        "Do you really want to send hired offer for student to do this project?"),
-                                    actions: <Widget>[
-                                      CupertinoDialogAction(
-                                        child: Text("Cancel",
-                                            style:
-                                                TextStyle(color: Colors.red)),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      CupertinoDialogAction(
-                                        child: Text("Send"),
-                                        onPressed: () {
-                                          _updateProposalUseCase.call(
-                                              params: UpdateProposalParam(
-                                                  widget.itemProposal!.id,
-                                                  widget.itemProposal!
-                                                      .coverLetter!,
-                                                  2));
-                                          Navigator.of(context).pop();
-                                          //setSelected(3);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                });
-                          },
-                          child: const Text(
-                              style: TextStyle(fontSize: 16), "Hire")),
-                    ),
+                        height: 30,
+                        width: 160,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    side: BorderSide(color: Colors.black))),
+                            onPressed: () {
+                              // setSelected(3);
+                              widget.itemProposal?.statusFlag == 0
+                                  ? showCupertinoDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CupertinoAlertDialog(
+                                          title: Text("Hired offer"),
+                                          content: Text(
+                                              "Do you really want to send hired offer for student to do this project?"),
+                                          actions: <Widget>[
+                                            CupertinoDialogAction(
+                                              child: Text("Cancel",
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            CupertinoDialogAction(
+                                              child: Text("Send"),
+                                              onPressed: () {
+                                                _updateProposalUseCase.call(
+                                                    params: UpdateProposalParam(
+                                                        widget.itemProposal!.id,
+                                                        widget.itemProposal!
+                                                            .coverLetter!,
+                                                        2));
+                                                Navigator.of(context).pop();
+                                                //setSelected(3);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      })
+                                  : null;
+                            },
+                            child: widget.itemProposal?.statusFlag == 0
+                                ? const Text(
+                                    style: TextStyle(fontSize: 16), "Hire")
+                                : widget.itemProposal?.statusFlag == 2
+                                    ? const Text(
+                                        style: TextStyle(fontSize: 16),
+                                        "Send offer")
+                                    : widget.itemProposal?.statusFlag == 1
+                                        ? const Text(
+                                            style: TextStyle(fontSize: 16),
+                                            "Messaged")
+                                        : const Text(
+                                            style: TextStyle(fontSize: 16),
+                                            "Hired"))),
                   ],
                 ),
                 SizedBox(
