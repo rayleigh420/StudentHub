@@ -1,6 +1,7 @@
 import 'package:boilerplate/core/widgets/project_item.dart';
 import 'package:boilerplate/core/widgets/search_project_modal.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/usecase/project/search_project_usecase.dart';
 
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/saved_project/saved_project.dart';
@@ -20,10 +21,28 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
   final FocusNode focusNode = FocusNode();
   ThemeStore _themeStore = getIt<ThemeStore>();
 
+  final searchController = TextEditingController();
+
+  SearchProjectsUseCase _searchProjectsUseCase = getIt<SearchProjectsUseCase>();
+
   @override
   void initState() {
     super.initState();
     focusNode.requestFocus();
+  }
+
+  void searchProject() async {
+    final searchQuery = searchController.text;
+    if (searchQuery.isNotEmpty) {
+      final result = await _searchProjectsUseCase.call(
+          params: SearchProjectParams(title: searchQuery));
+      // print(result);
+      Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+          builder: (context) => SearchProjectScreen(
+                projectList: result,
+              ),
+          maintainState: true));
+    }
   }
 
   @override
@@ -85,6 +104,7 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
               borderRadius: BorderRadius.circular(100),
             ),
             child: TextField(
+              controller: searchController,
               onTapOutside: (event) {
                 DeviceUtils.hideKeyboard(context);
               },
@@ -95,10 +115,11 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),
               onSubmitted: (value) {
-                Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                        builder: (context) => SearchProjectScreen(),
-                        maintainState: true));
+                searchProject();
+                // Navigator.of(context, rootNavigator: true).push(
+                //     MaterialPageRoute(
+                //         builder: (context) => SearchProjectScreen(),
+                //         maintainState: true));
               },
             ),
           )),
