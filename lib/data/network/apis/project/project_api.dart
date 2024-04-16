@@ -10,18 +10,29 @@ import 'package:dio/dio.dart';
 class ProjectApi {
   final DioClient _dioClient;
   ProjectApi(this._dioClient);
-  Future<ProjectList> getProjects(String token) async {
+  Future<ProjectList> getProjects(String token,
+      {String? title,
+      int? projectScopeFlag,
+      int? numberOfStudents,
+      int? proposalsLessThan}) async {
     try {
       // final token = await getIt<SharedPreferenceHelper>().authToken;
       final authToken = "Bearer ${token}";
-      final res = await _dioClient.dio.get(
-        Endpoints.getProjects,
-        options: Options(
-          headers: {
-            'Authorization': authToken,
-          },
-        ),
-      );
+      final Map<String, dynamic> queryParams = {};
+      if (title != null) queryParams['title'] = title;
+      if (projectScopeFlag != null)
+        queryParams['projectScopeFlag'] = projectScopeFlag;
+      if (numberOfStudents != null)
+        queryParams['numberOfStudents'] = numberOfStudents;
+      if (proposalsLessThan != null)
+        queryParams['proposalsLessThan'] = proposalsLessThan;
+      final res = await _dioClient.dio.get(Endpoints.getProjects,
+          options: Options(
+            headers: {
+              'Authorization': authToken,
+            },
+          ),
+          queryParameters: queryParams);
       log(res.data["result"].runtimeType.toString());
       return ProjectList.fromJson(res.data["result"]);
     } catch (e) {
