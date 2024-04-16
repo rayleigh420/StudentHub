@@ -69,6 +69,13 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
     "countMessages": 0,
     "countHired": 0
   });
+
+  void searchProject(ProjectList result) {
+    setState(() {
+      projects = result.projects!;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -144,6 +151,7 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
                 // hintText: "Search for projects âs",
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),
+              onTap: () => {Navigator.of(context).pop()},
             ),
           )),
           GestureDetector(
@@ -156,7 +164,7 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
                 enableDrag: true,
                 backgroundColor: Colors.transparent,
                 builder: (context) {
-                  return FilterSearchProjectModal();
+                  return FilterSearchProjectModal(searchProject: searchProject);
                 },
               );
             },
