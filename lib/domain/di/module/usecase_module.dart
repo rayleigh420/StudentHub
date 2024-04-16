@@ -35,6 +35,7 @@ import 'package:boilerplate/domain/usecase/profile/create_profile_student_usecas
 
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
+import 'package:boilerplate/domain/usecase/project/search_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/proposal/create_proposal.dart';
 import 'package:boilerplate/domain/usecase/proposal/get_proposal_student.dart';
@@ -154,6 +155,8 @@ mixin UseCaseModule {
         UpdateProjectsUseCase(getIt<ProjectRepository>()));
     getIt.registerSingleton<DeleteProjectsUseCase>(
         DeleteProjectsUseCase(getIt<ProjectRepository>()));
+    getIt.registerSingleton<SearchProjectsUseCase>(
+        SearchProjectsUseCase(getIt<ProjectRepository>()));
 
     // Favorite:--------------------------------------------------------------------
     getIt.registerSingleton<AddFavoriteByStudentIdUseCase>(

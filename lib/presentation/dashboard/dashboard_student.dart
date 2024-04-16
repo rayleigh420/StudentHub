@@ -2,6 +2,7 @@ import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/projects/submited_project_item.dart';
 import 'package:boilerplate/core/widgets/toogle_filter.dart';
+import 'package:boilerplate/core/widgets/toggle_button.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
@@ -21,6 +22,8 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
       getIt<GetProposalsStudentUseCase>();
   final ProjectStore _projectStore = getIt<ProjectStore>();
 
+  int selectedIndex = 0;
+
   List<ItemProposal> _proposals = [];
   List<Project> _projects = [];
 
@@ -34,6 +37,7 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
     final proposals = await _getProposalsStudentUseCase.call(params: null);
     setState(() {
       _proposals = proposals;
+      _projects = [];
       filterProject();
     });
   }
@@ -91,7 +95,14 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                       // ),
                       Container(
                         margin: EdgeInsets.only(top: 20),
-                        child: FilterButtons(),
+                        child: ToggleButtonsCompany(
+                          selected: selectedIndex,
+                          setSelected: (index) {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          },
+                        ),
                       ),
                       // ProjectItem(),
                       Container(
@@ -110,9 +121,21 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                         ),
                       ),
                       if (_projects.isNotEmpty)
-                        ..._projects.map((project) => SubmitedProjectItem(
-                              projDat: project,
-                            )),
+                        if (selectedIndex == 0 || selectedIndex == 1)
+                          ..._projects
+                              .where((item) => item.typeFlag != 1)
+                              .toList()
+                              .map((project) => SubmitedProjectItem(
+                                    projDat: project,
+                                  ))
+                        else if (selectedIndex == 2)
+                          ..._projects
+                              .where((item) => item.typeFlag == 1)
+                              .toList()
+                              .map((project) => SubmitedProjectItem(
+                                    projDat: project,
+                                  )),
+
                       // SubmitedProjectItem(
                       //   projDat: _projects[0],
                       // ),
