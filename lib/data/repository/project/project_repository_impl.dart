@@ -60,13 +60,13 @@ class ProjectRepositoryImpl extends ProjectRepository {
       throw new Exception(e.toString());
     }
   }
-  
+
   @override
-  Future<bool> deleteProject(int id) async{
-     try {
+  Future<bool> deleteProject(int id) async {
+    try {
       final token = await _sharedPreferenceHelper.authToken;
       log("token");
-      final res = await _projectApi.deleteProject(token!,id);
+      final res = await _projectApi.deleteProject(token!, id);
 
       return res;
     } catch (e) {
@@ -74,18 +74,37 @@ class ProjectRepositoryImpl extends ProjectRepository {
       log(e.toString());
       throw new Exception(e.toString());
     }
-
   }
-  
+
   @override
   Future<Project> updateProject(Project project) async {
     // TODO: implement updateProject
-     try {
+    try {
       final token = await _sharedPreferenceHelper.authToken;
       log("token");
-      final res = await _projectApi.updateProject(token!,project);
+      final res = await _projectApi.updateProject(token!, project);
 
       return res;
+    } catch (e) {
+      log("error");
+      log(e.toString());
+      throw new Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<ProjectList> searchProject(String? title, int? projectScopeFlag,
+      int? numberOfStudents, int? proposalsLessThan) async {
+    try {
+      final token = await _sharedPreferenceHelper.authToken;
+      log("token");
+      ProjectList list = await _projectApi.getProjects(token!,
+          title: title,
+          projectScopeFlag: projectScopeFlag,
+          numberOfStudents: numberOfStudents,
+          proposalsLessThan: proposalsLessThan);
+      log(list.toString());
+      return list;
     } catch (e) {
       log("error");
       log(e.toString());
