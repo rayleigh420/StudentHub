@@ -1,11 +1,13 @@
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/usecase/project/search_project_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 
 import 'package:flutter/material.dart';
 
 class FilterSearchProjectModal extends StatefulWidget {
-  const FilterSearchProjectModal({super.key});
+  final Function searchProject;
+  const FilterSearchProjectModal({super.key, required this.searchProject});
 
   @override
   State<FilterSearchProjectModal> createState() =>
@@ -14,7 +16,22 @@ class FilterSearchProjectModal extends StatefulWidget {
 
 class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
   ThemeStore _themeStore = getIt<ThemeStore>();
-  String? choosenTime = "Less than 1 month";
+  int? choosenTime = 0;
+
+  final studentNeededController = TextEditingController();
+  final proposalLessThanController = TextEditingController();
+
+  SearchProjectsUseCase _searchProjectsUseCase = getIt<SearchProjectsUseCase>();
+
+  void filterSubmit() async {
+    final result = await _searchProjectsUseCase.call(
+        params: SearchProjectParams(
+            projectScopeFlag: choosenTime,
+            numberOfStudents: int.parse(studentNeededController.text),
+            proposalsLessThan: int.parse(proposalLessThanController.text)));
+    widget.searchProject(result);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,6 +79,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextField(
+                        controller: studentNeededController,
                         scrollPadding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
                         onTapOutside: (event) {
@@ -93,6 +111,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: TextField(
+                        controller: proposalLessThanController,
                         scrollPadding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom),
                         keyboardType: TextInputType.number,
@@ -127,26 +146,26 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              visualDensity: const VisualDensity(
-                horizontal: VisualDensity.minimumDensity,
-                vertical: VisualDensity.minimumDensity,
-              ),
-              groupValue: choosenTime,
-              value: "Less than 1 month",
-              onChanged: (value) {
-                setState(() {
-                  choosenTime = value as String;
-                });
-              },
-            ),
-            const SizedBox(width: 15),
-            const Text("Less than 1 month")
-          ],
-        ),
+        // Row(
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     Radio(
+        //       visualDensity: const VisualDensity(
+        //         horizontal: VisualDensity.minimumDensity,
+        //         vertical: VisualDensity.minimumDensity,
+        //       ),
+        //       groupValue: choosenTime,
+        //       value: "Less than 1 month",
+        //       onChanged: (value) {
+        //         setState(() {
+        //           choosenTime = value as String;
+        //         });
+        //       },
+        //     ),
+        //     const SizedBox(width: 15),
+        //     const Text("Less than 1 month")
+        //   ],
+        // ),
         const SizedBox(height: 10),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,7 +179,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
               value: "1 to 3 months",
               onChanged: (value) {
                 setState(() {
-                  choosenTime = value as String;
+                  choosenTime = 0;
                 });
               },
             ),
@@ -181,7 +200,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
               value: "3 to 6 months",
               onChanged: (value) {
                 setState(() {
-                  choosenTime = value as String;
+                  choosenTime = 1;
                 });
               },
             ),
@@ -190,26 +209,26 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
           ],
         ),
         const SizedBox(height: 10),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Radio(
-              visualDensity: const VisualDensity(
-                horizontal: VisualDensity.minimumDensity,
-                vertical: VisualDensity.minimumDensity,
-              ),
-              groupValue: choosenTime,
-              value: "More than 6 months",
-              onChanged: (value) {
-                setState(() {
-                  choosenTime = value as String;
-                });
-              },
-            ),
-            const SizedBox(width: 15),
-            const Text("More than 6 months")
-          ],
-        ),
+        // Row(
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     Radio(
+        //       visualDensity: const VisualDensity(
+        //         horizontal: VisualDensity.minimumDensity,
+        //         vertical: VisualDensity.minimumDensity,
+        //       ),
+        //       groupValue: choosenTime,
+        //       value: "More than 6 months",
+        //       onChanged: (value) {
+        //         setState(() {
+        //           choosenTime = value as String;
+        //         });
+        //       },
+        //     ),
+        //     const SizedBox(width: 15),
+        //     const Text("More than 6 months")
+        //   ],
+        // ),
       ],
     );
   }
@@ -225,20 +244,26 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Container(
-            alignment: Alignment.center,
-            height: DeviceUtils.getScaledHeight(context, 0.034),
-            decoration: BoxDecoration(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(10)
-                // border: Border(top: BorderSide(color: )),
-                ),
-            width: DeviceUtils.getScaledWidth(context, 0.4),
-            child: Text(
-              "Apply Now",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          GestureDetector(
+            onTap: () => {
+              // filterSubmit(),
+              print("Hello")
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: DeviceUtils.getScaledHeight(context, 0.034),
+              decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(10)
+                  // border: Border(top: BorderSide(color: )),
+                  ),
+              width: DeviceUtils.getScaledWidth(context, 0.4),
+              child: Text(
+                "Apply Now",
+                textAlign: TextAlign.center,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
             ),
           ),
           Container(
