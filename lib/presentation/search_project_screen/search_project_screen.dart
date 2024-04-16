@@ -3,14 +3,17 @@ import 'package:boilerplate/core/widgets/project_item.dart';
 
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/domain/entity/project_2/project_list.dart';
 
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/material.dart';
 
 class SearchProjectScreen extends StatefulWidget {
+  final ProjectList? projectList;
   final String searchQuery;
-  const SearchProjectScreen({super.key, this.searchQuery = "abc"});
+  const SearchProjectScreen(
+      {super.key, this.searchQuery = "abc", this.projectList});
 
   @override
   State<SearchProjectScreen> createState() => _SearchProjectScreenState();
@@ -18,9 +21,13 @@ class SearchProjectScreen extends StatefulWidget {
 
 class _SearchProjectScreenState extends State<SearchProjectScreen> {
   String searchQuery = "";
+  List<Project> projects = [];
   @override
   void initState() {
     super.initState();
+    setState(() {
+      projects = widget.projectList!.projects!;
+    });
     searchQuery = widget.searchQuery;
   }
 
@@ -86,12 +93,14 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
                             const SizedBox(
                               height: 16,
                             ),
-
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
-                            ProjectItem(projDat: projDat),
+                            ...projects
+                                .map((e) => ProjectItem(projDat: e))
+                                .toList(),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
+                            // ProjectItem(projDat: projDat),
                             const SizedBox(
                               height: 16,
                             )
