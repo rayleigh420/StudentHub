@@ -13,7 +13,14 @@ class FavoriteRepositoryImpl extends FavoriteRepository {
   Future<ProjectList> getFavoriteProject() async {
     try {
       int? studentId = await _sharedPrefsHelper.currentStudentId;
-      ProjectList result = await _favoriteApi.getFavoriteProject(studentId!);
+      int? companyId = await _sharedPrefsHelper.currentCompanyId;
+
+      ProjectList result;
+      if (studentId != null) {
+        result = await _favoriteApi.getFavoriteProject(studentId);
+      } else {
+        result = await _favoriteApi.getFavoriteProject(companyId!);
+      }
       return result;
     } catch (e) {
       print(e.toString());
@@ -25,8 +32,17 @@ class FavoriteRepositoryImpl extends FavoriteRepository {
   Future<bool> addFavorite(int projectId, int disableFlag) async {
     try {
       int? studentId = await _sharedPrefsHelper.currentStudentId;
-      bool result =
-          await _favoriteApi.addFavorite(studentId!, projectId, disableFlag);
+      int? companyId = await _sharedPrefsHelper.currentCompanyId;
+
+      bool result;
+      if (studentId != null) {
+        result =
+            await _favoriteApi.addFavorite(studentId, projectId, disableFlag);
+      } else {
+        result =
+            await _favoriteApi.addFavorite(companyId!, projectId, disableFlag);
+      }
+      // await _favoriteApi.addFavorite(studentId!, projectId, disableFlag);
       return result;
     } catch (e) {
       print(e.toString());
