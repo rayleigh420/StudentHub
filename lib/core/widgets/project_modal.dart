@@ -1,5 +1,6 @@
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.dart';
 // import 'package:boilerplate/domain/entity/project/project.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/project/student/submit_project.dart';
@@ -16,6 +17,8 @@ class ProjectModal extends StatefulWidget {
 
 class _ProjectModalState extends State<ProjectModal> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
+  AddFavoriteByStudentIdUseCase _addFavoriteByStudentIdUseCase =
+      getIt<AddFavoriteByStudentIdUseCase>();
   @override
   void initState() {
     super.initState();
@@ -99,7 +102,7 @@ class _ProjectModalState extends State<ProjectModal> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Company name goes here",
+                widget.project.companyName!,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(
@@ -334,21 +337,31 @@ class _ProjectModalState extends State<ProjectModal> {
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            height: DeviceUtils.getScaledHeight(context, 0.034),
-            decoration: BoxDecoration(
-              // color: Colors.blueAccent,
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey),
-            ),
-            width: DeviceUtils.getScaledWidth(context, 0.4),
-            child: Text(
-              "Save",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          GestureDetector(
+            onTap: () {
+              _addFavoriteByStudentIdUseCase.call(
+                  params: AddProjectParams(
+                      projectId: widget.project.projectId != null
+                          ? widget.project.projectId!
+                          : widget.project.id!,
+                      disableFlag: widget.project.isFavorite! ? 1 : 0));
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: DeviceUtils.getScaledHeight(context, 0.034),
+              decoration: BoxDecoration(
+                // color: Colors.blueAccent,
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey),
+              ),
+              width: DeviceUtils.getScaledWidth(context, 0.4),
+              child: Text(
+                "Save",
+                textAlign: TextAlign.center,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
             ),
           ),
         ],
