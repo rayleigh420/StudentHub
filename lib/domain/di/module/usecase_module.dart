@@ -14,6 +14,7 @@ import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
+import 'package:boilerplate/domain/usecase/auth/studenthub_logout_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
 import 'package:boilerplate/domain/usecase/common/get_tech_stack.dart';
@@ -89,6 +90,9 @@ mixin UseCaseModule {
     getIt.registerSingleton<StudentHubSignupUC>(
       StudentHubSignupUC(getIt<AuthRepository>()),
     );
+    getIt.registerSingleton<StudentHubLogoutUC>(
+      StudentHubLogoutUC(getIt<AuthRepository>(),
+    ));
 
     // Profile:--------------------------------------------------------------------
     getIt.registerSingleton<ProfileTestUC>(
