@@ -1,8 +1,8 @@
 
 class Message {
   final String id;
-  final String sender;
-  final String receiver;
+  final int sender;
+  final int receiver;
   final DateTime createdAt;
   final String type;
   final String content;
