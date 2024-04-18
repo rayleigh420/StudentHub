@@ -30,7 +30,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
               builder = (BuildContext context) => BrowseProjectScreen();
               break;
             case 'searched_project':
-              builder = (BuildContext context) => SearchProjectScreen();
+              builder = (BuildContext context) => SearchProjectScreen(
+                    searchQuery: "",
+                  );
               break;
             case 'saved_project':
               builder = (BuildContext context) => SavedProject();

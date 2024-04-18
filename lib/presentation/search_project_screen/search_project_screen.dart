@@ -13,7 +13,7 @@ class SearchProjectScreen extends StatefulWidget {
   final ProjectList? projectList;
   final String searchQuery;
   const SearchProjectScreen(
-      {super.key, this.searchQuery = "abc", this.projectList});
+      {super.key, required this.searchQuery, this.projectList});
 
   @override
   State<SearchProjectScreen> createState() => _SearchProjectScreenState();
@@ -164,7 +164,8 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
                 enableDrag: true,
                 backgroundColor: Colors.transparent,
                 builder: (context) {
-                  return FilterSearchProjectModal(searchProject: searchProject);
+                  return FilterSearchProjectModal(
+                      searchProject: searchProject, searchQuery: searchQuery);
                 },
               );
             },
