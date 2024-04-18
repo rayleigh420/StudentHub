@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 // }
 
 class ScheduleItemChat extends StatefulWidget {
-  final isCancelled = false;
-  const ScheduleItemChat({super.key});
+  final isCancelled;
+  final int? type;
+  const ScheduleItemChat({super.key, this.type, this.isCancelled});
 
   @override
   State<ScheduleItemChat> createState() => _ScheduleItemChatState();
@@ -47,7 +48,11 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                         enableDrag: true,
                         backgroundColor: Colors.transparent,
                         builder: (context) {
-                          return ScheduleMeetingModal();
+                          return ScheduleMeetingModal(
+                            newSchedule: () {
+                              print("hello");
+                            },
+                          );
                         },
                       );
                     },
@@ -79,7 +84,7 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
         // margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
         width: DeviceUtils.getScaledWidth(context, 0.7),
         decoration: BoxDecoration(
-          color: Color(0xfff0f0f0),
+          color: widget.type == 0 ? Color(0xfff0f0f0) : Colors.blueAccent,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(

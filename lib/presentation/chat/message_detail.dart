@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:boilerplate/core/widgets/schedules/schedule_item_chat.dart';
 import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
@@ -7,6 +9,8 @@ import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+final List<Message> messages = MessageList().messages;
+
 class MessageDetail extends StatefulWidget {
   const MessageDetail({super.key});
 
@@ -15,24 +19,63 @@ class MessageDetail extends StatefulWidget {
 }
 
 class _MessageDetailState extends State<MessageDetail> {
-  final List<String> messages = [
-    "Hello",
-    "Hi there!",
-    "How are you?",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    "I'm fine, thanks!",
-    // Add more messages as needed
-  ];
-  final List<Message> messages2 = MessageList().messages;
+  final TextEditingController _messagecontroller = TextEditingController();
+  final GlobalKey _scrollViewKey = GlobalKey();
+  final ScrollController _controller = ScrollController();
+  final int receiverId = 2;
+  final int senderId = 1;
+  List<Message> messages2 = MessageList().messages;
+
+  @override
+  void initState() {
+    super.initState();
+    print("rerender");
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _controller.animateTo(
+    //     _controller.position.maxScrollExtent,
+    //     duration: Duration(seconds: 1),
+    //     curve: Curves.ease,
+    //   );
+    // });
+  }
+
+  void newMessage(String content) {
+    Message newmesage = Message(
+      id: Random().nextInt(100).toString(),
+      content: content,
+      sender: 2,
+      receiver: 1,
+      createdAt: DateTime.now().add(Duration(minutes: 35)),
+      type: 'text',
+    );
+    setState(() {
+      messages2.add(newmesage);
+    });
+    // scrollToBottom();
+  }
+
+  void newSchedule(String content) {
+    Message newmesage = Message(
+      id: Random().nextInt(100).toString(),
+      content: content,
+      sender: 2,
+      receiver: 1,
+      createdAt: DateTime.now().add(Duration(minutes: 35)),
+      type: 'schedule',
+    );
+    setState(() {
+      messages2.add(newmesage);
+    });
+  }
+
+  void scrollToBottom() {
+    _controller.animateTo(
+      _controller.position.minScrollExtent,
+      duration: Duration(seconds: 1),
+      curve: Curves.ease,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -44,7 +87,17 @@ class _MessageDetailState extends State<MessageDetail> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Icon(Icons.arrow_back_ios),
+                ),
+              ),
               Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
                 child: CircleAvatar(
                   radius: 20,
                   backgroundColor: Colors.white,
@@ -74,7 +127,11 @@ class _MessageDetailState extends State<MessageDetail> {
                               enableDrag: true,
                               backgroundColor: Colors.transparent,
                               builder: (context) {
-                                return ScheduleMeetingModal();
+                                return ScheduleMeetingModal(
+                                  newSchedule: () {
+                                    newSchedule("aha");
+                                  },
+                                );
                               },
                             );
                             // Navigator.pop(context);
@@ -101,17 +158,22 @@ class _MessageDetailState extends State<MessageDetail> {
           Container(
             height: DeviceUtils.getScaledHeight(context, 1),
             child: SingleChildScrollView(
+              controller: _controller,
+              reverse: true,
               physics: BouncingScrollPhysics(),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildChatDivider(context, "6/6/2024"),
-                  buildMessageTo(context, messages2[0]),
-                  buildMessageFrom(context, messages2[1]),
-                  buildMessageSchedule(
-                      context, "12:00 AM", "Luis", "assets/images/student.png"),
-                  buildMessageTo(context, messages2[2]),
+                  buildChat(),
+                  // buildMessageTo(context, messages2[0]),
+                  // buildMessageFrom(context, messages2[1]),
+                  // buildMessageSchedule(
+                  //     context, "12:00 AM", "Luis", "assets/images/student.png"),
+                  // buildMessageTo(context, messages2[2]),
+                  // buildMessageScheduleTo(
+                  //     context, "12:00 AM", "Luis", "assets/images/student.png"),
                   const SizedBox(height: 70),
                 ],
               ),
@@ -121,6 +183,34 @@ class _MessageDetailState extends State<MessageDetail> {
         ],
       ),
     ));
+  }
+
+  Widget buildChat() {
+    return Column(
+      children: [
+        ListView.builder(
+          key: _scrollViewKey,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: messages2.length,
+          itemBuilder: (context, index) {
+            if (messages2[index].sender == senderId) {
+              if (messages2[index].type == "text") {
+                return buildMessageFrom(context, messages2[index]);
+              }
+              return buildMessageSchedule(
+                  context, "12:00 AM", "Luis", "assets/images/student.png");
+            } else {
+              if (messages2[index].type == "text") {
+                return buildMessageTo(context, messages2[index]);
+              }
+              return buildMessageScheduleTo(
+                  context, "12:00 AM", "Luis", "assets/images/student.png");
+            }
+          },
+        )
+      ],
+    );
   }
 
   Widget buildMessageTo(BuildContext context, Message message) {
@@ -155,14 +245,6 @@ class _MessageDetailState extends State<MessageDetail> {
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Container(
-              padding: EdgeInsets.only(left: 10),
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage('assets/images/student.png'),
-              ),
-            ),
             Container(
               margin: EdgeInsets.all(10),
               padding: EdgeInsets.all(10),
@@ -243,26 +325,24 @@ class _MessageDetailState extends State<MessageDetail> {
   Widget buildMessageSchedule(
       BuildContext context, String time, String name, String avatarUrl) {
     return Container(
+        alignment: Alignment.centerLeft,
         padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage(avatarUrl),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                ScheduleItemChat()
-              ],
-            )
-          ],
+        // width: DeviceUtils.getScaledWidth(context, 0.5),
+        child: ScheduleItemChat(
+          isCancelled: false,
+          type: 0,
+        ));
+  }
+
+  Widget buildMessageScheduleTo(
+      BuildContext context, String time, String name, String avatarUrl) {
+    return Container(
+        alignment: Alignment.centerRight,
+        // width: DeviceUtils.getScaledWidth(context, 0.5),
+        padding: EdgeInsets.all(10),
+        child: ScheduleItemChat(
+          isCancelled: false,
+          type: 0,
         ));
   }
 
@@ -375,6 +455,8 @@ class _MessageDetailState extends State<MessageDetail> {
             ),
             Expanded(
               child: TextField(
+                controller: _messagecontroller,
+                autofocus: true,
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
                 },
@@ -388,7 +470,10 @@ class _MessageDetailState extends State<MessageDetail> {
               width: 15,
             ),
             FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                newMessage(_messagecontroller.text);
+                _messagecontroller.clear();
+              },
               child: Icon(
                 Icons.send,
                 color: Colors.white,
