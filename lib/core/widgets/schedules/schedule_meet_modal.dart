@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleMeetingModal extends StatefulWidget {
-  const ScheduleMeetingModal({super.key});
+  final VoidCallback? newSchedule;
+  const ScheduleMeetingModal({super.key, required this.newSchedule});
 
   @override
   State<ScheduleMeetingModal> createState() => _ScheduleMeetingModalState();
@@ -455,21 +456,28 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            height: DeviceUtils.getScaledHeight(context, 0.034),
-            decoration: BoxDecoration(
-              // color: Colors.blueAccent,
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey),
-            ),
-            width: DeviceUtils.getScaledWidth(context, 0.4),
-            child: Text(
-              "Send Invite",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          GestureDetector(
+            onTap: () {
+              widget.newSchedule!();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            },
+            child: Container(
+              alignment: Alignment.center,
+              height: DeviceUtils.getScaledHeight(context, 0.034),
+              decoration: BoxDecoration(
+                // color: Colors.blueAccent,
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey),
+              ),
+              width: DeviceUtils.getScaledWidth(context, 0.4),
+              child: Text(
+                "Send Invite",
+                textAlign: TextAlign.center,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
             ),
           ),
         ],
