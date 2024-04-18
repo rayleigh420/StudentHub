@@ -69,4 +69,18 @@ class AuthRepositoryImpl extends AuthRepository {
       throw new Exception(e.toString());
     }
   }
+
+  @override
+  Future<void> logOut() async {
+    try {
+      await _authApi.logOut();
+      _sharedPrefsHelper.removeAuthToken();
+      _sharedPrefsHelper.removeCurrentCompanyId();
+      _sharedPrefsHelper.removeCurrentStudentId();
+      _sharedPrefsHelper.removeRolesUser();
+      _sharedPrefsHelper.saveIsLoggedIn(false);
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
 }

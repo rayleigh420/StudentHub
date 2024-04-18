@@ -5,6 +5,7 @@ class Project {
   DateTime? updatedAt;
   DateTime? deletedAt;
   String? companyId;
+  String? companyName;
   int? projectScopeFlag;
   String? title;
   String? description;
@@ -27,6 +28,7 @@ class Project {
     this.description,
     this.typeFlag,
     this.numberOfStudents,
+    this.companyName,
     // this.proposals,
     this.countProposals,
     this.countMessages,
@@ -47,6 +49,7 @@ class Project {
       'description': description,
       'typeFlag': typeFlag,
       'numberOfStudents': numberOfStudents,
+      'companyName': companyName ?? '',
       // 'proposals': proposals,
       'countProposals': countProposals,
       'countMessages': countMessages,
@@ -74,6 +77,7 @@ class Project {
       countMessages: map['countMessages'],
       countHired: map['countHired'],
       isFavorite: map['isFavorite'],
+      companyName: map['companyName'],
     );
   }
 }

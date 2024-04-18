@@ -91,6 +91,15 @@ class AuthApi {
     }
   }
 
+  Future<void> logOut() async {
+    try {
+      await _dioClient.dio.post(Endpoints.logOut);
+      log("logged out");
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
+
   /// sample api call with default rest client
 //  Future<PostsList> getPosts() {
 //
