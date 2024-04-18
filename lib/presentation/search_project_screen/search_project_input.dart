@@ -40,6 +40,7 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
       Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
           builder: (context) => SearchProjectScreen(
                 projectList: result,
+                searchQuery: searchQuery,
               ),
           maintainState: true));
     }
