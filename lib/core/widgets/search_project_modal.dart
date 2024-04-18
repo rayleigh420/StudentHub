@@ -67,11 +67,11 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
                   // Handle search text change
                 },
                 onSubmitted: (value) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SearchProjectScreen(),
-                    ),
-                  );
+                  // Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => SearchProjectScreen(),
+                  //   ),
+                  // );
                 },
               ),
             ),
