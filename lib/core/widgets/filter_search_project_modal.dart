@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 class FilterSearchProjectModal extends StatefulWidget {
   final Function searchProject;
-  const FilterSearchProjectModal({super.key, required this.searchProject});
+  final String searchQuery;
+  const FilterSearchProjectModal(
+      {super.key, required this.searchProject, required this.searchQuery});
 
   @override
   State<FilterSearchProjectModal> createState() =>
@@ -24,12 +26,16 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
   SearchProjectsUseCase _searchProjectsUseCase = getIt<SearchProjectsUseCase>();
 
   void filterSubmit() async {
+    // print()
     final result = await _searchProjectsUseCase.call(
         params: SearchProjectParams(
+            title: widget.searchQuery,
             projectScopeFlag: choosenTime,
-            numberOfStudents: int.parse(studentNeededController.text),
-            proposalsLessThan: int.parse(proposalLessThanController.text)));
+            numberOfStudents: int.parse(studentNeededController.text)
+            // proposalsLessThan: int.parse(proposalLessThanController.text)
+            ));
     widget.searchProject(result);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -146,26 +152,6 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        // Row(
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Radio(
-        //       visualDensity: const VisualDensity(
-        //         horizontal: VisualDensity.minimumDensity,
-        //         vertical: VisualDensity.minimumDensity,
-        //       ),
-        //       groupValue: choosenTime,
-        //       value: "Less than 1 month",
-        //       onChanged: (value) {
-        //         setState(() {
-        //           choosenTime = value as String;
-        //         });
-        //       },
-        //     ),
-        //     const SizedBox(width: 15),
-        //     const Text("Less than 1 month")
-        //   ],
-        // ),
         const SizedBox(height: 10),
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -176,7 +162,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                 vertical: VisualDensity.minimumDensity,
               ),
               groupValue: choosenTime,
-              value: "1 to 3 months",
+              value: 0,
               onChanged: (value) {
                 setState(() {
                   choosenTime = 0;
@@ -197,7 +183,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                 vertical: VisualDensity.minimumDensity,
               ),
               groupValue: choosenTime,
-              value: "3 to 6 months",
+              value: 1,
               onChanged: (value) {
                 setState(() {
                   choosenTime = 1;
@@ -209,26 +195,6 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
           ],
         ),
         const SizedBox(height: 10),
-        // Row(
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Radio(
-        //       visualDensity: const VisualDensity(
-        //         horizontal: VisualDensity.minimumDensity,
-        //         vertical: VisualDensity.minimumDensity,
-        //       ),
-        //       groupValue: choosenTime,
-        //       value: "More than 6 months",
-        //       onChanged: (value) {
-        //         setState(() {
-        //           choosenTime = value as String;
-        //         });
-        //       },
-        //     ),
-        //     const SizedBox(width: 15),
-        //     const Text("More than 6 months")
-        //   ],
-        // ),
       ],
     );
   }
@@ -246,8 +212,8 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
         children: [
           GestureDetector(
             onTap: () => {
-              // filterSubmit(),
-              print("Hello")
+              filterSubmit(),
+              // print("Hello")
             },
             child: Container(
               alignment: Alignment.center,
