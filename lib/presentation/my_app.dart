@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           //   selectedIndex: 4,
           //   isStudent: true,
           // ),
-          home: MessageDetail(),
+          home: InputLogin(),
         );
       },
     );

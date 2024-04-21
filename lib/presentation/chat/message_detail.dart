@@ -87,15 +87,15 @@ class _MessageDetailState extends State<MessageDetail> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Icon(Icons.arrow_back_ios),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     Navigator.pop(context);
+              //   },
+              //   child: Padding(
+              //     padding: EdgeInsets.only(left: 10),
+              //     child: Icon(Icons.arrow_back_ios),
+              //   ),
+              // ),
               Container(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: CircleAvatar(
