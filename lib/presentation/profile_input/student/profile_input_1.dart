@@ -454,9 +454,10 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         padding: const EdgeInsets.all(4.0),
-                        child: IconButton(
-                            icon: Icon(Icons.add, size: 17),
-                            onPressed: _addLanguage),
+                        child: GestureDetector(
+                            child: Icon(Icons.add, size: 17),
+                            onTap: _addLanguage),
+
                         // ElevatedButton(
                         //     child: Icon(Icons.add, size: 17),
                         //     onPressed: _addLanguage,
@@ -544,13 +545,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           borderRadius: BorderRadius.circular(100),
                         ),
                         padding: const EdgeInsets.all(4.0),
-                        child: IconButton(
-                          icon: Icon(
+                        child: GestureDetector(
+                          child: Icon(
                             Icons.add,
                             size: 17,
                             weight: 100,
                           ),
-                          onPressed: _addEducation,
+                          onTap: _addEducation,
                         ),
                       ),
                     ],
