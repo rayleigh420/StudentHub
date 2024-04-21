@@ -74,12 +74,12 @@ class _ExpWidgetState extends State<ExpWidget> {
                             borderRadius: BorderRadius.circular(100),
                           ),
                           padding: const EdgeInsets.all(4.0),
-                          child: IconButton(
-                            icon: Icon(
+                          child: GestureDetector(
+                            child: Icon(
                               Icons.add,
                               size: 17,
                             ),
-                            onPressed: _addExperience,
+                            onTap: _addExperience,
                           )),
                     ],
                   ),

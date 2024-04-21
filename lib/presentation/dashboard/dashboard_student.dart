@@ -44,8 +44,8 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
 
   void filterProject() {
     final matchingProjects = _projectStore.projects!.projects!
-        .where((project) => _proposals
-            .any((proposal) => proposal.projectId == project.projectId))
+        .where((project) =>
+            _proposals.any((proposal) => proposal.projectId == project.id))
         .toList();
     setState(() {
       _projects = matchingProjects;

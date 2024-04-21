@@ -160,7 +160,7 @@ class _InputLoginState extends State<InputLogin> {
                             MaterialPageRoute(builder: (context) {
                           return AppBottomNavigationBar(
                             isStudent: false,
-                            selectedIndex: 2,
+                            selectedIndex: 0,
                           );
                         }));
                       }
@@ -177,27 +177,27 @@ class _InputLoginState extends State<InputLogin> {
                     //   );
                     // }));
 
-                    log("123");
-                    log(token);
-                    int role = handleRole(token);
-                    print(role);
-                    if (role == 0) {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) {
-                        return AppBottomNavigationBar(
-                          isStudent: true,
-                          selectedIndex: 4,
-                        );
-                      }));
-                    } else {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) {
-                        return AppBottomNavigationBar(
-                          isStudent: false,
-                          selectedIndex: 4,
-                        );
-                      }));
-                    }
+                    // log("123");
+                    // log(token);
+                    // int role = handleRole(token);
+                    // print(role);
+                    // if (role == 0) {
+                    //   Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(builder: (context) {
+                    //     return AppBottomNavigationBar(
+                    //       isStudent: true,
+                    //       selectedIndex: 4,
+                    //     );
+                    //   }));
+                    // } else {
+                    //   Navigator.of(context).pushReplacement(
+                    //       MaterialPageRoute(builder: (context) {
+                    //     return AppBottomNavigationBar(
+                    //       isStudent: false,
+                    //       selectedIndex: 4,
+                    //     );
+                    //   }));
+                    // }
                     // log(token);
                     // ScaffoldMessenger.of(context).showSnackBar(
                     //   const SnackBar(content: Text('Processing Data')),

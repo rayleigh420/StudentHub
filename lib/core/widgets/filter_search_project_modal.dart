@@ -31,9 +31,8 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
         params: SearchProjectParams(
             title: widget.searchQuery,
             projectScopeFlag: choosenTime,
-            numberOfStudents: int.parse(studentNeededController.text)
-            // proposalsLessThan: int.parse(proposalLessThanController.text)
-            ));
+            numberOfStudents: int.parse(studentNeededController.text),
+            proposalsLessThan: int.parse(proposalLessThanController.text)));
     widget.searchProject(result);
     Navigator.of(context).pop();
   }
