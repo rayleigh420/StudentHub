@@ -77,6 +77,8 @@
 //     );
 //   }
 // }
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 import 'dart:async';
 import 'dart:developer';
 
@@ -103,6 +105,7 @@ import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
@@ -114,7 +117,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
-  final SocketClient socketClient = getIt<SocketClient>();
+  late final SocketClient socketClient = SocketClient();
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
     MessageList(),
@@ -127,17 +130,17 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   void initState() {
     super.initState();
     _selectedIndex = widget.selectedIndex;
-    socketClient.connect(Endpoints.baseUrl);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkAuthToken();
     });
   }
 
-  @override
-  void dispose() {
-    socketClient.disconnect();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // socketClient.disconnect();
+  //   super.dispose();
+  // }
 
   void checkAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -156,7 +159,9 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       run();
     } else {
       final jwt = JWT.decode(authToken);
-      socketClient.setToken(authToken);
+      // socketClient.setToken(authToken);
+      socketClient.connect(Endpoints.baseUrl, authToken);
+
       print('Payload: ${jwt.payload}');
       print('roles: ${jwt.payload['roles'][0]}');
       // return jwt.payload['roles'][0];
