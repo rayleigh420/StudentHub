@@ -16,6 +16,7 @@ import 'package:boilerplate/data/network/apis/techStacks/tech_stack_api.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/interceptors/error_interceptor.dart';
 import 'package:boilerplate/data/network/rest_client.dart';
+import 'package:boilerplate/data/network/socket_client.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:event_bus/event_bus.dart';
 
@@ -57,7 +58,7 @@ mixin NetworkModule {
           ],
         ),
     );
-
+    getIt.registerSingleton<SocketClient>(SocketClient());
     // api's:-------------------------------------------------------------------
     getIt.registerSingleton(PostApi(getIt<DioClient>(), getIt<RestClient>()));
 

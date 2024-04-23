@@ -103,20 +103,12 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
     return Observer(builder: (context) {
       return _projectCompanyStore.loading
           ? Center(child: CircularProgressIndicator())
-          : selectedIndex == 0 || selectedIndex == 1
-              ? buildProjectsList(_projectCompanyStore
-                  .companyProjects!.projects!
-                  .where((item) => item.typeFlag != 1)
-                  .toList())
-              : buildProjectsList(_projectCompanyStore
-                  .companyProjects!.projects!
-                  .where((item) => item.typeFlag == 1)
-                  .toList());
+          : buildProjectsList();
       // buildProjectsList(project);
     });
   }
 
-  Widget buildProjectsList(List<Project> project) {
+  Widget buildProjectsList() {
     // final project = selectedIndex != 1
     //     ? _projectCompanyStore.companyProjects!.projects!
     //         .where((item) => item.typeFlag != 1)
@@ -128,11 +120,27 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
       builder: (context) {
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: project.length,
+          itemCount: selectedIndex == 0
+              ? _projectCompanyStore.companyProjects!.projects!.length
+              : _projectCompanyStore.companyProjects!.projects!
+                  .where((item) => item.typeFlag == 1)
+                  .toList()
+                  .length,
           itemBuilder: (context, index) {
-            return ProjectItemCompany(
-              project: project[index],
-            );
+            if (selectedIndex == 0) {
+              return ProjectItemCompany(
+                project: _projectCompanyStore.companyProjects!.projects![index],
+              );
+            } else {
+              if (_projectCompanyStore
+                      .companyProjects!.projects![index].typeFlag ==
+                  1) {
+                return ProjectItemCompany(
+                  project:
+                      _projectCompanyStore.companyProjects!.projects![index],
+                );
+              }
+            }
           },
         );
       },

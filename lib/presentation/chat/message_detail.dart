@@ -1,13 +1,18 @@
+import 'dart:developer';
 import 'dart:math';
 
 import 'package:boilerplate/core/widgets/schedules/schedule_item_chat.dart';
 import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_list.dart';
+import 'package:boilerplate/presentation/login/login.dart';
 // import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final List<Message> messages = MessageList().messages;
 
@@ -22,8 +27,11 @@ class _MessageDetailState extends State<MessageDetail> {
   final TextEditingController _messagecontroller = TextEditingController();
   final GlobalKey _scrollViewKey = GlobalKey();
   final ScrollController _controller = ScrollController();
+  final SharedPreferenceHelper _sharePref = getIt<SharedPreferenceHelper>();
   final int receiverId = 2;
   final int senderId = 1;
+  late int myId;
+  late int otherId;
   List<Message> messages2 = MessageList().messages;
 
   @override
@@ -37,17 +45,42 @@ class _MessageDetailState extends State<MessageDetail> {
     //     curve: Curves.ease,
     //   );
     // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadId();
+    });
+  }
+
+  _loadId() async {
+    // final token = await _sharePref.authToken;
+    final role = await _sharePref.roles;
+    final companyId = await _sharePref.currentCompanyId;
+    final userId = await _sharePref.currentStudentId;
+    if (companyId == null && userId == null) {
+      Navigator.of(context, rootNavigator: true).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) => LoginScreen(), maintainState: false));
+    }
+    print("role: " + role.toString());
+    if (role![0] != null) {
+      if (role[0] == 1) {
+        myId = companyId!;
+        print(("company id: " + companyId.toString()));
+      } else {
+        myId = userId!;
+        print(("student id: " + userId.toString()));
+      }
+    }
   }
 
   void newMessage(String content) {
     Message newmesage = Message(
-      id: Random().nextInt(100).toString(),
-      content: content,
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 35)),
-      type: 'text',
-    );
+        id: Random().nextInt(100).toString(),
+        content: content,
+        sender: 2,
+        receiver: 1,
+        createdAt: DateTime.now().add(Duration(minutes: 35)),
+        type: 'text',
+        projectId: 88);
     setState(() {
       messages2.add(newmesage);
     });
@@ -62,6 +95,7 @@ class _MessageDetailState extends State<MessageDetail> {
       receiver: 1,
       createdAt: DateTime.now().add(Duration(minutes: 35)),
       type: 'schedule',
+      projectId: 88,
     );
     setState(() {
       messages2.add(newmesage);
