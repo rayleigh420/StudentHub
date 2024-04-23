@@ -49,7 +49,6 @@ class WelcomeCompany extends StatelessWidget {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                           builder: (context) => AppBottomNavigationBar(
-                                isStudent: false,
                                 selectedIndex: 0,
                               )),
                     );
