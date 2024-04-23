@@ -27,10 +27,32 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   List<ItemProposal> _proposals = [];
   List<Project> _projects = [];
 
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   // check to see if already called api
+  //   if (!_projectStore.loading) {
+  //     _projectStore.getProjects();
+  //     // getProposalStudent();
+  //   }
+  // }
+
   @override
   void initState() {
     super.initState();
+    initializeData();
+    // getProposalStudent();
+  }
+
+  void initializeData() async {
+    if (_projectStore.projects == null) {
+      await getProject();
+    }
     getProposalStudent();
+  }
+
+  Future<void> getProject() async {
+    await _projectStore.getProjects();
   }
 
   void getProposalStudent() async {
@@ -121,16 +143,22 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                         ),
                       ),
                       if (_projects.isNotEmpty)
-                        if (selectedIndex == 0 || selectedIndex == 1)
+                        if (selectedIndex == 0)
                           ..._projects
-                              .where((item) => item.typeFlag != 1)
+                              .toList()
+                              .map((project) => SubmitedProjectItem(
+                                    projDat: project,
+                                  ))
+                        else if (selectedIndex == 1)
+                          ..._projects
+                              .where((item) => item.typeFlag == 1)
                               .toList()
                               .map((project) => SubmitedProjectItem(
                                     projDat: project,
                                   ))
                         else if (selectedIndex == 2)
                           ..._projects
-                              .where((item) => item.typeFlag == 1)
+                              .where((item) => item.typeFlag == 2)
                               .toList()
                               .map((project) => SubmitedProjectItem(
                                     projDat: project,
