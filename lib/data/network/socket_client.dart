@@ -7,31 +7,39 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 class SocketClient {
   // final SharedPreferenceHelper _sharedPreferenceHelper;
-  late Socket _socket;
+  late final IO.Socket _socket;
   // SocketClient(this._sharedPreferenceHelper);
   SocketClient();
-  void connect(String url) {
+  void connect(String url, String token) {
     // final String? token = await _sharedPreferenceHelper.authToken;
     log("Connecting to $url");
-    _socket = IO.io(url, <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
+    try {
+      _socket = IO.io(
+          url,
+          OptionBuilder()
+              .setTransports(['websocket'])
+              .disableAutoConnect()
+              .build());
+      _socket.io.options?['extraHeaders'] = {
+        'Authorization': 'Bearer ${token}',
+      };
+      _socket.io.options?['query'] = {'project_id': 471};
+      _socket.connect();
+      _socket.onConnect((data) {
+        print('Connected');
+        log("Connected to $url");
+      });
 
-    _socket.connect();
-    _socket.onConnect((data) => {
-          print('Connected'),
-        });
-
-    _socket.onDisconnect((data) => {
-          print('Disconnected'),
-        });
-  }
-
-  void setToken(String token) {
-    _socket.io.options?['extraHeaders'] = {
-      'Authorization': 'Bearer ${token}',
-    };
+      _socket.onDisconnect((data) => {
+            print('Disconnected'),
+          });
+      _socket.onConnectError((data) => print('$data'));
+      _socket.onError((data) => print(data));
+      _socket.on("ERROR", (data) => print(data));
+    } catch (e) {
+      print("Error connecting to $url");
+      print(e);
+    }
   }
 
   void sendMessage(String event, Message message) {
