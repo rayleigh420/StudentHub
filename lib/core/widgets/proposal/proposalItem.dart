@@ -44,7 +44,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${widget.itemProposal!.student?.userId}",
+                            "${widget.itemProposal!.student?.user?.fullname!}",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),

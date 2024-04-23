@@ -3,6 +3,7 @@ import 'package:boilerplate/domain/entity/experiences/experience.dart';
 import 'package:boilerplate/domain/entity/language/Language.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
+import 'package:boilerplate/domain/entity/profile/user.dart';
 
 class Student {
   int id;
@@ -11,6 +12,7 @@ class Student {
   DateTime? deletedAt;
   int userId;
   int techStackId;
+  User? user;
   TechStack? techStack;
   List<dynamic>? proposals;
   List<Education>? educations;
@@ -26,6 +28,7 @@ class Student {
       this.deletedAt,
       required this.userId,
       required this.techStackId,
+      this.user,
       this.resume,
       this.transcript,
       this.techStack,
@@ -48,6 +51,7 @@ class Student {
       transcript: map['transcript'],
       techStack:
           map['techStack'] != null ? TechStack.fromMap(map['techStack']) : null,
+      user: map['user'] != null ? User.fromJson(map['user']) : null,
       proposals: map['proposals'],
       educations: List<Education>.from(
           map['educations']?.map((x) => Education.fromMap(x))?.toList() ?? []),
@@ -72,6 +76,7 @@ class Student {
       'resume': resume,
       'transcript': transcript,
       'techStack': techStack?.toMap(),
+      'user': user?.toJson(),
       'proposals': proposals,
       'educations': educations != null
           ? educations!.map((x) => x.toMap()).toList()
