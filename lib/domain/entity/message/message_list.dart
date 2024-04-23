@@ -9,6 +9,7 @@ class MessageList {
       receiver: 2,
       createdAt: DateTime.now(),
       type: 'text',
+      projectId: 88,
     ),
     Message(
       id: '2',
@@ -17,6 +18,7 @@ class MessageList {
       receiver: 1,
       createdAt: DateTime.now().add(Duration(minutes: 5)),
       type: 'text',
+      projectId: 88,
     ),
     Message(
       id: '3',
@@ -25,6 +27,7 @@ class MessageList {
       receiver: 2,
       createdAt: DateTime.now().add(Duration(minutes: 10)),
       type: 'text',
+      projectId: 88,
     ),
     Message(
       id: '4',
@@ -32,6 +35,7 @@ class MessageList {
       sender: 2,
       receiver: 1,
       createdAt: DateTime.now().add(Duration(minutes: 15)),
+      projectId: 88,
       type: 'text',
     ),
     Message(
@@ -40,6 +44,7 @@ class MessageList {
       sender: 1,
       receiver: 2,
       createdAt: DateTime.now().add(Duration(minutes: 20)),
+      projectId: 88,
       type: 'text',
     ),
     Message(
@@ -48,6 +53,7 @@ class MessageList {
       sender: 2,
       receiver: 1,
       createdAt: DateTime.now().add(Duration(minutes: 25)),
+      projectId: 88,
       type: 'text',
     ),
     Message(
@@ -56,6 +62,7 @@ class MessageList {
       sender: 1,
       receiver: 2,
       createdAt: DateTime.now().add(Duration(minutes: 30)),
+      projectId: 88,
       type: 'schedule',
     ),
     Message(
@@ -64,6 +71,7 @@ class MessageList {
       sender: 2,
       receiver: 1,
       createdAt: DateTime.now().add(Duration(minutes: 35)),
+      projectId: 88,
       type: 'text',
     ),
     Message(
@@ -72,6 +80,7 @@ class MessageList {
       sender: 1,
       receiver: 2,
       createdAt: DateTime.now().add(Duration(minutes: 40)),
+      projectId: 88,
       type: 'text',
     ),
     Message(
@@ -80,6 +89,7 @@ class MessageList {
       sender: 2,
       receiver: 1,
       createdAt: DateTime.now().add(Duration(minutes: 45)),
+      projectId: 88,
       type: 'text',
     ),
     Message(
@@ -88,6 +98,7 @@ class MessageList {
       sender: 2,
       receiver: 1,
       createdAt: DateTime.now().add(Duration(minutes: 45)),
+      projectId: 88,
       type: 'schedule',
     ),
   ];

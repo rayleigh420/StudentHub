@@ -80,6 +80,8 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:boilerplate/data/network/constants/endpoints.dart';
+import 'package:boilerplate/data/network/socket_client.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/alert/alert.dart';
@@ -104,34 +106,37 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
-  final bool isStudent;
 
-  AppBottomNavigationBar(
-      {required this.selectedIndex, required this.isStudent});
+  AppBottomNavigationBar({required this.selectedIndex});
   @override
   _AppBottomNavigationBarState createState() => _AppBottomNavigationBarState();
 }
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
-  // bool _isStudent = false;
-  static List<Widget> _widgetOptions = [];
+  final SocketClient socketClient = getIt<SocketClient>();
+  static List<Widget> _widgetOptions = <Widget>[
+    BrowseProjectScreen(),
+    MessageList(),
+    DashboardStudentScreen(),
+    NotiList(),
+    ProfileScreen()
+  ];
 
   @override
   void initState() {
     super.initState();
-    // _isStudent = widget.isStudent;
     _selectedIndex = widget.selectedIndex;
-    // _widgetOptions = <Widget>[
-    //   BrowseProjectScreen(),
-    //   MessageList(),
-    //   _isStudent ? DashboardStudentScreen() : DashboardCompanyScreen(),
-    //   NotiList(),
-    //   ProfileScreen()
-    // ];
+    socketClient.connect(Endpoints.baseUrl);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkAuthToken();
     });
+  }
+
+  @override
+  void dispose() {
+    socketClient.disconnect();
+    super.dispose();
   }
 
   void checkAuthToken() async {
@@ -147,9 +152,11 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           );
         });
       }
+
       run();
     } else {
       final jwt = JWT.decode(authToken);
+      socketClient.setToken(authToken);
       print('Payload: ${jwt.payload}');
       print('roles: ${jwt.payload['roles'][0]}');
       // return jwt.payload['roles'][0];
@@ -167,20 +174,6 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       });
     }
   }
-
-  // void testRole() async {
-  //   List<int>? roles = await getIt<SharedPreferenceHelper>().roles;
-
-  //   int? currentCompanyId =
-  //       await getIt<SharedPreferenceHelper>().currentCompanyId;
-
-  //   int? currentStudentId =
-  //       await getIt<SharedPreferenceHelper>().currentStudentId;
-
-  //   print("roles from tab: $roles");
-  //   print("currentCompanyId: $currentCompanyId");
-  //   print("currentStudentId: $currentStudentId");
-  // }
 
   void _onItemTapped(int index) {
     setState(() {
