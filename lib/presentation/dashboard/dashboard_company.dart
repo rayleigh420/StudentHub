@@ -128,6 +128,7 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
       builder: (context) {
         return ListView.builder(
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           itemCount: project.length,
           itemBuilder: (context, index) {
             return ProjectItemCompany(
