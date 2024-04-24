@@ -7,9 +7,10 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 class SocketClient {
   // final SharedPreferenceHelper _sharedPreferenceHelper;
+  int projectId;
   late final IO.Socket _socket;
   // SocketClient(this._sharedPreferenceHelper);
-  SocketClient();
+  SocketClient(this.projectId);
   void connect(String url, String token) {
     // final String? token = await _sharedPreferenceHelper.authToken;
     log("Connecting to $url");

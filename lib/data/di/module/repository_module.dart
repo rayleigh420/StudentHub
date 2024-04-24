@@ -6,6 +6,7 @@ import 'package:boilerplate/data/network/apis/educations/education_api.dart';
 import 'package:boilerplate/data/network/apis/experiences/experience_api.dart';
 import 'package:boilerplate/data/network/apis/favorite/favorite_api.dart';
 import 'package:boilerplate/data/network/apis/languages/language_api.dart';
+import 'package:boilerplate/data/network/apis/message/message_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
 import 'package:boilerplate/data/network/apis/proposal/proposal_api.dart';
@@ -17,6 +18,7 @@ import 'package:boilerplate/data/repository/educations/education_repository_impl
 import 'package:boilerplate/data/repository/experiences/experience_repository_impl.dart';
 import 'package:boilerplate/data/repository/favorite/favorite_repository_impl.dart';
 import 'package:boilerplate/data/repository/languages/language_repository_impl.dart';
+import 'package:boilerplate/data/repository/message/message_repository_impl.dart';
 import 'package:boilerplate/data/repository/post/post_repository_impl.dart';
 import 'package:boilerplate/data/repository/profile/profile_company_repository_impl.dart';
 import 'package:boilerplate/data/repository/profile/profile_student_repository_impl.dart';
@@ -33,6 +35,7 @@ import 'package:boilerplate/domain/repository/educations/education_repository.da
 import 'package:boilerplate/domain/repository/experiences/experience_repository.dart';
 import 'package:boilerplate/domain/repository/favorite/favorite_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
+import 'package:boilerplate/domain/repository/message/message_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
@@ -128,6 +131,10 @@ mixin RepositoryModule {
     getIt.registerSingleton<ProposalRepository>(ProposalRepositoryImpl(
       getIt<ProposalApi>(),
       getIt<SharedPreferenceHelper>(),
+    ));
+
+    getIt.registerSingleton<MessageRepository>(MessageRepositoryImpl(
+      getIt<MessageApi>(),
     ));
   }
 }

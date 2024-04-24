@@ -117,7 +117,7 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
-  late final SocketClient socketClient = SocketClient();
+  
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
     MessageList(),
@@ -160,7 +160,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     } else {
       final jwt = JWT.decode(authToken);
       // socketClient.setToken(authToken);
-      socketClient.connect(Endpoints.baseUrl, authToken);
+      // socketClient.connect(Endpoints.baseUrl, authToken);
 
       print('Payload: ${jwt.payload}');
       print('roles: ${jwt.payload['roles'][0]}');
