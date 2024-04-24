@@ -13,22 +13,18 @@ class SocketClient {
   SocketClient(this.projectId);
   void connect(String url, String token) {
     // final String? token = await _sharedPreferenceHelper.authToken;
-    log("Connecting to $url");
+    final finalurl = url + '?projectId=$projectId';
+    log("Connecting to $finalurl");
     try {
-      _socket = IO.io(
-          url,
-          OptionBuilder()
-              .setTransports(['websocket'])
-              .disableAutoConnect()
-              .build());
+      _socket = IO.io(finalurl, OptionBuilder().disableAutoConnect().build());
       _socket.io.options?['extraHeaders'] = {
         'Authorization': 'Bearer ${token}',
       };
-      _socket.io.options?['query'] = {'project_id': 471};
+      // _socket.io.options?['query'] = {'project_id': 471};
       _socket.connect();
       _socket.onConnect((data) {
         print('Connected');
-        log("Connected to $url");
+        log("Connected to $finalurl");
       });
 
       _socket.onDisconnect((data) => {
@@ -43,8 +39,17 @@ class SocketClient {
     }
   }
 
-  void sendMessage(String event, Message message) {
-    _socket.emit(event, message.toJson());
+  void sendMessage(Message message) {
+    dynamic ctn = {
+      "content": message.content,
+      "sender_id": message.sender.id,
+      "receiver_id": message.receiver.id,
+      "project_id": projectId,
+      "messageFlag": 0
+    };
+    log(ctn.toString());
+    log(_socket.connected.toString());
+    _socket.emit("SEND_MESSAGE", ctn);
   }
 
   void listen(String event, Function(dynamic) callback) {
