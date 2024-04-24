@@ -61,23 +61,26 @@ class Project {
   factory Project.fromJson(Map<String, dynamic> map) {
     return Project(
       id: map['id'],
-      projectId: map['projectId'],
-      createdAt: DateTime.parse(map['createdAt']),
-      updatedAt: DateTime.parse(map['updatedAt']),
+      projectId: map['projectId'] != null ? map['projectId'] : null,
+      createdAt:
+          map['createdAt'] != null ? DateTime.parse(map['createdAt']) : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.parse(map['updatedAt']) : null,
       deletedAt:
           map['deletedAt'] != null ? DateTime.parse(map['deletedAt']) : null,
-      companyId: map['companyId'],
-      projectScopeFlag: map['projectScopeFlag'],
-      title: map['title'],
-      description: map['description'],
-      typeFlag: map['typeFlag'],
-      numberOfStudents: map['numberOfStudents'],
+      companyId: map['companyId'] != null ? map['companyId'] : null,
+      projectScopeFlag:
+          map['projectScopeFlag'] != null ? map['projectScopeFlag'] : null,
+      title: map['title'] != null ? map['title'] : null,
+      description: map['description'] != null ? map['description'] : null,
+      typeFlag: map['typeFlag'] != null ? map['typeFlag'] : null,
+      numberOfStudents: map['numberOfStudents'] ?? 0,
       // proposals: List<dynamic>.from(map['proposals']),
-      countProposals: map['countProposals'],
-      countMessages: map['countMessages'],
-      countHired: map['countHired'],
-      isFavorite: map['isFavorite'],
-      companyName: map['companyName'],
+      countProposals: map['countProposals'] ?? 0,
+      countMessages: map['countMessages'] ?? 0,
+      countHired: map['countHired'] ?? 0,
+      isFavorite: map['isFavorite'] ?? false,
+      companyName: map['companyName'] != null ? map['companyName'] : null,
     );
   }
 }

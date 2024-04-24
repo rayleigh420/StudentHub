@@ -5,6 +5,7 @@ import 'package:boilerplate/domain/repository/educations/education_repository.da
 import 'package:boilerplate/domain/repository/experiences/experience_repository.dart';
 import 'package:boilerplate/domain/repository/favorite/favorite_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
+import 'package:boilerplate/domain/repository/message/message_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
@@ -26,6 +27,7 @@ import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.d
 import 'package:boilerplate/domain/usecase/favorite/get_favorite_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/find_post_by_id_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
@@ -92,8 +94,8 @@ mixin UseCaseModule {
     getIt.registerSingleton<StudentHubSignupUC>(
       StudentHubSignupUC(getIt<AuthRepository>()),
     );
-    getIt.registerSingleton<StudentHubLogoutUC>(
-      StudentHubLogoutUC(getIt<AuthRepository>(),
+    getIt.registerSingleton<StudentHubLogoutUC>(StudentHubLogoutUC(
+      getIt<AuthRepository>(),
     ));
 
     // Profile:--------------------------------------------------------------------
@@ -181,6 +183,9 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<GetProposalsStudentUseCase>(
       GetProposalsStudentUseCase(getIt<ProposalRepository>()),
+    );
+    getIt.registerSingleton<GetAllMessageUseCase>(
+      GetAllMessageUseCase(getIt<MessageRepository>()),
     );
   }
 }
