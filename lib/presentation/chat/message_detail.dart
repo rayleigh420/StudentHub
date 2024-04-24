@@ -29,9 +29,11 @@ class _MessageDetailState extends State<MessageDetail> {
   final ScrollController _controller = ScrollController();
   final SharedPreferenceHelper _sharePref = getIt<SharedPreferenceHelper>();
   late final SocketClient socketClient =
-      SocketClient(widget.messageProject.project.id!);
-  late int myId = -1;
-  late int otherId = -1;
+      new SocketClient(widget.messageProject.project.id!);
+  // late int myId = -1;
+  // late int otherId = -1;
+  late MessageUser me = MessageUser(id: -1, fullname: "");
+  late MessageUser other = MessageUser(id: -1, fullname: "");
   late MessageProject messageProject = widget.messageProject;
 
   @override
@@ -48,12 +50,19 @@ class _MessageDetailState extends State<MessageDetail> {
   @override
   void dispose() {
     super.dispose();
+    print("dispose detail message");
     socketClient.disconnect();
   }
 
   _connectSocket() async {
     final token = await _sharePref.authToken;
     socketClient.connect(Endpoints.baseUrl, token!);
+    socketClient.listen("RECEIVE_MESSAGE", (data) {
+      print(data);
+      setState(() {
+        messageProject.messages.add(Message.fromJson(data));
+      });
+    });
   }
 
   _loadId() async {
@@ -74,53 +83,49 @@ class _MessageDetailState extends State<MessageDetail> {
               builder: (context) => LoginScreen(), maintainState: false));
     }
     print("role: " + role.toString());
-    if (role![0] != null) {
-      final jwt = JWT.decode(token!);
-      final id2 = findOtherId();
-
-      setState(
-        () {
-          myId = jwt.payload['id'];
-          otherId = id2;
-        },
-      );
-      // if (role[0] == 1) {
-      //   // myId = companyId!;
-      //   setState(() {
-      //     myId = companyId!;
-      //   });
-      //   print(("company id: " + companyId.toString()));
-      // } else {
-      //   setState(() {
-      //     myId = userId!;
-      //   });
-      //   // myId = userId!;
-      //   print(("student id: " + userId.toString()));
-      // }
-    }
-  }
-
-  int findOtherId() {
+    final jwt = JWT.decode(token!);
+    final myId = jwt.payload['id'];
     if (myId == messageProject.messages[0].sender.id) {
-      return messageProject.messages[0].receiver.id;
+      setState(() {
+        me = messageProject.messages[0].sender;
+        other = messageProject.messages[0].receiver;
+      });
+    } else {
+      setState(() {
+        me = messageProject.messages[0].receiver;
+        other = messageProject.messages[0].sender;
+      });
     }
-    return messageProject.messages[0].sender.id;
+    // if (role[0] == 1) {
+    //   // myId = companyId!;
+    //   setState(() {
+    //     myId = companyId!;
+    //   });
+    //   print(("company id: " + companyId.toString()));
+    // } else {
+    //   setState(() {
+    //     myId = userId!;
+    //   });
+    //   // myId = userId!;
+    //   print(("student id: " + userId.toString()));
+    // }
   }
+
+  // int findOtherId() {
+  //   if (myId == messageProject.messages[0].sender.id) {
+  //     return messageProject.messages[0].receiver.id;
+  //   }
+  //   return messageProject.messages[0].sender.id;
+  // }
 
   void newMessage(String content) {
     Message newmesage = Message(
-      id: messageProject.messages.last.id + 1,
-      content: content,
-      sender: MessageUser.fromJson({
-        "id": myId,
-        "fullname": "Luis Pham",
-      }),
-      receiver: MessageUser.fromJson({
-        "id": otherId,
-        "fullname": "Luis Pham",
-      }),
-      createdAt: DateTime.now().add(Duration(minutes: 35)),
-    );
+        id: messageProject.messages.last.id + 1,
+        content: content,
+        sender: me,
+        receiver: other,
+        createdAt: DateTime.now());
+    socketClient.sendMessage(newmesage);
     setState(() {
       messageProject.messages.add(newmesage);
     });
@@ -131,17 +136,11 @@ class _MessageDetailState extends State<MessageDetail> {
     Message newmesage = Message(
       id: messageProject.messages.last.id + 1,
       content: content,
-      sender: MessageUser.fromJson({
-        "id": myId,
-        "fullname": "Luis Pham",
-      }),
-      receiver: MessageUser.fromJson({
-        "id": otherId,
-        "fullname": "Luis Pham",
-      }),
-      createdAt: DateTime.now().add(Duration(minutes: 35)),
+      sender: me,
+      receiver: other,
+      createdAt: DateTime.now(),
     );
-    socketClient.sendMessage("SEND_MESSAGE", newmesage);
+    socketClient.sendMessage(newmesage);
     setState(() {
       messageProject.messages.add(newmesage);
     });
@@ -273,7 +272,7 @@ class _MessageDetailState extends State<MessageDetail> {
           shrinkWrap: true,
           itemCount: messageProject.messages.length,
           itemBuilder: (context, index) {
-            if (messageProject.messages[index].sender.id != myId) {
+            if (messageProject.messages[index].sender.id != me.id) {
               if (messageProject.messages[index].interview == null) {
                 return buildMessageFrom(
                     context, messageProject.messages[index]);
