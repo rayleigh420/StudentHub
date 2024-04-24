@@ -1,105 +1,22 @@
-import 'package:boilerplate/domain/entity/message/message.dart';
+import 'package:boilerplate/domain/entity/message/message_project.dart';
 
 class MessageList {
-  final List<Message> messages = [
-    Message(
-      id: '1',
-      content: 'Hello',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now(),
-      type: 'text',
-      projectId: 88,
-    ),
-    Message(
-      id: '2',
-      content: 'Hi there!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 5)),
-      type: 'text',
-      projectId: 88,
-    ),
-    Message(
-      id: '3',
-      content: 'How are you?',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 10)),
-      type: 'text',
-      projectId: 88,
-    ),
-    Message(
-      id: '4',
-      content: "I'm fine, thanks!",
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 15)),
-      projectId: 88,
-      type: 'text',
-    ),
-    Message(
-      id: '5',
-      content: 'Meeting at 10:00 AM',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 20)),
-      projectId: 88,
-      type: 'text',
-    ),
-    Message(
-      id: '6',
-      content: 'Sure, see you then!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 25)),
-      projectId: 88,
-      type: 'text',
-    ),
-    Message(
-      id: '7',
-      content: 'Reminder: Buy groceries',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 30)),
-      projectId: 88,
-      type: 'schedule',
-    ),
-    Message(
-      id: '8',
-      content: 'Got it!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 35)),
-      projectId: 88,
-      type: 'text',
-    ),
-    Message(
-      id: '9',
-      content: 'Don\'t forget to call mom',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 40)),
-      projectId: 88,
-      type: 'text',
-    ),
-    Message(
-      id: '10',
-      content: 'Will do!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 45)),
-      projectId: 88,
-      type: 'text',
-    ),
-    Message(
-      id: '11',
-      content: 'Will do!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 45)),
-      projectId: 88,
-      type: 'schedule',
-    ),
-  ];
+  final List<MessageProject> messages;
+
+  MessageList({
+    required this.messages,
+  });
+
+  factory MessageList.fromJson(Map<String, dynamic> map) {
+    return MessageList(
+      messages: List<MessageProject>.from(
+          map['messages'].map((x) => MessageProject.fromJson(x))),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'messagesProject': messages.map((x) => x.toJson()).toList(),
+    };
+  }
 }

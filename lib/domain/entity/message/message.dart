@@ -1,30 +1,27 @@
-class Message {
-  final String id;
-  final int sender;
-  final int receiver;
-  final DateTime createdAt;
-  final String type;
-  final String content;
-  final int projectId;
-  Message({
-    required this.id,
-    required this.content,
-    required this.sender,
-    required this.receiver,
-    required this.createdAt,
-    required this.type,
-    required this.projectId,
-  });
+import 'package:boilerplate/domain/entity/message/message_user.dart';
 
-  factory Message.fromJson(Map<String, dynamic> json) {
+class Message {
+  final int id;
+  final MessageUser sender;
+  final MessageUser receiver;
+  final DateTime createdAt;
+  final String content;
+  final dynamic interview;
+  Message(
+      {required this.id,
+      required this.content,
+      required this.sender,
+      required this.receiver,
+      required this.createdAt,
+      this.interview});
+
+  factory Message.fromJson(Map<String, dynamic> map) {
     return Message(
-      id: json['id'],
-      content: json['content'],
-      sender: json['sender'],
-      receiver: json['receiver'],
-      createdAt: DateTime.parse(json['createdAt']),
-      type: json['type'],
-      projectId: json['projectId'],
+      id: map['id'],
+      content: map['content'],
+      sender: MessageUser.fromJson(map['sender']),
+      receiver: MessageUser.fromJson(map['receiver']),
+      createdAt: DateTime.parse(map['createdAt']),
     );
   }
 
@@ -32,11 +29,9 @@ class Message {
     return {
       'id': id,
       'content': content,
-      'sender': sender,
-      'receiver': receiver,
       'createdAt': createdAt.toIso8601String(),
-      'type': type,
-      'projectId': projectId,
+      'sender': sender.toJson(),
+      'receiver': receiver.toJson(),
     };
   }
 }
