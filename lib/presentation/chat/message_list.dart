@@ -136,7 +136,7 @@ class MessageProjectItem extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             // top: BorderSide(width: 1.0),
-            bottom: BorderSide(width: 0.5),
+            bottom: BorderSide(width: 0.5, color: Colors.grey),
           ),
         ),
         child: InkWell(
@@ -203,11 +203,12 @@ class MessageProjectItem extends StatelessWidget {
                           ],
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 5,
                         ),
                         Row(
                           children: [
-                            Text('${messageProject.messages.last.sender.fullname}: ',
+                            Text(
+                                '${messageProject.messages.last.sender.fullname}: ',
                                 style: TextStyle(fontSize: 15)),
                             Text(
                               messageProject.messages.last.content,
