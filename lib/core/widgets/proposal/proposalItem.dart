@@ -63,7 +63,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Full Stack Engineer",
+                      "${widget.itemProposal!.student?.techStack!.name}",
                       style: TextStyle(fontSize: 16),
                     ),
                     Text(
@@ -147,4 +147,5 @@ class _ProposalItemsState extends State<ProposalItems> {
               ],
             )));
   }
+  
 }

@@ -19,6 +19,7 @@ class Student {
   List<SkillSet>? skillSets;
   dynamic resume;
   dynamic transcript;
+  dynamic user;
   Student(
       {required this.id,
       required this.createdAt,
@@ -33,7 +34,8 @@ class Student {
       this.educations,
       this.languages,
       this.experiences,
-      this.skillSets});
+      this.skillSets,
+      this.user});
 
   factory Student.fromJson(Map<String, dynamic> map) {
     return Student(
@@ -58,6 +60,7 @@ class Student {
               []),
       skillSets: List<SkillSet>.from(
           map['skillSets']?.map((x) => SkillSet.fromMap(x))?.toList() ?? []),
+          user: map['user'],
     );
   }
 
@@ -83,6 +86,7 @@ class Student {
           : null,
       'skillSets':
           skillSets != null ? skillSets!.map((x) => x.toMap()).toList() : null,
+        'user': user,
     };
   }
 }

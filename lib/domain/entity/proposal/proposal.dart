@@ -3,8 +3,8 @@ import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 
 class Proposal {
   bool hasNext;
-  String offset;
-  String limit;
+  String? offset;
+  String? limit;
   int total;
   List<ItemProposal>? items;
   Proposal({
@@ -17,8 +17,9 @@ class Proposal {
   factory Proposal.fromJson(Map<String, dynamic> map) {
     return Proposal(
       hasNext: map['hasNext'],
-      offset: map['offset'],
-      limit: map['limit'],
+      offset:
+       map['offset']!=null ? map['offset']:null,
+      limit: map['limit'] != null ? map['limit']:null,
       total: map['total'],
       items: List<ItemProposal>.from(
           map['items']?.map((x) => ItemProposal.fromJson(x))?.toList() ?? []),

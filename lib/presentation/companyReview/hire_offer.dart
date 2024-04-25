@@ -1,15 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
 import 'package:boilerplate/core/widgets/proposal/proposalItem.dart';
+import 'package:boilerplate/core/widgets/toggle_button.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 import 'package:boilerplate/domain/entity/proposal/proposal.dart';
 import 'package:boilerplate/domain/usecase/proposal/get_proposal_usecase.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:boilerplate/core/widgets/toggle_button.dart';
-
 
 class HireOffer extends StatefulWidget {
   @override
@@ -21,6 +24,7 @@ class _HireOfferState extends State<HireOffer> {
     final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
       getIt<GetProposalsByProjectIdUseCase>();
       List<ItemProposal> listItemProposal=[];
+      String res1="";
   int selectedIndex = 0;
   List<Widget> _widgetOptions = [];
   @override
@@ -29,8 +33,9 @@ class _HireOfferState extends State<HireOffer> {
     getItem();
     _widgetOptions = <Widget>[
       Proposal1(
-        listItem: listItemProposal,
-        // selected: selectedIndex,
+        //key: UniqueKey(),
+        //listItem: listItemProposal,
+         //selected: selectedIndex,
         setSelected: (p0) {
           print(p0);
           setState(() {
@@ -53,9 +58,12 @@ class _HireOfferState extends State<HireOffer> {
   }
   void getItem() async{
       final res= await _getProposalsByProjectIdUseCase.call(params: 53);
+      print("res:hire_offer.dart");
+      log(res.toString());
       setState(() {
         listItemProposal=res.items!;
-        log(listItemProposal.toString());
+        res1=res.items![0].student!.userId.toString();
+        print(listItemProposal.toList().toString());
       });
     
   }
@@ -91,6 +99,8 @@ class _HireOfferState extends State<HireOffer> {
                         ),
                       ),
                     ),
+
+                   
                    
                     SizedBox(
                       height: 5,
@@ -107,6 +117,7 @@ class _HireOfferState extends State<HireOffer> {
                         },
                       ),
                     ),
+                    buildProposalItem(),
                     // Proposal()
                     _widgetOptions[selectedIndex]
                   ],
@@ -116,15 +127,61 @@ class _HireOfferState extends State<HireOffer> {
       ),
     );
   }
+  Widget buildProposalItemContent(){
+    return Observer(builder: (context) {
+      return listItemProposal.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : buildProposalItem();
+    });
+  }
+  Widget buildProposalItem(){
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: listItemProposal.length,
+      itemBuilder: (context,index){
+        return ProposalItems(itemProposal: listItemProposal[index]);
+      },
+    );
+  }
 }
-
-class Proposal1 extends StatelessWidget {
+class Proposal1 extends StatefulWidget {
   final Function(int) setSelected;
-  final List<ItemProposal> listItem;
-  Proposal1({super.key, required this.setSelected, required this.listItem});
+  //final List<ItemProposal> listItem;
+  Proposal1({
+    Key? key,
+    required this.setSelected //required this.listItem,
+   
+  }) : super(key: key);
 
   @override
+  _Proposal1State createState() => _Proposal1State();
+}
+class _Proposal1State extends State<Proposal1> {
+  final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
+      getIt<GetProposalsByProjectIdUseCase>();
+      List<ItemProposal> listItemProposal=[];
+      @override
+  void initState() {
+    super.initState();
+    getItem();
+  }
+    void getItem() async{
+      final res= await _getProposalsByProjectIdUseCase.call(params: 53);
+      print("res:hire_offer.dart123");
+      String res1="";
+      //print(widget.listItem[0].student!.userId.toString());
+      setState(() {
+        listItemProposal=res.items!;
+        res1=res.items![0].student!.userId.toString();
+        print("res1:$res1");
+        print(listItemProposal.toList().toString());
+      });
+    
+  }
+ 
+  @override
   Widget build(BuildContext context) {
+    //final String res123 =listItem[0].student!.userId.toString();
     return Column(
       children: [
         Container(
@@ -143,6 +200,7 @@ class Proposal1 extends StatelessWidget {
               SizedBox(
                 height: 25,
               ),
+              
               Text(
                 "- Clear expectation about your project or deliverables",
                 style: TextStyle(fontSize: 14),
@@ -161,13 +219,33 @@ class Proposal1 extends StatelessWidget {
             ],
           ),
         ),
-        ...listItem.map((e) => ProposalItems(itemProposal: e)).toList(),
-        //ProposalItems(itemProposal: listItem[0]),
-       
+
+
+
+         buildProposalItem(),
+      //  Text(
+      //   res123
+      //  ),
         SizedBox(
           height: 50,
         ),
       ],
+    );
+  }
+   Widget buildProposalItemContent(){
+    return Observer(builder: (context) {
+      return listItemProposal.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : buildProposalItem();
+    });
+  }
+  Widget buildProposalItem(){
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: listItemProposal.length,
+      itemBuilder: (context,index){
+        return ProposalItems(itemProposal: listItemProposal[index]);
+      },
     );
   }
 }
