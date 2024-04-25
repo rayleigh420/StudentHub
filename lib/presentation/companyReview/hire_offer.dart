@@ -128,7 +128,7 @@ class Proposal1 extends StatelessWidget {
   }
    Widget buildProposalItemContent(){
     return Observer(builder: (context) {
-      return listItemProposal.isEmpty
+      return listItem.isEmpty
           ? Center(child: CircularProgressIndicator())
           : buildProposalItem();
     });
@@ -136,9 +136,9 @@ class Proposal1 extends StatelessWidget {
   Widget buildProposalItem(){
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: listItemProposal.length,
+      itemCount: listItem.length,
       itemBuilder: (context,index){
-        return ProposalItems(itemProposal: listItemProposal[index]);
+        return ProposalItems(itemProposal: listItem[index]);
       },
     );
   }

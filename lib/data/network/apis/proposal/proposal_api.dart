@@ -13,7 +13,7 @@ class ProposalApi {
   ProposalApi(this._dioClient);
 
   Future<Proposal> getProposalsByProjectId(String token, int id) async {
-    print("getProposalsByProjectId");
+    print("getProposalsByProjectId123");
     Proposal result;
     ItemProposal itemProposal;
     try {
@@ -26,8 +26,11 @@ class ProposalApi {
           },
         ),
       );
+      print("getProposalsByProjectId123456");
+      result = Proposal.fromJson(res.data["result"]);
       // log("getProposalsByProjectId");
       // log(res.data["result"].runtimeType.toString());
+      print(result);
       return Proposal.fromJson(res.data["result"]);
     } catch (e) {
       log("error in get projects api");
