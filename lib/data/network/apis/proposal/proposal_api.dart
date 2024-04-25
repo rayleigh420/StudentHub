@@ -26,17 +26,11 @@ class ProposalApi {
           },
         ),
       );
-      print("getProposalsByProjectId12345");
-      print(res.data["result"].runtimeType.toString());
-      print(res.data["result"]);
-      print("123456");
-      result = Proposal.fromJson(res.data["result"]);
-      print(result.toJson());
-      itemProposal =result.items![0];
-      print(itemProposal.student!.id);
+      // log("getProposalsByProjectId");
+      // log(res.data["result"].runtimeType.toString());
       return Proposal.fromJson(res.data["result"]);
-    }  catch (e) {
-       log("error in get projects api");
+    } catch (e) {
+      log("error in get projects api");
       log(e.toString());
       throw new Exception(e.toString());
     }

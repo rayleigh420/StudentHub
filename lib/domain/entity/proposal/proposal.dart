@@ -31,10 +31,7 @@ class Proposal {
       "offset": offset,
       "limit": limit,
       "total": total,
-      "items": items != null
-          ? items!.map((x) => x.toJson()).toList()
-          : null,
+      "items": items != null ? items!.map((x) => x.toJson()).toList() : null,
     };
   }
-  
 }

@@ -19,53 +19,24 @@ class HireOffer extends StatefulWidget {
   _HireOfferState createState() => _HireOfferState();
 }
 
-
 class _HireOfferState extends State<HireOffer> {
-    final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
+  final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
       getIt<GetProposalsByProjectIdUseCase>();
-      List<ItemProposal> listItemProposal=[];
-      String res1="";
+  List<ItemProposal> listItemProposal = [];
   int selectedIndex = 0;
-  List<Widget> _widgetOptions = [];
   @override
   void initState() {
     super.initState();
     getItem();
-    _widgetOptions = <Widget>[
-      Proposal1(
-        //key: UniqueKey(),
-        //listItem: listItemProposal,
-         //selected: selectedIndex,
-        setSelected: (p0) {
-          print(p0);
-          setState(() {
-            selectedIndex = p0;
-          });
-        },
-      ),
-      ProjectDetail_2(
-        selected: selectedIndex,
-        setSelected: (p0) {
-          print(p0);
-          setState(() {
-            selectedIndex = p0;
-          });
-        },
-      ),
-      Text("Message"),
-      Text("Hired"),
-    ];
   }
-  void getItem() async{
-      final res= await _getProposalsByProjectIdUseCase.call(params: 53);
-      print("res:hire_offer.dart");
-      log(res.toString());
-      setState(() {
-        listItemProposal=res.items!;
-        res1=res.items![0].student!.userId.toString();
-        print(listItemProposal.toList().toString());
-      });
-    
+
+  void getItem() async {
+    print("Hello");
+    final res = await _getProposalsByProjectIdUseCase.call(params: 53);
+    setState(() {
+      listItemProposal = res.items!;
+      log(listItemProposal.toString());
+    });
   }
 
   @override
@@ -99,9 +70,6 @@ class _HireOfferState extends State<HireOffer> {
                         ),
                       ),
                     ),
-
-                   
-                   
                     SizedBox(
                       height: 5,
                     ),
@@ -117,9 +85,19 @@ class _HireOfferState extends State<HireOffer> {
                         },
                       ),
                     ),
-                    buildProposalItem(),
-                    // Proposal()
-                    _widgetOptions[selectedIndex]
+                    selectedIndex == 0
+                        ? Proposal1(
+                            listItem: listItemProposal,
+                          )
+                        : ProjectDetail_2(
+                            selected: selectedIndex,
+                            setSelected: (p0) {
+                              print(p0);
+                              setState(() {
+                                selectedIndex = p0;
+                              });
+                            },
+                          )
                   ],
                 ),
               )),
@@ -127,105 +105,21 @@ class _HireOfferState extends State<HireOffer> {
       ),
     );
   }
-  Widget buildProposalItemContent(){
-    return Observer(builder: (context) {
-      return listItemProposal.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : buildProposalItem();
-    });
-  }
-  Widget buildProposalItem(){
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: listItemProposal.length,
-      itemBuilder: (context,index){
-        return ProposalItems(itemProposal: listItemProposal[index]);
-      },
-    );
-  }
 }
-class Proposal1 extends StatefulWidget {
-  final Function(int) setSelected;
-  //final List<ItemProposal> listItem;
-  Proposal1({
-    Key? key,
-    required this.setSelected //required this.listItem,
-   
-  }) : super(key: key);
 
-  @override
-  _Proposal1State createState() => _Proposal1State();
-}
-class _Proposal1State extends State<Proposal1> {
-  final GetProposalsByProjectIdUseCase _getProposalsByProjectIdUseCase =
-      getIt<GetProposalsByProjectIdUseCase>();
-      List<ItemProposal> listItemProposal=[];
-      @override
-  void initState() {
-    super.initState();
-    getItem();
-  }
-    void getItem() async{
-      final res= await _getProposalsByProjectIdUseCase.call(params: 53);
-      print("res:hire_offer.dart123");
-      String res1="";
-      //print(widget.listItem[0].student!.userId.toString());
-      setState(() {
-        listItemProposal=res.items!;
-        res1=res.items![0].student!.userId.toString();
-        print("res1:$res1");
-        print(listItemProposal.toList().toString());
-      });
-    
-  }
- 
+class Proposal1 extends StatelessWidget {
+  final List<ItemProposal> listItem;
+  Proposal1({
+    super.key,
+    required this.listItem,
+  });
+
   @override
   Widget build(BuildContext context) {
     //final String res123 =listItem[0].student!.userId.toString();
     return Column(
       children: [
-        Container(
-          margin: EdgeInsets.only(top: 15),
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(width: 1.0), top: BorderSide(width: 1.0)),
-          ),
-          child: Wrap(
-            children: [
-              Text(
-                "Students are looking for",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              
-              Text(
-                "- Clear expectation about your project or deliverables",
-                style: TextStyle(fontSize: 14),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "- The skills required for your project",
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                "- Detail about your project",
-                style: TextStyle(fontSize: 14),
-              )
-            ],
-          ),
-        ),
-
-
-
-         buildProposalItem(),
-      //  Text(
-      //   res123
-      //  ),
+        ...listItem.map((e) => ProposalItems(itemProposal: e)).toList(),
         SizedBox(
           height: 50,
         ),
