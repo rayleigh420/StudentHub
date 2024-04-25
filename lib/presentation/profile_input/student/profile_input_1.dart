@@ -151,10 +151,10 @@ class _ProfileInput1State extends State<ProfileInput1> {
       skillSets: skills.map((skill) => skill.id!.toString()).toList(),
     ));
 
-    if (result) {
-      updateLanguageByStudentId();
-      updateEducationByStudentId();
-    }
+    // if (result) {
+
+    // }
+    // updateLanguageByStudentId();
   }
 
   @override
@@ -669,8 +669,8 @@ class _ProfileInput1State extends State<ProfileInput1> {
                   educations.educations!.add(Education(
                     id: null,
                     schoolName: schoolController.text,
-                    startYear: DateTime(int.parse(startYearController.text)),
-                    endYear: DateTime(int.parse(endYearController.text)),
+                    startYear: int.parse(startYearController.text),
+                    endYear: int.parse(endYearController.text),
                   ));
                 });
                 Navigator.of(context).pop();
@@ -699,7 +699,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
               ),
               const SizedBox(height: 10),
               Text(
-                '${education.startYear!.year} - ${education.endYear!.year}',
+                '${education.startYear!} - ${education.endYear!}',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontSize: 15,
@@ -739,13 +739,13 @@ class _ProfileInput1State extends State<ProfileInput1> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                     padding: const EdgeInsets.all(4.0),
-                    child: IconButton(
-                      icon: Icon(
+                    child: GestureDetector(
+                      child: Icon(
                         Icons.delete,
                         size: 17,
                         weight: 100,
                       ),
-                      onPressed: () {
+                      onTap: () {
                         setState(() {
                           educations.educations!.removeWhere((item) =>
                               item.schoolName == education.schoolName);
@@ -772,6 +772,8 @@ class _ProfileInput1State extends State<ProfileInput1> {
             onPressed: () {
               createProfileStudent();
               log("push");
+              updateLanguageByStudentId();
+              updateEducationByStudentId();
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
                 return const ProfileInput2();
