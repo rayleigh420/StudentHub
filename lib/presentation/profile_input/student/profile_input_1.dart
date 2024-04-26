@@ -24,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:textfield_tags/textfield_tags.dart';
+import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 
 class ProfileInput1 extends StatefulWidget {
   const ProfileInput1({super.key});
@@ -79,6 +80,8 @@ class _ProfileInput1State extends State<ProfileInput1> {
   final FocusNode skillSetFocusNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   Color borderColor = Colors.black;
+
+  final GetProfileUseCase _getProfileUseCase = getIt<GetProfileUseCase>();
 
   @override
   void initState() {
@@ -150,6 +153,11 @@ class _ProfileInput1State extends State<ProfileInput1> {
       techStackId: techStacksValue!,
       skillSets: skills.map((skill) => skill.id!.toString()).toList(),
     ));
+
+    await _getProfileUseCase.call(params: null);
+
+    updateLanguageByStudentId();
+    updateEducationByStudentId();
 
     // if (result) {
 
@@ -772,8 +780,6 @@ class _ProfileInput1State extends State<ProfileInput1> {
             onPressed: () {
               createProfileStudent();
               log("push");
-              updateLanguageByStudentId();
-              updateEducationByStudentId();
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
                 return const ProfileInput2();
