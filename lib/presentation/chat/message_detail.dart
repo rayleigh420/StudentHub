@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:boilerplate/core/widgets/schedules/schedule_item_chat.dart';
 import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
-import 'package:boilerplate/data/network/socket_client.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
@@ -14,10 +12,8 @@ import 'package:boilerplate/presentation/chat/store/message_store.dart';
 
 // import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -40,7 +36,6 @@ class MessageDetail extends StatefulWidget {
 
 class _MessageDetailState extends State<MessageDetail> {
   final TextEditingController _messagecontroller = new TextEditingController();
-  final GlobalKey _scrollViewKey = new GlobalKey();
   final ScrollController _controller = new ScrollController();
   final SharedPreferenceHelper _sharePref = getIt<SharedPreferenceHelper>();
 
@@ -54,8 +49,8 @@ class _MessageDetailState extends State<MessageDetail> {
   @override
   void initState() {
     super.initState();
-    // _loadId();
     _loadId();
+    // _loadId();
   }
 
   @override
@@ -81,9 +76,9 @@ class _MessageDetailState extends State<MessageDetail> {
     // socket.io.options?['extraHeaders'] = {
     //   'Authorization': 'Bearer ${token}',
     // };
+    print('Bearer $token');
     socket.io.options?['extraHeaders'] = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsImZ1bGxuYW1lIjoiTG9uZyIsImVtYWlsIjoia2xvbmcxMDAwMDBAZ21haWwuY29tIiwicm9sZXMiOlsxXSwiaWF0IjoxNzE0MDI2OTY4LCJleHAiOjE3MTUyMzY1Njh9.H_1SMIBOKOUQLXEgJKmjwenFEzrdpueGAxR3os09SU0',
+      'Authorization': 'Bearer ${token}',
     };
     socket.io.options?['query'] = {'project_id': widget.projectId};
 
@@ -114,6 +109,9 @@ class _MessageDetailState extends State<MessageDetail> {
       setState(() {
         messages.add(message);
       });
+      // int index = _messageStore.getIndex(
+      //     widget.projectId, widget.receiverId, widget.senderId);
+      // _messageStore.messages![index].messages.add(message);
     });
     socket.connect();
     // _messageStore.receiveMessage(msg);
@@ -121,7 +119,10 @@ class _MessageDetailState extends State<MessageDetail> {
 
   _loadId() async {
     final id = await _sharePref.getDefaultId();
-
+    final tk = await _sharePref.authToken;
+    setState(() {
+      token = tk!;
+    });
     int index = _messageStore.getIndex(
         widget.projectId, widget.receiverId, widget.senderId);
     List<Message> m = _messageStore.messages![index].messages;
@@ -293,45 +294,40 @@ class _MessageDetailState extends State<MessageDetail> {
   Widget buildChat() {
     int i = _messageStore.getIndex(
         widget.projectId, widget.receiverId, widget.senderId);
-    return Observer(
-      builder: (context) {
-        return _messageStore.loading
-            ? Center(child: CupertinoActivityIndicator())
-            : Column(
-                children: [
-                  ListView.builder(
-                    key: _scrollViewKey,
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: _messageStore.messages![i].messages.length,
-                    itemBuilder: (context, index) {
-                      if (_messageStore
-                              .messages![i].messages[index].sender.id !=
-                          me.id) {
-                        if (_messageStore
-                                .messages![i].messages[index].interview ==
-                            null) {
-                          return buildMessageFrom(context,
-                              _messageStore.messages![i].messages[index]);
-                        } else
-                          return buildMessageSchedule(context, "12:00 AM",
-                              "Luis", "assets/images/student.png");
-                      } else {
-                        if (_messageStore
-                                .messages![i].messages[index].interview ==
-                            null) {
-                          return buildMessageTo(context,
-                              _messageStore.messages![i].messages[index]);
-                        }
-                        return buildMessageScheduleTo(context, "12:00 AM",
-                            "Luis", "assets/images/student.png");
-                      }
-                    },
-                  )
-                ],
-              );
-      },
-    );
+
+    return _messageStore.loading
+        ? Center(child: CupertinoActivityIndicator())
+        : Column(
+            children: [
+              ListView.builder(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: _messageStore.messages![i].messages.length,
+                itemBuilder: (context, index) {
+                  if (_messageStore.messages![i].messages[index].sender.id !=
+                      me.id) {
+                    if (_messageStore.messages![i].messages[index].interview ==
+                        null) {
+                      return buildMessageFrom(
+                          context, _messageStore.messages![i].messages[index]);
+                    } else
+                      return buildMessageSchedule(context, "12:00 AM", "Luis",
+                          "assets/images/student.png");
+                  } else {
+                    if (_messageStore.messages![i].messages[index].interview ==
+                        null) {
+                      return buildMessageTo(
+                          context, _messageStore.messages![i].messages[index]);
+                    }
+                    return buildMessageScheduleTo(context, "12:00 AM", "Luis",
+                        "assets/images/student.png");
+                  }
+                },
+              )
+            ],
+          );
   }
 
   Widget buildMessageTo(BuildContext context, Message message) {
@@ -578,9 +574,9 @@ class _MessageDetailState extends State<MessageDetail> {
               child: TextField(
                 controller: _messagecontroller,
                 autofocus: true,
-                onTapOutside: (event) {
-                  FocusScope.of(context).unfocus();
-                },
+                // onTapOutside: (event) {
+                //   FocusScope.of(context).unfocus();
+                // },
                 decoration: InputDecoration(
                     hintText: "Write message...",
                     hintStyle: TextStyle(color: Colors.black54),

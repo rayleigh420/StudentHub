@@ -34,7 +34,7 @@ class _MessageListState extends State<MessageList> {
       getIt<GetAllMessageUseCase>();
   final SharedPreferenceHelper _sharedPreferenceHelper =
       getIt<SharedPreferenceHelper>();
-  final SocketStore _socketStore = getIt<SocketStore>();
+  // final SocketStore _socketStore = getIt<SocketStore>();
   late String token = '';
   final _messageStore = getIt<MessageStore>();
   late List<Socket> _socketClientList = [];
@@ -45,7 +45,6 @@ class _MessageListState extends State<MessageList> {
     super.initState();
     // _connectSockets();
     _loadId();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {});
   }
 
   @override
@@ -65,27 +64,27 @@ class _MessageListState extends State<MessageList> {
         token = userToken!;
       },
     );
-    // _connectSockets();
+    // _initSocket();
   }
 
-  _connectSockets() {
+  _initSocket() {
     // _socketStore.init(_messageStore.messageList!);
     _messageStore.messageList!.forEach((element) {
       final finalurl = Endpoints.baseUrl + '?project_id=${element.project.id}';
 
       log("Connecting to $finalurl");
       IO.Socket socket = IO.io(
-          finalurl, // Server url
+          Endpoints.baseUrl, // Server url
           OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
               .build());
       log("token kết nối " + token);
       socket.io.options?['extraHeaders'] = {
-        'Authorization': 'Bearer ${token}',
+        'Authorization': 'Bearer $token',
       };
-      // socket.io.options?['query'] = {'project_id': element.project.id};
-      socket.connect();
+      socket.io.options?['query'] = {'project_id': element.project.id};
+
       socket.onConnect((data) {
         print('Connected');
         log("Connected to $finalurl");
@@ -104,10 +103,18 @@ class _MessageListState extends State<MessageList> {
         msg['projectId'] = element.project.id;
         _messageStore.receiveMessage(data);
       });
-
+      // socket.connect();
+      _socketClientList.add(socket);
       // socket.io
       //   ..disconnect()
       //   ..connect();
+    });
+    _connectSocket();
+  }
+
+  _connectSocket() {
+    _socketClientList.forEach((element) {
+      element.connect();
     });
   }
 
