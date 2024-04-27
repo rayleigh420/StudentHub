@@ -1,94 +1,42 @@
-import 'package:boilerplate/domain/entity/message/message.dart';
+import 'package:boilerplate/domain/entity/message/message_user.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 
-class MessageList {
-  final List<Message> messages = [
-    Message(
-      id: '1',
-      content: 'Hello',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now(),
-      type: 'text',
-    ),
-    Message(
-      id: '2',
-      content: 'Hi there!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 5)),
-      type: 'text',
-    ),
-    Message(
-      id: '3',
-      content: 'How are you?',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 10)),
-      type: 'text',
-    ),
-    Message(
-      id: '4',
-      content: "I'm fine, thanks!",
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 15)),
-      type: 'text',
-    ),
-    Message(
-      id: '5',
-      content: 'Meeting at 10:00 AM',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 20)),
-      type: 'text',
-    ),
-    Message(
-      id: '6',
-      content: 'Sure, see you then!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 25)),
-      type: 'text',
-    ),
-    Message(
-      id: '7',
-      content: 'Reminder: Buy groceries',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 30)),
-      type: 'schedule',
-    ),
-    Message(
-      id: '8',
-      content: 'Got it!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 35)),
-      type: 'text',
-    ),
-    Message(
-      id: '9',
-      content: 'Don\'t forget to call mom',
-      sender: 1,
-      receiver: 2,
-      createdAt: DateTime.now().add(Duration(minutes: 40)),
-      type: 'text',
-    ),
-    Message(
-      id: '10',
-      content: 'Will do!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 45)),
-      type: 'text',
-    ),
-    Message(
-      id: '11',
-      content: 'Will do!',
-      sender: 2,
-      receiver: 1,
-      createdAt: DateTime.now().add(Duration(minutes: 45)),
-      type: 'schedule',
-    ),
-  ];
+class MessageListItem {
+  int id;
+  MessageUser sender;
+  MessageUser receiver;
+  String content;
+  DateTime createdAt;
+  Project project;
+
+  MessageListItem({
+    required this.id,
+    required this.sender,
+    required this.receiver,
+    required this.content,
+    required this.createdAt,
+    required this.project,
+  });
+
+  factory MessageListItem.fromJson(Map<String, dynamic> map) {
+    return MessageListItem(
+      id: map['id'],
+      sender: MessageUser.fromJson(map['sender']),
+      receiver: MessageUser.fromJson(map['receiver']),
+      content: map['content'],
+      createdAt: DateTime.parse(map['createdAt']),
+      project: Project.fromJson(map['project']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'sender': sender.toJson(),
+      'receiver': receiver.toJson(),
+      'content': content,
+      'createdAt': createdAt.toIso8601String(),
+      'project': project.toJson(),
+    };
+  }
 }

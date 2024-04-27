@@ -313,12 +313,10 @@ class _ProjectModalState extends State<ProjectModal> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        SubmitProject(projectId: widget.project.projectId!)),
-              );
+              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                  builder: (context) =>
+                      SubmitProject(projectId: widget.project.id!),
+                  maintainState: true));
             },
             child: Container(
               alignment: Alignment.center,
@@ -345,6 +343,7 @@ class _ProjectModalState extends State<ProjectModal> {
                           ? widget.project.projectId!
                           : widget.project.id!,
                       disableFlag: widget.project.isFavorite! ? 1 : 0));
+              Navigator.of(context, rootNavigator: true).pop();
             },
             child: Container(
               alignment: Alignment.center,

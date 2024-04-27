@@ -159,8 +159,7 @@ class _InputLoginState extends State<InputLogin> {
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) {
                           return AppBottomNavigationBar(
-                            isStudent: false,
-                            selectedIndex: 0,
+                            selectedIndex: 1,
                           );
                         }));
                       }

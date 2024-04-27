@@ -71,10 +71,9 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           home: AppBottomNavigationBar(
-            selectedIndex: 4,
-            isStudent: true,
+            selectedIndex: 1,
+            // isStudent: true,
           ),
-          // home: InputLogin(),
         );
       },
     );

@@ -152,7 +152,7 @@ class _ProjectPost4State extends State<ProjectPost4> {
                           Navigator.of(context, rootNavigator: true)
                               .push(MaterialPageRoute(
                                   builder: (context) => AppBottomNavigationBar(
-                                        isStudent: false,
+                                        // isStudent: false,
                                         selectedIndex: 2,
                                       ),
                                   maintainState: false));

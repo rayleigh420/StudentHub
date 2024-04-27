@@ -42,7 +42,7 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
                 projectList: result,
                 searchQuery: searchQuery,
               ),
-          maintainState: true));
+          maintainState: false));
     }
   }
 

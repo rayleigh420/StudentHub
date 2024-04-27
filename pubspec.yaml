@@ -64,7 +64,9 @@ dependencies:
   xxtea: ^2.1.0
   textfield_tags: ^2.1.1
   json_annotation: ^4.8.1
-  dart_jsonwebtoken: ^2.13.0
+  dart_jsonwebtoken: ^2.14.0
+  socket_io_client: ^2.0.0
+  jwt_decoder: ^2.0.1
   # Y
   # Z
 

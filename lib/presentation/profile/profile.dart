@@ -106,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: 'Logout',
                 onTap: () {
                   _studentHubLogoutUC.call(params: null);
-                  Navigator.of(context,rootNavigator: true)
+                  Navigator.of(context, rootNavigator: true)
                       .pushReplacement(MaterialPageRoute(builder: (context) {
                     return InputLogin();
                   }));

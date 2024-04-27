@@ -70,7 +70,7 @@ class Routes {
     dashboard: (context) => DashboardCompanyScreen(),
     profile: (context) => ProfileScreen(),
     rootTab: (context) =>
-        AppBottomNavigationBar(selectedIndex: 0, isStudent: false),
+        AppBottomNavigationBar(selectedIndex: 0),
     project_post_1: (context) => ProjectPost1(),
     project_post_2: (context) => ProjectPost2(),
     project_post_3: (context) => ProjectPost3(),
