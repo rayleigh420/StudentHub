@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:boilerplate/core/widgets/schedules/schedule_item_chat.dart';
 import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
@@ -6,143 +9,174 @@ import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 
-import 'package:boilerplate/domain/entity/message/message_project.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
-import 'package:boilerplate/presentation/login/login.dart';
+import 'package:boilerplate/presentation/chat/store/message_store.dart';
+
 // import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart';
 
 class MessageDetail extends StatefulWidget {
-  final MessageProject messageProject;
-  const MessageDetail({super.key, required this.messageProject});
+  final int projectId;
+  final int receiverId;
+  final int senderId;
+  final dynamic index;
+
+  const MessageDetail(
+      {super.key,
+      required this.projectId,
+      required this.receiverId,
+      required this.senderId,
+      this.index});
 
   @override
   State<MessageDetail> createState() => _MessageDetailState();
 }
 
 class _MessageDetailState extends State<MessageDetail> {
-  final TextEditingController _messagecontroller = TextEditingController();
-  final GlobalKey _scrollViewKey = GlobalKey();
-  final ScrollController _controller = ScrollController();
+  final TextEditingController _messagecontroller = new TextEditingController();
+  final GlobalKey _scrollViewKey = new GlobalKey();
+  final ScrollController _controller = new ScrollController();
   final SharedPreferenceHelper _sharePref = getIt<SharedPreferenceHelper>();
-  late final SocketClient socketClient =
-      new SocketClient(widget.messageProject.project.id!);
-  // late int myId = -1;
-  // late int otherId = -1;
+
+  final MessageStore _messageStore = getIt<MessageStore>();
   late MessageUser me = MessageUser(id: -1, fullname: "");
   late MessageUser other = MessageUser(id: -1, fullname: "");
-  late MessageProject messageProject = widget.messageProject;
+  List<Message> messages = [];
+  String token = '';
+  late Socket socket;
 
   @override
   void initState() {
     super.initState();
-    print("rerender");
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadId();
-      _connectSocket();
-    });
+    // _loadId();
+    _loadId();
   }
 
   @override
   void dispose() {
+    socket.disconnect();
+    socket.dispose();
     super.dispose();
-    print("dispose detail message");
-    socketClient.disconnect();
+    // print("dispose detail message");
   }
 
-  _connectSocket() async {
-    final token = await _sharePref.authToken;
-    socketClient.connect(Endpoints.baseUrl, token!);
-    socketClient.listen("RECEIVE_MESSAGE", (data) {
+  _connectSocket() {
+    // socket = new SocketClient(widget.projectId);
+    final finalurl = Endpoints.baseUrl + '?project_id=$widget.projectId';
+    log("Connecting to $finalurl");
+    socket = IO.io(
+        Endpoints.baseUrl,
+        OptionBuilder()
+            .setTransports(['websocket'])
+            // .setExtraHeaders({'Authorization': 'Bearer $token'})
+            .disableAutoConnect()
+            .build());
+
+    // socket.io.options?['extraHeaders'] = {
+    //   'Authorization': 'Bearer ${token}',
+    // };
+    socket.io.options?['extraHeaders'] = {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsImZ1bGxuYW1lIjoiTG9uZyIsImVtYWlsIjoia2xvbmcxMDAwMDBAZ21haWwuY29tIiwicm9sZXMiOlsxXSwiaWF0IjoxNzE0MDI2OTY4LCJleHAiOjE3MTUyMzY1Njh9.H_1SMIBOKOUQLXEgJKmjwenFEzrdpueGAxR3os09SU0',
+    };
+    socket.io.options?['query'] = {'project_id': widget.projectId};
+
+    socket.onConnect((data) {
+      print('Connected');
+      log("Connected to $finalurl");
+    });
+
+    socket.onDisconnect((data) => {
+          print('Disconnected'),
+        });
+    socket.onConnectError((data) => print('$data'));
+    socket.onError((data) => print(data));
+    socket.on("ERROR", (data) => print(data));
+    socket.on("RECEIVE_MESSAGE", (data) {
+      log("RECEIVE_MESSAGE");
       print(data);
+      dynamic msg = data;
+      msg['projectId'] = widget.projectId;
+      Message message = Message.fromJson({
+        "id": messages.last.id + 1,
+        "content": msg['content'],
+        "sender": {"id": msg['senderId'], "fullname": ""},
+        "receiver": {"id": msg['receiverId'], "fullname": ""},
+        "messageFlag": msg['messageFlag'],
+        "createdAt": DateTime.now().toString()
+      });
       setState(() {
-        messageProject.messages.add(Message.fromJson(data));
+        messages.add(message);
       });
     });
+    socket.connect();
+    // _messageStore.receiveMessage(msg);
   }
 
   _loadId() async {
-    // final token = await _sharePref.authToken;
-    final role = await _sharePref.roles;
-    final token = await _sharePref.authToken;
+    final id = await _sharePref.getDefaultId();
 
-    final companyId = await _sharePref.currentCompanyId;
-    final userId = await _sharePref.currentStudentId;
-    if (companyId == null && userId == null) {
-      Navigator.of(context, rootNavigator: true).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => LoginScreen(), maintainState: false));
-    }
-    if (token == null) {
-      Navigator.of(context, rootNavigator: true).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) => LoginScreen(), maintainState: false));
-    }
-    print("role: " + role.toString());
-    final jwt = JWT.decode(token!);
-    final myId = jwt.payload['id'];
-    if (myId == messageProject.messages[0].sender.id) {
+    int index = _messageStore.getIndex(
+        widget.projectId, widget.receiverId, widget.senderId);
+    List<Message> m = _messageStore.messages![index].messages;
+
+    setState(() {
+      messages = m;
+    });
+
+    if (id == _messageStore.messages![index].messages[0].sender.id) {
       setState(() {
-        me = messageProject.messages[0].sender;
-        other = messageProject.messages[0].receiver;
+        me = _messageStore.messages![index].messages[0].sender;
+        other = _messageStore.messages![index].messages[0].receiver;
       });
     } else {
       setState(() {
-        me = messageProject.messages[0].receiver;
-        other = messageProject.messages[0].sender;
+        me = _messageStore.messages![index].messages[0].receiver;
+        other = _messageStore.messages![index].messages[0].sender;
       });
     }
-    // if (role[0] == 1) {
-    //   // myId = companyId!;
-    //   setState(() {
-    //     myId = companyId!;
-    //   });
-    //   print(("company id: " + companyId.toString()));
-    // } else {
-    //   setState(() {
-    //     myId = userId!;
-    //   });
-    //   // myId = userId!;
-    //   print(("student id: " + userId.toString()));
-    // }
+    _connectSocket();
   }
-
-  // int findOtherId() {
-  //   if (myId == messageProject.messages[0].sender.id) {
-  //     return messageProject.messages[0].receiver.id;
-  //   }
-  //   return messageProject.messages[0].sender.id;
-  // }
 
   void newMessage(String content) {
     Message newmesage = Message(
-        id: messageProject.messages.last.id + 1,
+        id: messages.last.id + 1,
         content: content,
         sender: me,
         receiver: other,
         createdAt: DateTime.now());
-    socketClient.sendMessage(newmesage);
-    setState(() {
-      messageProject.messages.add(newmesage);
+    socket.emit("SEND_MESSAGE", {
+      "content": newmesage.content,
+      "senderId": newmesage.sender.id,
+      "receiverId": newmesage.receiver.id,
+      "projectId": widget.projectId,
+      "messageFlag": 0
     });
+    // socket.sendMessage(newmesage);
+
+    // setState(() {
+    //   messageProject.messages.add(newmesage);
+    // });
     // scrollToBottom();
   }
 
   void newSchedule(String content) {
     Message newmesage = Message(
-      id: messageProject.messages.last.id + 1,
+      id: messages.last.id + 1,
       content: content,
       sender: me,
       receiver: other,
       createdAt: DateTime.now(),
     );
-    socketClient.sendMessage(newmesage);
+    // socket.sendMessage(newmesage);
     setState(() {
-      messageProject.messages.add(newmesage);
+      messages.add(newmesage);
     });
   }
 
@@ -245,13 +279,6 @@ class _MessageDetailState extends State<MessageDetail> {
                 children: [
                   buildChatDivider(context, "6/6/2024"),
                   buildChat(),
-                  // buildMessageTo(context, messages2[0]),
-                  // buildMessageFrom(context, messages2[1]),
-                  // buildMessageSchedule(
-                  //     context, "12:00 AM", "Luis", "assets/images/student.png"),
-                  // buildMessageTo(context, messages2[2]),
-                  // buildMessageScheduleTo(
-                  //     context, "12:00 AM", "Luis", "assets/images/student.png"),
                   const SizedBox(height: 70),
                 ],
               ),
@@ -264,31 +291,46 @@ class _MessageDetailState extends State<MessageDetail> {
   }
 
   Widget buildChat() {
-    return Column(
-      children: [
-        ListView.builder(
-          key: _scrollViewKey,
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: messageProject.messages.length,
-          itemBuilder: (context, index) {
-            if (messageProject.messages[index].sender.id != me.id) {
-              if (messageProject.messages[index].interview == null) {
-                return buildMessageFrom(
-                    context, messageProject.messages[index]);
-              } else
-                return buildMessageSchedule(
-                    context, "12:00 AM", "Luis", "assets/images/student.png");
-            } else {
-              if (messageProject.messages[index].interview == null) {
-                return buildMessageTo(context, messageProject.messages[index]);
-              }
-              return buildMessageScheduleTo(
-                  context, "12:00 AM", "Luis", "assets/images/student.png");
-            }
-          },
-        )
-      ],
+    int i = _messageStore.getIndex(
+        widget.projectId, widget.receiverId, widget.senderId);
+    return Observer(
+      builder: (context) {
+        return _messageStore.loading
+            ? Center(child: CupertinoActivityIndicator())
+            : Column(
+                children: [
+                  ListView.builder(
+                    key: _scrollViewKey,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _messageStore.messages![i].messages.length,
+                    itemBuilder: (context, index) {
+                      if (_messageStore
+                              .messages![i].messages[index].sender.id !=
+                          me.id) {
+                        if (_messageStore
+                                .messages![i].messages[index].interview ==
+                            null) {
+                          return buildMessageFrom(context,
+                              _messageStore.messages![i].messages[index]);
+                        } else
+                          return buildMessageSchedule(context, "12:00 AM",
+                              "Luis", "assets/images/student.png");
+                      } else {
+                        if (_messageStore
+                                .messages![i].messages[index].interview ==
+                            null) {
+                          return buildMessageTo(context,
+                              _messageStore.messages![i].messages[index]);
+                        }
+                        return buildMessageScheduleTo(context, "12:00 AM",
+                            "Luis", "assets/images/student.png");
+                      }
+                    },
+                  )
+                ],
+              );
+      },
     );
   }
 

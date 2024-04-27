@@ -77,6 +77,9 @@
 //     );
 //   }
 // }
+import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
+import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'dart:async';
@@ -117,7 +120,10 @@ class AppBottomNavigationBar extends StatefulWidget {
 
 class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   int _selectedIndex = 0;
-  
+  final MessageStore _messageStore = getIt<MessageStore>();
+  final ProfileStore _profileStore = getIt<ProfileStore>();
+  final ProjectStore _projectStore = getIt<ProjectStore>();
+
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
     MessageList(),
@@ -136,11 +142,13 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
     });
   }
 
-  // @override
-  // void dispose() {
-  //   // socketClient.disconnect();
-  //   super.dispose();
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_messageStore.loading == false) {
+      _messageStore.getMessages();
+    }
+  }
 
   void checkAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -177,6 +185,13 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           ProfileScreen()
         ];
       });
+
+      // if (_projectStore.loading == false) {
+      //   _projectStore.getProjects();
+      // }
+      // if (_profileStore.loading == false) {
+      //   _profileStore.getProfile();
+      // }
     }
   }
 
@@ -188,51 +203,107 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      // appBar: _buildAppBar(),
-      tabBuilder: (BuildContext context, int index) {
-        return CupertinoTabView(
-          onGenerateRoute: (settings) {
-            return MaterialPageRoute(
-              builder: (context) => _widgetOptions.elementAt(index),
-            );
-          },
-          builder: (BuildContext context) {
-            return SafeArea(
-              top: false,
-              bottom: false,
-              child: _widgetOptions.elementAt(index),
-            );
-          },
-        );
+    return Observer(
+      builder: (context) {
+        return !_messageStore.success
+            ? Center(child: CupertinoActivityIndicator())
+            : CupertinoTabScaffold(
+                // appBar: _buildAppBar(),
+                tabBuilder: (BuildContext context, int index) {
+                  return CupertinoTabView(
+                    onGenerateRoute: (settings) {
+                      return MaterialPageRoute(
+                        builder: (context) => _widgetOptions.elementAt(index),
+                      );
+                    },
+                    builder: (BuildContext context) {
+                      return SafeArea(
+                        top: false,
+                        bottom: false,
+                        child: _widgetOptions.elementAt(index),
+                      );
+                    },
+                  );
+                },
+                tabBar: CupertinoTabBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.file_copy),
+                      label: 'Project',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.message),
+                      label: 'Message',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.dashboard),
+                      label: 'Dashboard',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.notifications),
+                      label: 'Alert',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.supervisor_account_outlined),
+                      label: 'Profile',
+                    ),
+                  ],
+                  currentIndex: _selectedIndex,
+                  // selectedItemColor: Colors.blue,
+                  onTap: _onItemTapped,
+                ),
+              );
+        // return _messageStore.loading ||
+        //         _profileStore.loading ||
+        //         _projectStore.loading
+        //     ? Center(child: CupertinoActivityIndicator())
+        //     : CupertinoTabScaffold(
+        //         // appBar: _buildAppBar(),
+        //         tabBuilder: (BuildContext context, int index) {
+        //           return CupertinoTabView(
+        //             onGenerateRoute: (settings) {
+        //               return MaterialPageRoute(
+        //                 builder: (context) => _widgetOptions.elementAt(index),
+        //               );
+        //             },
+        //             builder: (BuildContext context) {
+        //               return SafeArea(
+        //                 top: false,
+        //                 bottom: false,
+        //                 child: _widgetOptions.elementAt(index),
+        //               );
+        //             },
+        //           );
+        //         },
+        //         tabBar: CupertinoTabBar(
+        //           items: const <BottomNavigationBarItem>[
+        //             BottomNavigationBarItem(
+        //               icon: Icon(Icons.file_copy),
+        //               label: 'Project',
+        //             ),
+        //             BottomNavigationBarItem(
+        //               icon: Icon(Icons.message),
+        //               label: 'Message',
+        //             ),
+        //             BottomNavigationBarItem(
+        //               icon: Icon(Icons.dashboard),
+        //               label: 'Dashboard',
+        //             ),
+        //             BottomNavigationBarItem(
+        //               icon: Icon(Icons.notifications),
+        //               label: 'Alert',
+        //             ),
+        //             BottomNavigationBarItem(
+        //               icon: Icon(Icons.supervisor_account_outlined),
+        //               label: 'Profile',
+        //             ),
+        //           ],
+        //           currentIndex: _selectedIndex,
+        //           // selectedItemColor: Colors.blue,
+        //           onTap: _onItemTapped,
+        //         ),
+        //       );
       },
-      tabBar: CupertinoTabBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.file_copy),
-            label: 'Project',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'Message',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Alert',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.supervisor_account_outlined),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        // selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
-      ),
     );
   }
 }
