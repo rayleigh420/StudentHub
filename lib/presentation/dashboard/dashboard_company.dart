@@ -126,6 +126,7 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
                   .where((item) => item.typeFlag == 1)
                   .toList()
                   .length,
+          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             if (selectedIndex == 0) {
               return ProjectItemCompany(

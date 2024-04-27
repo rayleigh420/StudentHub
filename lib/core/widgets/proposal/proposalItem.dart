@@ -44,7 +44,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${widget.itemProposal!.student?.userId}",
+                            "${widget.itemProposal!.student?.user?.fullname!}",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),
@@ -120,7 +120,8 @@ class _ProposalItemsState extends State<ProposalItems> {
                                     side: BorderSide(color: Colors.black))),
                             onPressed: () {
                               // setSelected(3);
-                              widget.itemProposal?.statusFlag == 0
+                              widget.itemProposal?.statusFlag == 0 ||
+                                      widget.itemProposal?.statusFlag == 1
                                   ? showCupertinoDialog(
                                       context: context,
                                       builder: (context) {
@@ -155,20 +156,21 @@ class _ProposalItemsState extends State<ProposalItems> {
                                       })
                                   : null;
                             },
-                            child: widget.itemProposal?.statusFlag == 0
+                            child: widget.itemProposal?.statusFlag == 0 ||
+                                    widget.itemProposal?.statusFlag == 1
                                 ? const Text(
                                     style: TextStyle(fontSize: 16), "Hire")
                                 : widget.itemProposal?.statusFlag == 2
                                     ? const Text(
                                         style: TextStyle(fontSize: 16),
                                         "Send offer")
-                                    : widget.itemProposal?.statusFlag == 1
-                                        ? const Text(
-                                            style: TextStyle(fontSize: 16),
-                                            "Messaged")
-                                        : const Text(
-                                            style: TextStyle(fontSize: 16),
-                                            "Hired"))),
+                                    // : widget.itemProposal?.statusFlag == 1
+                                    //     ? const Text(
+                                    //         style: TextStyle(fontSize: 16),
+                                    //         "Messaged")
+                                    : const Text(
+                                        style: TextStyle(fontSize: 16),
+                                        "Hired"))),
                   ],
                 ),
                 SizedBox(
