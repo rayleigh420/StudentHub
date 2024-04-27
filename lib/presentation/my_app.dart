@@ -74,7 +74,6 @@ class MyApp extends StatelessWidget {
             selectedIndex: 1,
             // isStudent: true,
           ),
-          
         );
       },
     );

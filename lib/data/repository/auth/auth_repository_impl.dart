@@ -1,6 +1,7 @@
 import 'package:boilerplate/data/network/apis/auth/auth_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   // shared pref object
@@ -14,9 +15,11 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<String> signInWithStudentHub(String email, String password) async {
     try {
       final token = await _authApi.logIn(email, password);
-
+      final jwt = JWT.decode(token);
+      final id = jwt.payload['id'];
       _sharedPrefsHelper.saveAuthToken(token);
       _sharedPrefsHelper.saveIsLoggedIn(true);
+      _sharedPrefsHelper.saveDefaultId(id);
       return token;
     } catch (e) {
       throw new Exception(e.toString());
@@ -79,6 +82,7 @@ class AuthRepositoryImpl extends AuthRepository {
       _sharedPrefsHelper.removeCurrentStudentId();
       _sharedPrefsHelper.removeRolesUser();
       _sharedPrefsHelper.saveIsLoggedIn(false);
+      _sharedPrefsHelper.removeDefaultId();
     } catch (e) {
       throw new Exception(e.toString());
     }

@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:boilerplate/domain/entity/message/message_project.dart';
+import 'package:boilerplate/domain/entity/message/message.dart';
+import 'package:boilerplate/domain/entity/message/message_list.dart';
 
 abstract class MessageRepository {
-  Future<List<MessageProject>> getMessages();
+  Future<List<MessageListItem>> getMessages();
+  Future<List<Message>> getProjectMessages(int projectId, int receiverId);
 }

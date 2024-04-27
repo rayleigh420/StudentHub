@@ -24,6 +24,10 @@ class SharedPreferenceHelper {
     return _sharedPreference.getInt(Preferences.current_student_id);
   }
 
+  Future<int?> get defaultId async {
+    return _sharedPreference.getInt(Preferences.default_id);
+  }
+
   Future<List<int>?> get roles async {
     return _sharedPreference
         .getStringList(Preferences.roles)
@@ -91,5 +95,17 @@ class SharedPreferenceHelper {
 
   Future<bool> removeRolesUser() async {
     return _sharedPreference.remove(Preferences.roles);
+  }
+
+  Future<bool> saveDefaultId(int id) async {
+    return _sharedPreference.setInt(Preferences.default_id, id);
+  }
+
+  Future<int?> getDefaultId() async {
+    return _sharedPreference.getInt(Preferences.default_id);
+  }
+
+  Future<bool> removeDefaultId() async {
+    return _sharedPreference.remove(Preferences.default_id);
   }
 }

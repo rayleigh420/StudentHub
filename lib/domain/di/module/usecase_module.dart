@@ -28,6 +28,7 @@ import 'package:boilerplate/domain/usecase/favorite/get_favorite_by_student_id.d
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart';
+import 'package:boilerplate/domain/usecase/message/get_project_message.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/find_post_by_id_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
@@ -187,5 +188,7 @@ mixin UseCaseModule {
     getIt.registerSingleton<GetAllMessageUseCase>(
       GetAllMessageUseCase(getIt<MessageRepository>()),
     );
+    getIt.registerSingleton<GetProjectMessageUseCase>(
+        GetProjectMessageUseCase(getIt<MessageRepository>()));
   }
 }
