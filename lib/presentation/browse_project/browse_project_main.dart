@@ -21,14 +21,14 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
   final ProjectStore _projectStore = getIt<ProjectStore>();
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   // check to see if already called api
-  //   if (!_projectStore.loading) {
-  //     _projectStore.getProjects();
-  //   }
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // check to see if already called api
+    if (!_projectStore.loading) {
+      _projectStore.getProjects();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
