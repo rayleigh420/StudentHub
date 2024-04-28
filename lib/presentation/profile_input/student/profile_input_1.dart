@@ -19,6 +19,7 @@ import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.d
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/core/widgets/exp_widget.dart';
 import 'package:boilerplate/presentation/profile_input/student/profile_input_2.dart';
+import 'package:boilerplate/presentation/profile_input/student/resume_upload.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -774,7 +775,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
               log("push");
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
-                return const ProfileInput2();
+                return const ResumeUpload();
               }));
             },
             child: Text("Next",

@@ -10,6 +10,7 @@ import 'package:boilerplate/data/network/apis/languages/language_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
 import 'package:boilerplate/data/network/apis/proposal/proposal_api.dart';
+import 'package:boilerplate/data/network/apis/resume/resume_api.dart';
 import 'package:boilerplate/data/network/apis/skillSet/skill_set_api.dart';
 import 'package:boilerplate/data/network/apis/project/project_api.dart';
 import 'package:boilerplate/data/network/apis/techStacks/tech_stack_api.dart';
@@ -80,5 +81,7 @@ mixin NetworkModule {
     getIt.registerSingleton<FavoriteApi>(FavoriteApi(getIt<DioClient>()));
 
     getIt.registerSingleton<ProposalApi>(ProposalApi(getIt<DioClient>()));
+    
+    getIt.registerSingleton<ResumeApi>(ResumeApi(getIt<DioClient>()));
   }
 }

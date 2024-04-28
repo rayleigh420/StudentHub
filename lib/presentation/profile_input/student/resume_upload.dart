@@ -257,6 +257,7 @@
 //             )));
 //   }
 // }
+import 'package:boilerplate/domain/usecase/resume/post_resume.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -274,6 +275,7 @@ class ResumeUpload extends StatefulWidget {
 
 class _ResumeUploadState extends State<ResumeUpload> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
+  final PostResumeUseCase _postResumeUseCase = getIt<PostResumeUseCase>();
   List<PlatformFile>? _cvPaths;
   List<PlatformFile>? _transcriptPaths;
   String? _cvFileName;
@@ -336,6 +338,29 @@ class _ResumeUploadState extends State<ResumeUpload> {
           : 'Choose Transcript file to upload';
     });
   }
+  Future<bool> handleButton() async{
+    if(_cvPaths != null){
+      final cvPath = _cvPaths!.first.path;
+      final cvFileName = _cvPaths!.first.name;
+      print("CV file path: $cvPath");
+      print("CV file name: $cvFileName");
+      try{
+        final cvRes = await _postResumeUseCase.call(
+          params: PostResumeParams(
+            filePath: cvPath!,
+            fileName: cvFileName,
+          ),
+         
+        );
+        return cvRes;
+      } catch(e){
+        print("Error uploading CV file: $e");
+        return false;
+        }
+      }
+      return false;
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -378,13 +403,14 @@ class _ResumeUploadState extends State<ResumeUpload> {
             SizedBox(height: 120),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => AppBottomNavigationBar(
-                            isStudent: true,
-                            selectedIndex: 0,
-                          )),
-                );
+                // Navigator.of(context).pushReplacement(
+                //   MaterialPageRoute(
+                //       builder: (context) => AppBottomNavigationBar(
+                //             isStudent: true,
+                //             selectedIndex: 0,
+                //           )),
+                // );
+                handleButton();
               },
               child: Text(
                 'Continue',
