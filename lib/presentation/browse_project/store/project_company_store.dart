@@ -54,6 +54,8 @@ abstract class _ProjectCompanyStore with Store {
     future.then((companyProjects) {
       this.companyProjects = companyProjects;
     }).catchError((error) {
+      ProjectList projects = ProjectList(projects: []);
+      this.companyProjects = projects;
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
   }

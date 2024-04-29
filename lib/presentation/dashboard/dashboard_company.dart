@@ -21,14 +21,14 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_projectCompanyStore.loading) {
-      _projectCompanyStore.getCompanyProjects();
-    }
+    // _projectCompanyStore.getCompanyProjects();
+    // if (!_projectCompanyStore.loading) {}
   }
 
   @override
   void initState() {
     super.initState();
+    _projectCompanyStore.getCompanyProjects();
   }
 
   @override
