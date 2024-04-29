@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 // import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/di/service_locator.dart';
@@ -117,11 +116,11 @@ class _InputLoginState extends State<InputLogin> {
               buildLaunchButton(context, () async {
                 if (_formKey.currentState!.validate()) {
                   // DeviceUtils.hideKeyboard(context);
-
+                  log("dcmm con cho");
                   try {
                     String token = await handleLogin(
                         _emailController.text, _passwordController.text);
-
+                    log("token nè dcmm" + token);
                     // lnduy20@clc.fitus.edu.vn
                     // Password123
 

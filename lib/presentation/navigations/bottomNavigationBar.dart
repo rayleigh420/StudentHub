@@ -80,10 +80,8 @@
 import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/socket_client.dart';
@@ -102,13 +100,11 @@ import 'package:boilerplate/presentation/message/message.dart';
 import 'package:boilerplate/presentation/notification/noti_list.dart';
 import 'package:boilerplate/presentation/profile/profile.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
-import 'package:boilerplate/presentation/project/project.dart';
-import 'package:boilerplate/utils/locale/app_localization.dart';
+
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;

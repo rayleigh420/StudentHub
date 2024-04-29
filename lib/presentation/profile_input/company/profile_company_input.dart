@@ -1,4 +1,5 @@
 import 'package:boilerplate/domain/usecase/profile/create_profile_company_usecase.dart';
+import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_company.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
@@ -19,6 +20,7 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
   final _companyDescriptionController = TextEditingController();
   final CreateProfileCompanyUC _createProfileCompanyUC =
       getIt<CreateProfileCompanyUC>();
+  final GetProfileUseCase _getProfileUseCase = getIt<GetProfileUseCase>();
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -62,7 +64,7 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6C6C6C);
   }
 
-  void handleCreateProfile() {
+  void handleCreateProfile() async{
     _createProfileCompanyUC.call(
         params: CreateProfileCompanyParams(
             companyName: _companyNameController.text,
@@ -70,6 +72,7 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                 .firstWhere((element) => element["value"] == true)["size"],
             website: _companyWebsiteController.text,
             description: _companyDescriptionController.text));
+    _getProfileUseCase.call(params: null);
   }
 
   @override
