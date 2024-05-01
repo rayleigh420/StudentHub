@@ -7,7 +7,9 @@ import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/update_company_project_usecase.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
+import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
+import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
   DeleteProjectsUseCase deleteProjectsUseCase = getIt<DeleteProjectsUseCase>();
   UpdateProjectsUseCase updateProjectsUseCase = getIt<UpdateProjectsUseCase>();
   final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
+  final MessageStore _messageStore = getIt<MessageStore>();
+  final ProfileStore _profileStore = getIt<ProfileStore>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -168,7 +172,10 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ListTile(
                   leading: Icon(Icons.message),
                   title: Text('View messages'),
-                  onTap: () => {},
+                  onTap: () => {
+                    // _messageStore.newMessageListItem(
+                    //     _profileStore.profile!.id, 1, widget.project)
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.person),

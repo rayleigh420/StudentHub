@@ -19,7 +19,6 @@ import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dar
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
-import 'package:boilerplate/presentation/chat/store/socket_store.dart';
 
 import 'package:boilerplate/presentation/home/store/language/language_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
@@ -97,7 +96,5 @@ mixin StoreModule {
         getIt<ErrorStore>(),
       ),
     );
-
-    getIt.registerSingleton(SocketStore());
   }
 }
