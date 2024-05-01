@@ -13,6 +13,7 @@ import 'package:boilerplate/domain/repository/resume/resume_repository.dart';
 import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
+import 'package:boilerplate/domain/repository/transcript/transcript_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_logout_usecase.dart';
@@ -50,6 +51,7 @@ import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/domain/usecase/project/get_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase.dart';
+import 'package:boilerplate/domain/usecase/transcript/post_transcript.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
@@ -186,6 +188,9 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<PostResumeUseCase>(
       PostResumeUseCase(getIt<ResumeRepository>()),
+    );
+    getIt.registerSingleton<PostTranscriptUseCase>(
+      PostTranscriptUseCase(getIt<TranscriptRepository>()),
     );
   }
 }

@@ -12,6 +12,7 @@ import 'package:boilerplate/data/network/apis/proposal/proposal_api.dart';
 import 'package:boilerplate/data/network/apis/resume/resume_api.dart';
 import 'package:boilerplate/data/network/apis/skillSet/skill_set_api.dart';
 import 'package:boilerplate/data/network/apis/project/project_api.dart';
+import 'package:boilerplate/data/network/apis/transcript/transcript_api.dart';
 import 'package:boilerplate/data/repository/auth/auth_repository_impl.dart';
 import 'package:boilerplate/data/network/apis/techStacks/tech_stack_api.dart';
 import 'package:boilerplate/data/repository/educations/education_repository_impl.dart';
@@ -28,6 +29,7 @@ import 'package:boilerplate/data/repository/resume/resume_repository_impl.dart';
 import 'package:boilerplate/data/repository/setting/setting_repository_impl.dart';
 import 'package:boilerplate/data/repository/skillSet/skill_set_repository_impl.dart';
 import 'package:boilerplate/data/repository/techStack/tech_stack_repository_impl.dart';
+import 'package:boilerplate/data/repository/transcript/transcript_repository_impl.dart';
 import 'package:boilerplate/data/repository/user/user_repository_impl.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/domain/repository/auth/auth_repository.dart';
@@ -45,6 +47,7 @@ import 'package:boilerplate/domain/repository/resume/resume_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
 import 'package:boilerplate/domain/repository/techStack/teach_stack_repository.dart';
+import 'package:boilerplate/domain/repository/transcript/transcript_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 
 import '../../../di/service_locator.dart';
@@ -135,6 +138,11 @@ mixin RepositoryModule {
     // Resume
     getIt.registerSingleton<ResumeRepository>(ResumeRepositoryImpl(
       getIt<ResumeApi>(),
+      getIt<SharedPreferenceHelper>(),
+    ));
+    // Transcipt
+    getIt.registerSingleton<TranscriptRepository>(TranscriptRepositoryImpl(
+      getIt<TranscriptApi>(),
       getIt<SharedPreferenceHelper>(),
     ));
   }

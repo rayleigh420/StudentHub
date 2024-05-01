@@ -258,6 +258,7 @@
 //   }
 // }
 import 'package:boilerplate/domain/usecase/resume/post_resume.dart';
+import 'package:boilerplate/domain/usecase/transcript/post_transcript.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -276,7 +277,8 @@ class ResumeUpload extends StatefulWidget {
 class _ResumeUploadState extends State<ResumeUpload> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
   final PostResumeUseCase _postResumeUseCase = getIt<PostResumeUseCase>();
-  List<PlatformFile>? _cvPaths;
+  final PostTranscriptUseCase _postTranscriptUseCase = getIt<PostTranscriptUseCase>();
+  PlatformFile? _cvPaths;
   List<PlatformFile>? _transcriptPaths;
   String? _cvFileName;
   String? _transcriptFileName;
@@ -296,11 +298,29 @@ class _ResumeUploadState extends State<ResumeUpload> {
     });
 
     try {
-      _cvPaths = (await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf', 'doc', 'docx'],
-      ))
-          ?.files;
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+if (result != null) {
+  print("result:file");
+  print(result.files.first.path);
+   _cvPaths = result.files.first;
+
+  print(_cvPaths!.name);
+  print(_cvPaths!.bytes);
+  print(_cvPaths!.size);
+  print(_cvPaths!.extension);
+  print(_cvPaths!.path);
+  print(_cvPaths!.path);
+} else {
+  // User canceled the picker
+}
+      print("result:file");
+      
+     
+
+      print("cvPaths");
+      print(_cvPaths?.path);
+        
     } catch (e) {
       print("Error picking CV file: $e");
     }
@@ -310,7 +330,7 @@ class _ResumeUploadState extends State<ResumeUpload> {
     setState(() {
       _cvIsLoading = false;
       _cvFileName =
-          _cvPaths != null ? _cvPaths!.first.name : 'Choose CV file to upload';
+          _cvPaths != null ? _cvPaths!.name : 'Choose CV file to upload';
     });
   }
 
@@ -339,11 +359,15 @@ class _ResumeUploadState extends State<ResumeUpload> {
     });
   }
   Future<bool> handleButton() async{
-    if(_cvPaths != null){
-      final cvPath = _cvPaths!.first.path;
-      final cvFileName = _cvPaths!.first.name;
+    if(_cvPaths != null && _transcriptPaths != null){
+      final cvPath = _cvPaths!.path;
+      final cvFileName = _cvPaths!.name;
+      final transcriptPath = _transcriptPaths!.first.path;
+      final transcriptFileName = _transcriptPaths!.first.name;
       print("CV file path: $cvPath");
       print("CV file name: $cvFileName");
+      print("Transcript file path: $transcriptPath");
+      print("Transcript file name: $transcriptFileName");
       try{
         final cvRes = await _postResumeUseCase.call(
           params: PostResumeParams(
@@ -352,9 +376,15 @@ class _ResumeUploadState extends State<ResumeUpload> {
           ),
          
         );
-        return cvRes;
+        final transcriptRes = await _postTranscriptUseCase.call(
+          params: PostTranscriptParams(
+            filePath: transcriptPath!,
+            fileName: transcriptFileName,
+          ),
+        );  
+        return true;
       } catch(e){
-        print("Error uploading CV file: $e");
+        print("Error uploading file: $e");
         return false;
         }
       }
@@ -403,14 +433,15 @@ class _ResumeUploadState extends State<ResumeUpload> {
             SizedBox(height: 120),
             ElevatedButton(
               onPressed: () {
-                // Navigator.of(context).pushReplacement(
-                //   MaterialPageRoute(
-                //       builder: (context) => AppBottomNavigationBar(
-                //             isStudent: true,
-                //             selectedIndex: 0,
-                //           )),
-                // );
-                handleButton();
+                 handleButton();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) => AppBottomNavigationBar(
+                            isStudent: true,
+                            selectedIndex: 0,
+                          )),
+                );
+
               },
               child: Text(
                 'Continue',
