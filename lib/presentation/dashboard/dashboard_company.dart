@@ -116,34 +116,28 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
     //     : _projectCompanyStore.companyProjects!.projects!
     //         .where((item) => item.typeFlag == 1)
     //         .toList();
-    return Observer(
-      builder: (context) {
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: selectedIndex == 0
-              ? _projectCompanyStore.companyProjects!.projects!.length
-              : _projectCompanyStore.companyProjects!.projects!
-                  .where((item) => item.typeFlag == 1)
-                  .toList()
-                  .length,
-          physics: NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            if (selectedIndex == 0) {
-              return ProjectItemCompany(
-                project: _projectCompanyStore.companyProjects!.projects![index],
-              );
-            } else {
-              if (_projectCompanyStore
-                      .companyProjects!.projects![index].typeFlag ==
-                  1) {
-                return ProjectItemCompany(
-                  project:
-                      _projectCompanyStore.companyProjects!.projects![index],
-                );
-              }
-            }
-          },
-        );
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: selectedIndex == 0
+          ? _projectCompanyStore.companyProjects!.projects!.length
+          : _projectCompanyStore.companyProjects!.projects!
+              .where((item) => item.typeFlag == 1)
+              .toList()
+              .length,
+      physics: NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        if (selectedIndex == 0) {
+          return ProjectItemCompany(
+            project: _projectCompanyStore.companyProjects!.projects![index],
+          );
+        } else {
+          if (_projectCompanyStore.companyProjects!.projects![index].typeFlag ==
+              1) {
+            return ProjectItemCompany(
+              project: _projectCompanyStore.companyProjects!.projects![index],
+            );
+          }
+        }
       },
     );
   }

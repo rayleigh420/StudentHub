@@ -75,6 +75,9 @@ abstract class _MessageStore with Store {
   // Map<int, List<Message>>? messages = {};
 
   @observable
+  int completedMessageLists = 0;
+
+  @observable
   List<Messages>? messages;
 
   @observable
@@ -103,6 +106,7 @@ abstract class _MessageStore with Store {
 
     getAllMessageFuture.then((item) {
       messageList = item;
+      List<Future> futures = [];
       messageList!.forEach((element) {
         final getMessageListFuture = _getProjectMessageUseCase.call(
             params: GetProjectMessageParams(
@@ -111,7 +115,7 @@ abstract class _MessageStore with Store {
                     ? element.sender.id
                     : element.receiver.id));
         fetchMessageListFuture = ObservableFuture(getMessageListFuture);
-
+        futures.add(getMessageListFuture);
         getMessageListFuture.then((value) {
           if (messages == null) {
             messages = [];
@@ -124,10 +128,13 @@ abstract class _MessageStore with Store {
               senderId: element.sender.id));
 
           log("value nè: " + value[0].toJson().toString());
+          if (messages!.length == messageList!.length) {
+            success = true;
+          }
         });
       });
       log("messages 1 cout: ${messageList!.length.toString()}");
-      success = true;
+      // success = true;
     }).catchError((error) {
       errorStore.errorMessage = error.toString();
     });

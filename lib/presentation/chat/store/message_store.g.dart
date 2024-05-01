@@ -72,6 +72,23 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
+  late final _$completedMessageListsAtom =
+      Atom(name: '_MessageStore.completedMessageLists', context: context);
+
+  @override
+  int get completedMessageLists {
+    _$completedMessageListsAtom.reportRead();
+    return super.completedMessageLists;
+  }
+
+  @override
+  set completedMessageLists(int value) {
+    _$completedMessageListsAtom.reportWrite(value, super.completedMessageLists,
+        () {
+      super.completedMessageLists = value;
+    });
+  }
+
   late final _$messagesAtom =
       Atom(name: '_MessageStore.messages', context: context);
 
@@ -187,6 +204,7 @@ mixin _$MessageStore on _MessageStore, Store {
 initSocket: ${initSocket},
 fetchMessageFuture: ${fetchMessageFuture},
 fetchMessageListFuture: ${fetchMessageListFuture},
+completedMessageLists: ${completedMessageLists},
 messages: ${messages},
 messageList: ${messageList},
 success: ${success},
