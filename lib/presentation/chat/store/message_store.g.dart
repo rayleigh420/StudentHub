@@ -93,13 +93,13 @@ mixin _$MessageStore on _MessageStore, Store {
       Atom(name: '_MessageStore.messages', context: context);
 
   @override
-  List<Messages>? get messages {
+  List<ObservableMessages>? get messages {
     _$messagesAtom.reportRead();
     return super.messages;
   }
 
   @override
-  set messages(List<Messages>? value) {
+  set messages(List<ObservableMessages>? value) {
     _$messagesAtom.reportWrite(value, super.messages, () {
       super.messages = value;
     });

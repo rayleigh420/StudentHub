@@ -122,7 +122,7 @@ class _MessageDetailState extends State<MessageDetail> {
     });
     int index = _messageStore.getIndex(
         widget.projectId, widget.receiverId, widget.senderId);
-    List<Message> m = _messageStore.messages![index].messages;
+    List<Message> m = _messageStore.messages![index].messages.messages;
 
     setState(() {
       messages = m;
@@ -301,22 +301,25 @@ class _MessageDetailState extends State<MessageDetail> {
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: _messageStore.messages![i].messages.length,
+                itemCount: _messageStore.messages![i].messages.messages.length,
                 itemBuilder: (context, index) {
-                  if (_messageStore.messages![i].messages[index].sender.id !=
+                  if (_messageStore
+                          .messages![i].messages.messages[index].sender.id !=
                       me.id) {
-                    if (_messageStore.messages![i].messages[index].interview ==
+                    if (_messageStore
+                            .messages![i].messages.messages[index].interview ==
                         null) {
-                      return buildMessageFrom(
-                          context, _messageStore.messages![i].messages[index]);
+                      return buildMessageFrom(context,
+                          _messageStore.messages![i].messages.messages[index]);
                     } else
                       return buildMessageSchedule(context, "12:00 AM", "Luis",
                           "assets/images/student.png");
                   } else {
-                    if (_messageStore.messages![i].messages[index].interview ==
+                    if (_messageStore
+                            .messages![i].messages.messages[index].interview ==
                         null) {
-                      return buildMessageTo(
-                          context, _messageStore.messages![i].messages[index]);
+                      return buildMessageTo(context,
+                          _messageStore.messages![i].messages.messages[index]);
                     }
                     return buildMessageScheduleTo(context, "12:00 AM", "Luis",
                         "assets/images/student.png");

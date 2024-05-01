@@ -1,12 +1,10 @@
 import 'dart:developer';
 
 import 'package:boilerplate/core/stores/error/error_store.dart';
-import 'package:boilerplate/data/network/socket_client_list.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_list.dart';
-import 'package:boilerplate/domain/entity/message/message_project.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/domain/entity/message/messages.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
@@ -18,30 +16,11 @@ import 'package:mobx/mobx.dart';
 
 part 'message_store.g.dart';
 
-class SenderReceiverProject {
-  final int senderId;
-  final int receiverId;
-  final int projectId;
+class ObservableMessages {
+  @observable
+  Messages messages;
 
-  SenderReceiverProject(
-      {required this.senderId,
-      required this.receiverId,
-      required this.projectId});
-
-  factory SenderReceiverProject.fromJson(Map<String, dynamic> json) {
-    return SenderReceiverProject(
-        senderId: json['senderId'],
-        receiverId: json['receiverId'],
-        projectId: json['projectId']);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'senderId': senderId,
-      'receiverId': receiverId,
-      'projectId': projectId
-    };
-  }
+  ObservableMessages({required this.messages});
 }
 
 class MessageStore = _MessageStore with _$MessageStore;
@@ -78,7 +57,7 @@ abstract class _MessageStore with Store {
   int completedMessageLists = 0;
 
   @observable
-  List<Messages>? messages;
+  List<ObservableMessages>? messages;
 
   @observable
   List<MessageListItem>? messageList;
@@ -121,11 +100,12 @@ abstract class _MessageStore with Store {
             messages = [];
           }
 
-          messages!.add(Messages(
-              messages: value,
-              projectId: element.project.id!,
-              receiverId: element.receiver.id,
-              senderId: element.sender.id));
+          messages!.add(ObservableMessages(
+              messages: Messages(
+                  messages: value,
+                  projectId: element.project.id!,
+                  receiverId: element.receiver.id,
+                  senderId: element.sender.id)));
 
           log("value nè: " + value[0].toJson().toString());
           if (messages!.length == messageList!.length) {
@@ -144,11 +124,11 @@ abstract class _MessageStore with Store {
     int index = -1;
 
     for (int i = 0; i < messages!.length; i++) {
-      if (messages![i].projectId == projectId) {
-        final x = messages![i].senderId == senderId &&
-            messages![i].receiverId == receiverId;
-        final y = messages![i].senderId == receiverId &&
-            messages![i].receiverId == senderId;
+      if (messages![i].messages.projectId == projectId) {
+        final x = messages![i].messages.senderId == senderId &&
+            messages![i].messages.receiverId == receiverId;
+        final y = messages![i].messages.senderId == receiverId &&
+            messages![i].messages.receiverId == senderId;
         if (x || y) {
           index = i;
           break;
@@ -173,11 +153,12 @@ abstract class _MessageStore with Store {
           project: project);
       log("newMessageListItem: " + newMessageListItem.toJson().toString());
       final List<Message> emptyMessage = [];
-      messages?.add(Messages(
-          messages: emptyMessage,
-          projectId: project.id!,
-          receiverId: receiver.id,
-          senderId: sender.id));
+      messages?.add(ObservableMessages(
+          messages: Messages(
+              messages: emptyMessage,
+              projectId: project.id!,
+              receiverId: receiver.id,
+              senderId: sender.id)));
       messageList!.add(newMessageListItem);
       return messageList!.length - 1;
     }
@@ -205,9 +186,7 @@ abstract class _MessageStore with Store {
         receiver: MessageUser(id: msg['receiverId'], fullname: ''),
         createdAt: DateTime.now(),
       );
-      final x = messages;
-      x![index].messages.add(newMessage);
-      messages = x;
+      messages![index].messages.messages.add(newMessage);
 
       // messages![index].messages.add(newMessage);
     }
