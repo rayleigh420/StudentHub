@@ -1,6 +1,7 @@
 import 'package:boilerplate/domain/entity/educations/education.dart';
 import 'package:boilerplate/domain/entity/experiences/experience.dart';
 import 'package:boilerplate/domain/entity/language/Language.dart';
+import 'package:boilerplate/domain/entity/language/language_student.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 import 'package:boilerplate/domain/entity/profile/user.dart';
@@ -16,7 +17,7 @@ class Student {
   TechStack? techStack;
   List<dynamic>? proposals;
   List<Education>? educations;
-  List<Language>? languages;
+  List<LanguageStudent>? languages;
   List<Experience>? experiences;
   List<SkillSet>? skillSets;
   dynamic resume;
@@ -55,8 +56,8 @@ class Student {
       proposals: map['proposals'],
       educations: List<Education>.from(
           map['educations']?.map((x) => Education.fromMap(x))?.toList() ?? []),
-      languages: List<Language>.from(
-          map['languages']?.map((x) => Language.fromMap(x))?.toList() ?? []),
+      languages: List<LanguageStudent>.from(
+          map['languages']?.map((x) => LanguageStudent.fromMap(x))?.toList() ?? []),
       experiences: List<Experience>.from(
           map['experiences']?.map((x) => Experience.fromMap(x))?.toList() ??
               []),

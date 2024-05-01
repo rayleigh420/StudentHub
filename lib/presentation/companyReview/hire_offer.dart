@@ -93,6 +93,7 @@ class _HireOfferState extends State<HireOffer> {
                             listItem: listItemProposal
                                 .where((item) => item.statusFlag != 3)
                                 .toList(),
+                            project: widget.project!,
                           )
                         : selectedIndex == 1
                             ? ProjectDetail_2(
@@ -108,7 +109,9 @@ class _HireOfferState extends State<HireOffer> {
                             : Proposal1(
                                 listItem: listItemProposal
                                     .where((item) => item.statusFlag == 3)
-                                    .toList()),
+                                    .toList(),
+                                project: widget.project!,
+                              ),
                   ],
                 ),
               )),
@@ -120,16 +123,23 @@ class _HireOfferState extends State<HireOffer> {
 
 class Proposal1 extends StatelessWidget {
   final List<ItemProposal> listItem;
+  final Project project;
   Proposal1({
     super.key,
     required this.listItem,
+    required this.project,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ...listItem.map((e) => ProposalItems(itemProposal: e)).toList(),
+        ...listItem
+            .map((e) => ProposalItems(
+                  itemProposal: e,
+                  project: project,
+                ))
+            .toList(),
         SizedBox(
           height: 50,
         ),
