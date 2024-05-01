@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:boilerplate/core/stores/error/error_store.dart';
 import 'package:boilerplate/core/stores/form/form_store.dart';
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart';
@@ -74,10 +75,8 @@ mixin StoreModule {
       getIt<ErrorStore>(),
     ));
 
-    getIt.registerSingleton(ProfileStore(
-      getIt<GetProfileUseCase>(),
-      getIt<ErrorStore>(),
-    ));
+    getIt.registerSingleton(ProfileStore(getIt<GetProfileUseCase>(),
+        getIt<ErrorStore>(), getIt<SharedPreferenceHelper>()));
 
     getIt.registerSingleton(
       ProjectCompanyStore(
