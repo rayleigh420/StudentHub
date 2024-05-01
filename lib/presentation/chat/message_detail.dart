@@ -55,8 +55,8 @@ class _MessageDetailState extends State<MessageDetail> {
 
   @override
   void dispose() {
-    socket.disconnect();
-    socket.dispose();
+    // socket.disconnect();
+    // socket.dispose();
     super.dispose();
     // print("dispose detail message");
   }
@@ -139,7 +139,7 @@ class _MessageDetailState extends State<MessageDetail> {
         other = _messageStore.messageList![index].sender;
       });
     }
-    _connectSocket();
+    // _connectSocket();
   }
 
   void newMessage(String content) {
