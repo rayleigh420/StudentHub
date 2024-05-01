@@ -9,6 +9,7 @@ import 'package:boilerplate/domain/entity/message/message_list.dart';
 import 'package:boilerplate/domain/entity/message/message_project.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/domain/entity/message/messages.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart';
 import 'package:boilerplate/domain/usecase/message/get_project_message.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
@@ -82,8 +83,15 @@ abstract class _MessageStore with Store {
   @observable
   bool success = false;
 
+  @observable
+  bool successMessages = false;
+
   @computed
   bool get loading => fetchMessageFuture.status == FutureStatus.pending;
+
+  @computed
+  bool get loadingMessageList =>
+      fetchMessageListFuture.status == FutureStatus.pending;
 
   @action
   Future getMessages() async {
@@ -145,6 +153,31 @@ abstract class _MessageStore with Store {
   }
 
   @action
+  int newMessageListItem(
+      MessageUser sender, MessageUser receiver, Project project) {
+    final index = getIndex(project.id!, sender.id, receiver.id);
+    if (index == -1) {
+      final MessageListItem newMessageListItem = MessageListItem(
+          id: 0,
+          sender: sender,
+          receiver: receiver,
+          content: '',
+          createdAt: DateTime.now(),
+          project: project);
+      log("newMessageListItem: " + newMessageListItem.toJson().toString());
+      final List<Message> emptyMessage = [];
+      messages?.add(Messages(
+          messages: emptyMessage,
+          projectId: project.id!,
+          receiverId: receiver.id,
+          senderId: sender.id));
+      messageList!.add(newMessageListItem);
+      return messageList!.length - 1;
+    }
+    return index;
+  }
+
+  @action
   receiveMessage(dynamic data) {
     log("data nè " + data.toString());
     final msg = {
@@ -176,7 +209,7 @@ abstract class _MessageStore with Store {
   @action
   refreshMessage() {
     messages = null;
-    success = false;
+    // success = false;
     errorStore.errorMessage = "";
     getMessages();
   }
