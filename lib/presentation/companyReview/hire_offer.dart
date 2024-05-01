@@ -105,10 +105,16 @@ class _HireOfferState extends State<HireOffer> {
                                   });
                                 },
                               )
-                            : Proposal1(
-                                listItem: listItemProposal
-                                    .where((item) => item.statusFlag == 3)
-                                    .toList()),
+                            : selectedIndex == 2
+                                ? Proposal1(
+                                    listItem: listItemProposal
+                                        .where((item) => item.statusFlag == 1)
+                                        .toList(),
+                                  )
+                                : Proposal1(
+                                    listItem: listItemProposal
+                                        .where((item) => item.statusFlag == 3)
+                                        .toList()),
                   ],
                 ),
               )),
@@ -168,21 +174,28 @@ class ProjectDetail_2 extends StatelessWidget {
               SizedBox(
                 height: 25,
               ),
-              Text(
-                "- Clear expectation about your project or deliverables",
-                style: TextStyle(fontSize: 14),
+              FractionallySizedBox(
+                widthFactor: 1.0,
+                child: Text(
+                  "- ${project!.description}",
+                  style: TextStyle(fontSize: 14),
+                ),
               ),
+              // Text(
+              //   "- Clear expectation about your project or deliverables",
+              //   style: TextStyle(fontSize: 14),
+              // ),
               SizedBox(
                 height: 10,
               ),
-              Text(
-                "- The skills required for your project",
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                "- Detail about your project",
-                style: TextStyle(fontSize: 14),
-              )
+              // Text(
+              //   "- The skills required for your project",
+              //   style: TextStyle(fontSize: 14),
+              // ),
+              // Text(
+              //   "- Detail about your project",
+              //   style: TextStyle(fontSize: 14),
+              // )
             ],
           ),
         ),

@@ -35,68 +35,73 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Container(
-          padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                      "Your Projects"),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5))),
-                      onPressed: () {
-                        Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                                builder: (context) => ProjectPost1(),
-                                maintainState: false));
-                      },
-                      child: const Text(
-                          style: TextStyle(fontSize: 16), "Post a job")),
-                ],
-              ),
+            body: RefreshIndicator(
+                onRefresh: _projectCompanyStore.getCompanyProjects,
+                child: SingleChildScrollView(
+                  physics: BouncingScrollPhysics(),
+                  child: Container(
+                      padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                  "Your Projects"),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5))),
+                                  onPressed: () {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProjectPost1(),
+                                            maintainState: false));
+                                  },
+                                  child: const Text(
+                                      style: TextStyle(fontSize: 16),
+                                      "Post a job")),
+                            ],
+                          ),
 
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                child: ToggleButtonsCompany(
-                  selected: selectedIndex!,
-                  setSelected: (index) {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              // ProjectItem(),
-              // ListProjectCompany(),
-              buildProjectsContent(selectedIndex!),
-              // Container(
-              //   margin: EdgeInsets.only(
-              //       top: DeviceUtils.getScaledHeight(context, 0.35)),
-              //   child: Center(
-              //       child: Column(
-              //     children: [
-              //       const Text(
-              //           style: TextStyle(fontWeight: FontWeight.w500),
-              //           "Welcome Duy!"),
-              //       const Text(
-              //           style: TextStyle(fontWeight: FontWeight.w500),
-              //           "You have no jobs!"),
-              //     ],
-              //   )),
-              // ),
-            ],
-          )),
-    )));
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: ToggleButtonsCompany(
+                              selected: selectedIndex!,
+                              setSelected: (index) {
+                                setState(() {
+                                  selectedIndex = index;
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          // ProjectItem(),
+                          // ListProjectCompany(),
+                          buildProjectsContent(selectedIndex!),
+                          // Container(
+                          //   margin: EdgeInsets.only(
+                          //       top: DeviceUtils.getScaledHeight(context, 0.35)),
+                          //   child: Center(
+                          //       child: Column(
+                          //     children: [
+                          //       const Text(
+                          //           style: TextStyle(fontWeight: FontWeight.w500),
+                          //           "Welcome Duy!"),
+                          //       const Text(
+                          //           style: TextStyle(fontWeight: FontWeight.w500),
+                          //           "You have no jobs!"),
+                          //     ],
+                          //   )),
+                          // ),
+                        ],
+                      )),
+                ))));
   }
 
   Widget buildProjectsContent(int selected) {
