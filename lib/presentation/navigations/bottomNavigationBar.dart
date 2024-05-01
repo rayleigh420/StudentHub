@@ -123,7 +123,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   final MessageStore _messageStore = getIt<MessageStore>();
   final ProfileStore _profileStore = getIt<ProfileStore>();
   final ProjectStore _projectStore = getIt<ProjectStore>();
-
+  final isLoggedIn = false;
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
     MessageList(),
@@ -145,9 +145,6 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_messageStore.loading == false) {
-      _messageStore.getMessages();
-    }
   }
 
   void checkAuthToken() async {
@@ -185,7 +182,12 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           ProfileScreen()
         ];
       });
-
+      if (_messageStore.loading == false) {
+        _messageStore.getMessages();
+      }
+      if (_profileStore.loading == false) {
+        _profileStore.getProfile();
+      }
       // if (_projectStore.loading == false) {
       //   _projectStore.getProjects();
       // }

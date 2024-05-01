@@ -12,9 +12,10 @@ import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart'
 import 'package:boilerplate/presentation/chat/message_detail.dart';
 import 'package:boilerplate/presentation/chat/message_project_item.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
-import 'package:boilerplate/presentation/chat/store/socket_store.dart';
+
 
 import 'package:boilerplate/presentation/input_login/input_login.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -137,46 +138,59 @@ class _MessageListState extends State<MessageList> {
   }
 
   Widget buildMainContent() {
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: TextField(
-              keyboardType: TextInputType.text,
-              maxLines: 1,
-              onTapOutside: (event) => FocusScope.of(context).unfocus(),
-              decoration: const InputDecoration(
-                hintText: 'Search ',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                contentPadding: EdgeInsets.all(10),
-              ),
-              onChanged: (value) {},
+    return Observer(
+      builder: (context) {
+        if (_messageStore.loading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return RefreshIndicator(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            height: DeviceUtils.getScaledHeight(context, 1),
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: TextField(
+                    keyboardType: TextInputType.text,
+                    maxLines: 1,
+                    onTapOutside: (event) => FocusScope.of(context).unfocus(),
+                    decoration: const InputDecoration(
+                      hintText: 'Search ',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      contentPadding: EdgeInsets.all(10),
+                    ),
+                    onChanged: (value) {},
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _messageStore.messageList!.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return MessageProjectItem(
+                      messageListItem: _messageStore.messageList![index],
+                      index: index,
+                    );
+                  },
+                )
+
+                // MessageProjectItem(),
+              ],
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          RefreshIndicator(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _messageStore.messageList!.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return MessageProjectItem(
-                    messageListItem: _messageStore.messageList![index],
-                    index: index,
-                  );
-                },
-              ),
-              onRefresh: _pullRefresh)
-
-          // MessageProjectItem(),
-        ],
-      ),
+        ),
+        onRefresh: _pullRefresh);
+        }
+      },
     );
   }
 }

@@ -96,7 +96,7 @@ class _MessageDetailState extends State<MessageDetail> {
     socket.on("RECEIVE_MESSAGE", (data) {
       log("RECEIVE_MESSAGE");
       print(data);
-      dynamic msg = data;
+      dynamic msg = data['notification']['message'];
       msg['projectId'] = widget.projectId;
       Message message = Message.fromJson({
         "id": messages.last.id + 1,
@@ -109,9 +109,6 @@ class _MessageDetailState extends State<MessageDetail> {
       setState(() {
         messages.add(message);
       });
-      // int index = _messageStore.getIndex(
-      //     widget.projectId, widget.receiverId, widget.senderId);
-      // _messageStore.messages![index].messages.add(message);
     });
     socket.connect();
     // _messageStore.receiveMessage(msg);
@@ -131,15 +128,15 @@ class _MessageDetailState extends State<MessageDetail> {
       messages = m;
     });
 
-    if (id == _messageStore.messages![index].messages[0].sender.id) {
+    if (id == _messageStore.messageList![index].sender.id) {
       setState(() {
-        me = _messageStore.messages![index].messages[0].sender;
-        other = _messageStore.messages![index].messages[0].receiver;
+        me = _messageStore.messageList![index].sender;
+        other = _messageStore.messageList![index].receiver;
       });
     } else {
       setState(() {
-        me = _messageStore.messages![index].messages[0].receiver;
-        other = _messageStore.messages![index].messages[0].sender;
+        me = _messageStore.messageList![index].receiver;
+        other = _messageStore.messageList![index].sender;
       });
     }
     _connectSocket();
