@@ -72,7 +72,6 @@ class MyApp extends StatelessWidget {
           ],
           home: AppBottomNavigationBar(
             selectedIndex: 1,
-            // isStudent: true,
           ),
         );
       },

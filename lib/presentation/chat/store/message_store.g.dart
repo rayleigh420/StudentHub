@@ -15,6 +15,13 @@ mixin _$MessageStore on _MessageStore, Store {
   bool get loading => (_$loadingComputed ??=
           Computed<bool>(() => super.loading, name: '_MessageStore.loading'))
       .value;
+  Computed<bool>? _$loadingMessageListComputed;
+
+  @override
+  bool get loadingMessageList => (_$loadingMessageListComputed ??=
+          Computed<bool>(() => super.loadingMessageList,
+              name: '_MessageStore.loadingMessageList'))
+      .value;
 
   late final _$initSocketAtom =
       Atom(name: '_MessageStore.initSocket', context: context);
@@ -113,6 +120,22 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
+  late final _$successMessagesAtom =
+      Atom(name: '_MessageStore.successMessages', context: context);
+
+  @override
+  bool get successMessages {
+    _$successMessagesAtom.reportRead();
+    return super.successMessages;
+  }
+
+  @override
+  set successMessages(bool value) {
+    _$successMessagesAtom.reportWrite(value, super.successMessages, () {
+      super.successMessages = value;
+    });
+  }
+
   late final _$getMessagesAsyncAction =
       AsyncAction('_MessageStore.getMessages', context: context);
 
@@ -123,6 +146,18 @@ mixin _$MessageStore on _MessageStore, Store {
 
   late final _$_MessageStoreActionController =
       ActionController(name: '_MessageStore', context: context);
+
+  @override
+  int newMessageListItem(
+      MessageUser sender, MessageUser receiver, Project project) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.newMessageListItem');
+    try {
+      return super.newMessageListItem(sender, receiver, project);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   dynamic receiveMessage(dynamic data) {
@@ -155,7 +190,9 @@ fetchMessageListFuture: ${fetchMessageListFuture},
 messages: ${messages},
 messageList: ${messageList},
 success: ${success},
-loading: ${loading}
+successMessages: ${successMessages},
+loading: ${loading},
+loadingMessageList: ${loadingMessageList}
     ''';
   }
 }
