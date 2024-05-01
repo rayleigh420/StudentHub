@@ -53,6 +53,7 @@ abstract class _ProjectCompanyStore with Store {
 
     future.then((companyProjects) {
       this.companyProjects = companyProjects;
+      success = true;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
