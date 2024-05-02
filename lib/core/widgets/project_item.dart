@@ -120,7 +120,7 @@ class _ProjectItemState extends State<ProjectItem> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Text("Proposals: 0 proposals",
+                    Text("Proposals: ${widget.projDat.countProposals} proposals",
                         // "Proposals: ${widget.projDat.proposals != null ? widget.projDat.proposals : 0} proposals",
                         style: TextStyle(fontSize: 13, color: Colors.black)),
                   ],

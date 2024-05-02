@@ -1,5 +1,6 @@
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/notification/notification.dart';
+import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:boilerplate/presentation/chat/store/notification_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,7 @@ class NotiList extends StatefulWidget {
 
 class _NotiListState extends State<NotiList> {
   final NotificationStore _notificationStore = getIt<NotificationStore>();
+  UpdateProposalUseCase _updateProposalUseCase = getIt<UpdateProposalUseCase>();
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -121,6 +123,17 @@ class _NotiListState extends State<NotiList> {
             SizedBox(
               height: 10,
             ),
+            if (noti.notifyFlag == "0")
+                Center(
+                  
+
+                  child: ElevatedButton(
+                    onPressed: () {
+                            // Handle button press
+                          },
+                          child: Text('Agree'),
+                        ),
+                ),
             Divider(
               color: Colors.black,
               thickness: 1,
