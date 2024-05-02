@@ -29,10 +29,10 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
     // print()
     final result = await _searchProjectsUseCase.call(
         params: SearchProjectParams(
-            title: widget.searchQuery,
-            projectScopeFlag: choosenTime,
-            numberOfStudents: int.parse(studentNeededController.text),
-            proposalsLessThan: int.parse(proposalLessThanController.text)));
+      title: widget.searchQuery,
+      projectScopeFlag: choosenTime,
+      numberOfStudents: int.parse(studentNeededController.text),
+    ));
     widget.searchProject(result);
     Navigator.of(context).pop();
   }
