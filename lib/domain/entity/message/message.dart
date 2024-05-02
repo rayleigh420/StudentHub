@@ -7,13 +7,15 @@ class Message {
   final MessageUser receiver;
   final DateTime createdAt;
   final String content;
-  final Interview? interview;
+  final int? messageFlag;
+  Interview? interview;
   Message(
       {required this.id,
       required this.content,
       required this.sender,
       required this.receiver,
       required this.createdAt,
+      required this.messageFlag,
       required this.interview});
 
   factory Message.fromJson(Map<String, dynamic> map) {
@@ -23,6 +25,7 @@ class Message {
       sender: MessageUser.fromJson(map['sender']),
       receiver: MessageUser.fromJson(map['receiver']),
       createdAt: DateTime.parse(map['createdAt']),
+      messageFlag: map['messageFlag'] == null ? null : map['messageFlag'],
       interview: map['interview'] == null
           ? null
           : Interview.fromJson(map['interview']),
@@ -36,6 +39,7 @@ class Message {
       'createdAt': createdAt.toIso8601String(),
       'sender': sender.toJson(),
       'receiver': receiver.toJson(),
+      'messageFlag': messageFlag,
       'interview': interview?.toJson(),
     };
   }

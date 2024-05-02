@@ -76,9 +76,6 @@ class _MessageDetailState extends State<MessageDetail> {
             .disableAutoConnect()
             .build());
 
-    // socket.io.options?['extraHeaders'] = {
-    //   'Authorization': 'Bearer ${token}',
-    // };
     print('Bearer $token');
     socket.io.options?['extraHeaders'] = {
       'Authorization': 'Bearer ${token}',
@@ -123,33 +120,38 @@ class _MessageDetailState extends State<MessageDetail> {
       dynamic meetingRoom = data['notification']['meetingRoom'];
       dynamic sender = data['notification']['sender'];
       dynamic receiver = data['notification']['receiver'];
-
+      Interview interviewData = Interview.fromJson({
+        "id": interview['id'],
+        "title": interview['title'],
+        "createdAt": interview['createdAt'],
+        "updatedAt": interview['updatedAt'],
+        "deletedAt": interview['deletedAt'],
+        "startTime": interview['startTime'],
+        "endTime": interview['endTime'],
+        "disableFlag": interview['disableFlag'],
+        "meetingRoomId": interview['meetingRoomId'],
+      });
+      MeetingRoom meetingRoomData = MeetingRoom.fromJson({
+        "id": meetingRoom['id'],
+        "createdAt": meetingRoom['createdAt'],
+        "updatedAt": meetingRoom['updatedAt'],
+        "deletedAt": meetingRoom['deletedAt'],
+        "meeting_room_code": meetingRoom['meeting_room_code'],
+        "meeting_room_id": meetingRoom['meeting_room_id'],
+        "expired_at": meetingRoom['expired_at'],
+      });
+      interviewData.meetingRoom = meetingRoomData;
       Message message = Message.fromJson({
-        "id": messages.last.id + 1,
+        "id": msg['id'],
         "content": msg['content'],
         "sender": {"id": msg['senderId'], "fullname": sender['fullname']},
         "receiver": {"id": msg['receiverId'], "fullname": receiver['fullname']},
         "messageFlag": msg['messageFlag'],
-        "createdAt": DateTime.now().toString(),
-        "interview": Interview.fromJson({
-          "id": interview['id'],
-          "title": interview['title'],
-          "startTime": interview['startTime'],
-          "endTime": interview['endTime'],
-          "disableFlag": interview['disableFlag'],
-          "meetingRoomId": interview['meetingRoomId'],
-          "meetingRoom": {
-            "id": meetingRoom['id'],
-            "createdAt": meetingRoom['createdAt'],
-            "updatedAt": meetingRoom['updatedAt'],
-            "deletedAt": meetingRoom['deletedAt'],
-            "meetingRoomCode": meetingRoom['meetingRoomCode'],
-            "meetingRoomId": meetingRoom['meetingRoomId'],
-            "expiredAt": meetingRoom['expiredAt'],
-          }
-        })
+        "createdAt": msg['createdAt'],
       });
 
+      message.interview = interviewData;
+      log(message.toJson().toString());
       setState(() {
         messages.add(message);
       });
@@ -188,14 +190,15 @@ class _MessageDetailState extends State<MessageDetail> {
 
   void newMessage(String content) {
     Message newmesage = Message(
-        id: -1,
-        content: content,
-        sender: me,
-        receiver: other,
-        createdAt: DateTime.now(),
-        interview: null)
-        ;
-        log(newmesage.toJson().toString());
+      id: -1,
+      content: content,
+      sender: me,
+      receiver: other,
+      createdAt: DateTime.now(),
+      interview: null,
+      messageFlag: 0,
+    );
+    log(newmesage.toJson().toString());
     socket.emit("SEND_MESSAGE", {
       "content": newmesage.content,
       "senderId": newmesage.sender.id,
@@ -205,17 +208,32 @@ class _MessageDetailState extends State<MessageDetail> {
     });
   }
 
-  void newSchedule(String content) {
-    socket.emit("SCHEDULE_INTERVIEW", {
-      "title": "Meeting",
-      "startTime": DateTime.now().toString(),
-      "endTime": DateTime.now().toString(),
+  void newSchedule(dynamic dataInterview) {
+    dynamic msg = {
+      "title": dataInterview['title'],
+      "content": "Schedule a meeting",
+      "startTime": dataInterview['startTime'],
+      "endTime": dataInterview['endTime'],
       "projectId": widget.projectId,
       "senderId": me.id,
       "receiverId": other.id,
-      "meeting_room_code": "abcde",
-      "meeting_room_id": "abcdf"
-    });
+      "meeting_room_code": "${other.id}_${me.id}_${DateTime.now()}",
+      "meeting_room_id": "${me.id}_${other.id}_${DateTime.now()}"
+    };
+    log("data nè " + msg.toString());
+
+    log(msg.toString());
+    socket.emit("SCHEDULE_INTERVIEW", msg);
+    // {
+    //   "title": "Meeting",
+    //   "startTime": DateTime.now().toString(),
+    //   "endTime": DateTime.now().toString(),
+    //   "projectId": widget.projectId,
+    //   "senderId": me.id,
+    //   "receiverId": other.id,
+    //   "meeting_room_code": "abcde",
+    //   "meeting_room_id": "abcdf"
+    // }
   }
 
   void scrollToBottom() {
@@ -254,7 +272,7 @@ class _MessageDetailState extends State<MessageDetail> {
                   backgroundImage: AssetImage('assets/images/student.png'),
                 ),
               ),
-              Text('Luis Pham')
+              Text(other.fullname)
             ],
           ),
         ),
@@ -278,8 +296,8 @@ class _MessageDetailState extends State<MessageDetail> {
                               backgroundColor: Colors.transparent,
                               builder: (context) {
                                 return ScheduleMeetingModal(
-                                  newSchedule: () {
-                                    newSchedule("aha");
+                                  newSchedule: (data) {
+                                    newSchedule(data);
                                   },
                                 );
                               },
@@ -303,27 +321,31 @@ class _MessageDetailState extends State<MessageDetail> {
         ],
       ),
       // resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Container(
-            height: DeviceUtils.getScaledHeight(context, 1),
-            child: SingleChildScrollView(
-              controller: _controller,
-              reverse: true,
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildChatDivider(context, "6/6/2024"),
-                  buildChat(),
-                  const SizedBox(height: 70),
-                ],
+      body: Observer(
+        builder: (context) {
+          return Stack(
+            children: [
+              Container(
+                height: DeviceUtils.getScaledHeight(context, 1),
+                child: SingleChildScrollView(
+                  controller: _controller,
+                  reverse: true,
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildChatDivider(context, "6/6/2024"),
+                      buildChat(),
+                      const SizedBox(height: 70),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-          buildBottomTextBox(context)
-        ],
+              buildBottomTextBox(context)
+            ],
+          );
+        },
       ),
     ));
   }

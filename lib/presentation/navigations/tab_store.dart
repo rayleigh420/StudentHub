@@ -6,7 +6,7 @@ class TabStore = _TabStore with _$TabStore;
 
 abstract class _TabStore with Store {
   @observable
-  int selectedIndex = 0;
+  int selectedIndex = 1;
 
   @action
   void setTabIndex(int index) {
