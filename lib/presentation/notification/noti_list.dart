@@ -123,7 +123,7 @@ class _NotiListState extends State<NotiList> {
             SizedBox(
               height: 10,
             ),
-            if (noti.notifyFlag == "0")
+            if (noti.typeNotifyFlag == "0")
                 Center(
                   
 
