@@ -77,6 +77,8 @@
 //     );
 //   }
 // }
+import 'dart:developer';
+
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
@@ -171,6 +173,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       print('roles: ${jwt.payload['roles'][0]}');
       // return jwt.payload['roles'][0];
       int roleString = jwt.payload['roles'][0];
+      log("roleString: $roleString");
       // int role = int.parse(roleString);
       print(roleString);
       setState(() {
@@ -260,7 +263,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                               label: 'Profile',
                             ),
                           ],
-                          currentIndex: _tabStore.selectedIndex,
+                          currentIndex: _selectedIndex,
                           // selectedItemColor: Colors.blue,
                           onTap: _onItemTapped,
                         ),
