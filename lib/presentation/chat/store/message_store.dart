@@ -57,10 +57,12 @@ abstract class _MessageStore with Store {
   int completedMessageLists = 0;
 
   @observable
-  List<ObservableMessages>? messages;
+  ObservableList<ObservableMessages> messages =
+      ObservableList<ObservableMessages>();
 
   @observable
-  List<MessageListItem>? messageList;
+  ObservableList<MessageListItem> messageList =
+      ObservableList<MessageListItem>();
 
   @observable
   bool success = false;
@@ -84,7 +86,7 @@ abstract class _MessageStore with Store {
     fetchMessageFuture = ObservableFuture(getAllMessageFuture);
 
     getAllMessageFuture.then((item) {
-      messageList = item;
+      messageList.addAll(item);
       List<Future> futures = [];
       messageList!.forEach((element) {
         final getMessageListFuture = _getProjectMessageUseCase.call(
@@ -96,11 +98,7 @@ abstract class _MessageStore with Store {
         fetchMessageListFuture = ObservableFuture(getMessageListFuture);
         futures.add(getMessageListFuture);
         getMessageListFuture.then((value) {
-          if (messages == null) {
-            messages = [];
-          }
-
-          messages!.add(ObservableMessages(
+          messages.add(ObservableMessages(
               messages: Messages(
                   messages: value,
                   projectId: element.project.id!,
@@ -108,7 +106,7 @@ abstract class _MessageStore with Store {
                   senderId: element.sender.id)));
 
           log("value nè: " + value[0].toJson().toString());
-          if (messages!.length == messageList!.length) {
+          if (messages.length == messageList!.length) {
             success = true;
           }
         });
@@ -195,7 +193,7 @@ abstract class _MessageStore with Store {
 
   @action
   refreshMessage() {
-    messages = null;
+    messages = ObservableList<ObservableMessages>();
     // success = false;
     errorStore.errorMessage = "";
     getMessages();

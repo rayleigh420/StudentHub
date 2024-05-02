@@ -6,6 +6,7 @@ import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:boilerplate/presentation/chat/message_detail.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
+import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _ProposalItemsState extends State<ProposalItems> {
   UpdateProposalUseCase _updateProposalUseCase = getIt<UpdateProposalUseCase>();
   final MessageStore _messageStore = getIt<MessageStore>();
   final ProfileStore _profileStore = getIt<ProfileStore>();
+  final TabStore _tabStore = getIt<TabStore>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -129,6 +131,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                             //           selectedIndex: 1,
                             //         ),
                             //     maintainState: true));
+                            _tabStore.setTabIndex(1);
                             Navigator.of(context, rootNavigator: true)
                                 .push(MaterialPageRoute(
                                     builder: (context) => MessageDetail(
