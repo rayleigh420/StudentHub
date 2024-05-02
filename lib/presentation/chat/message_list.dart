@@ -305,7 +305,7 @@ class _MessageListState extends State<MessageList> {
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Container(
-                  height: DeviceUtils.getScaledHeight(context, 1),
+                  // height: DeviceUtils.getScaledHeight(context, 1),
                   child: Column(
                     children: [
                       Container(
