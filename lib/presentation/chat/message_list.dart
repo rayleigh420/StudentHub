@@ -3,10 +3,14 @@ import 'dart:developer';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/message/interview.dart';
+import 'package:boilerplate/domain/entity/notification/message_noti.dart';
 import 'package:boilerplate/domain/entity/notification/notification.dart';
+import 'package:boilerplate/notification_service.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/chat/message_project_item.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:boilerplate/presentation/chat/store/notification_store.dart';
 
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
@@ -29,6 +33,8 @@ class _MessageListState extends State<MessageList> {
   final _messageStore = getIt<MessageStore>();
   final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
   final ProfileStore _profileStore = getIt<ProfileStore>();
+  final NotificationStore _notificationStore = getIt<NotificationStore>();
+
   late List<Socket> _socketClientList = [];
   // late int myId = -1;+
 
@@ -37,6 +43,7 @@ class _MessageListState extends State<MessageList> {
     super.initState();
     // _connectSockets();
     // _loadId();
+    this._initSocket2();
     this._initSocket();
   }
 
@@ -47,6 +54,52 @@ class _MessageListState extends State<MessageList> {
       element.disconnect();
     });
     super.dispose();
+  }
+
+  void _initSocket2() {
+    final token = _profileStore.token;
+    final socket = io(
+        Endpoints.baseUrl,
+        OptionBuilder()
+            .setTransports(['websocket'])
+            .enableForceNewConnection()
+            .disableAutoConnect()
+            .build());
+    socket.io.options?['extraHeaders'] = {
+      'Authorization': 'Bearer ${token}',
+    };
+    socket.connect();
+    socket.onConnect((data) {
+      log("Connected to user socket");
+    });
+
+    socket.onDisconnect((data) => {
+          print('Disconnected'),
+        });
+    socket.onConnectError((data) => print('$data'));
+    socket.onError((data) => print(data));
+
+    socket.on("NOTI_${_profileStore.profile!.id}", (data) {
+      dynamic msg = data;
+      Noti notification = Noti(
+          id: msg['notification']['id'],
+          title: msg['notification']['title'],
+          content: msg['notification']['content'],
+          createdAt: DateTime.parse(msg['notification']['createdAt']),
+          notifyFlag: msg['notification']['notifyFlag'],
+          typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+          messageNoti: MessageNoti.fromJson(msg['notification']['message']));
+      if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+        _notificationStore.addNotification(notification);
+        NotificationService().showNotification(
+            title: notification.title, body: notification.content);
+      }
+      log(notification.toJson().toString());
+    });
+
+    socket.on("ERROR", (data) => print(data));
+
+    _socketClientList.add(socket);
   }
 
   void _initSocket() {
@@ -87,34 +140,48 @@ class _MessageListState extends State<MessageList> {
 
           socket.on("RECEIVE_MESSAGE", (data) {
             log("NOTI FOR RECEIVE_MESSAGE");
-            dynamic msg = data;
-            Noti notification = Noti(
-                id: msg['notification']['id'],
-                title: msg['notification']['title'],
-                content: msg['notification']['content'],
-                createdAt: DateTime.parse(msg['notification']['createdAt']),
-                notifyFlag: msg['notification']['notifyFlag'],
-                typeNotifyFlag: msg['notification']['typeNotifyFlag']);
-            log(notification.toJson().toString());
+            // dynamic msg = data;
+            // Noti notification = Noti(
+            //     id: msg['notification']['id'],
+            //     title: msg['notification']['title'],
+            //     content: msg['notification']['content'],
+            //     createdAt: DateTime.parse(msg['notification']['createdAt']),
+            //     notifyFlag: msg['notification']['notifyFlag'],
+            //     typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+            //     messageNoti:
+            //         MessageNoti.fromJson(msg['notification']['message']));
+            // if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+            //   _notificationStore.addNotification(notification);
+            //   NotificationService().showNotification(
+            //       title: notification.title, body: notification.content);
+            // }
+            // log(notification.toJson().toString());
             // _messageStore.receiveMessage(msg);
           });
-          socket.on(
-              "NOTI_${_profileStore.profile!.id}",
-              (data) => {
-                    log("NOTI_${_profileStore.profile!.id}"),
-                    log(data.toString())
-                  });
+          // socket.on(
+          //     "NOTI_${_profileStore.profile!.id}",
+          //     (data) => {
+          //           log("NOTI_${_profileStore.profile!.id}"),
+          //           log(data.toString())
+          //         });
           socket.on('RECEIVE_INTERVIEW', (data) {
             log("NOTI FOR RECEIVE_INTERVIEW");
             dynamic msg = data;
             Noti notification = Noti(
-                id: msg['notification']['id'],
-                title: msg['notification']['title'],
-                content: msg['notification']['content'],
-                createdAt: DateTime.parse(msg['notification']['createdAt']),
-                notifyFlag: msg['notification']['notifyFlag'],
-                typeNotifyFlag: msg['notification']['typeNotifyFlag']);
-            log(notification.toJson().toString());
+              id: msg['notification']['id'],
+              title: msg['notification']['title'],
+              content: msg['notification']['content'],
+              createdAt: DateTime.parse(msg['notification']['createdAt']),
+              notifyFlag: msg['notification']['notifyFlag'],
+              typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+              messageNoti: MessageNoti.fromJson(msg['notification']['message']),
+            );
+            // if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+            //   _notificationStore.addNotification(notification);
+            //   NotificationService().showNotification(
+            //       title: notification.title, body: notification.content);
+            // }
+            // log(notification.toJson().toString());
           });
           socket.on("ERROR", (data) => print(data));
 
@@ -122,11 +189,6 @@ class _MessageListState extends State<MessageList> {
         });
       }
     }
-  }
-
-  void handleReceiveMessageCompany(dynamic msg) {
-    log("RECEIVE_MESSAGE");
-    log(msg.toString());
   }
 
   void _initSocketClient() {
@@ -161,10 +223,49 @@ class _MessageListState extends State<MessageList> {
         socket.onError((data) => print(data));
 
         socket.on("RECEIVE_MESSAGE", (data) {
-          log("RECEIVE_MESSAGE");
-          dynamic msg = data['notification']['message'];
-          msg['projectId'] = element.id;
-          log(msg.toString());
+          log("NOTI FOR RECEIVE_MESSAGE");
+          dynamic msg = data;
+          Noti notification = Noti(
+              id: msg['notification']['id'],
+              title: msg['notification']['title'],
+              content: msg['notification']['content'],
+              createdAt: DateTime.parse(msg['notification']['createdAt']),
+              notifyFlag: msg['notification']['notifyFlag'],
+              typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+              messageNoti:
+                  MessageNoti.fromJson(msg['notification']['message']));
+          if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+            _notificationStore.addNotification(notification);
+            NotificationService().showNotification(
+                title: notification.title, body: notification.content);
+          }
+          log(notification.toJson().toString());
+        });
+
+        // socket.on(
+        //     "NOTI_${_profileStore.profile!.id}",
+        //     (data) => {
+        //           log("NOTI_${_profileStore.profile!.id}"),
+        //           log(data.toString())
+        //         });
+        socket.on('RECEIVE_INTERVIEW', (data) {
+          log("NOTI FOR RECEIVE_INTERVIEW");
+          dynamic msg = data;
+          Noti notification = Noti(
+            id: msg['notification']['id'],
+            title: msg['notification']['title'],
+            content: msg['notification']['content'],
+            createdAt: DateTime.parse(msg['notification']['createdAt']),
+            notifyFlag: msg['notification']['notifyFlag'],
+            typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+            messageNoti: MessageNoti.fromJson(msg['notification']['message']),
+          );
+          if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+            _notificationStore.addNotification(notification);
+            NotificationService().showNotification(
+                title: notification.title, body: notification.content);
+          }
+          log(notification.toJson().toString());
         });
 
         socket.on("ERROR", (data) => print(data));

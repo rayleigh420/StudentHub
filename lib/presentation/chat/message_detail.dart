@@ -188,7 +188,7 @@ class _MessageDetailState extends State<MessageDetail> {
 
   void newMessage(String content) {
     Message newmesage = Message(
-        id: messages.last.id + 1,
+        id: -1,
         content: content,
         sender: me,
         receiver: other,
