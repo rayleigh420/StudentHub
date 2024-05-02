@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
+import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,9 +12,11 @@ import 'package:flutter/material.dart';
 // }
 
 class ScheduleItemChat extends StatefulWidget {
+  final Interview interview;
   final isCancelled;
   final int? type;
-  const ScheduleItemChat({super.key, this.type, this.isCancelled});
+  const ScheduleItemChat(
+      {super.key, this.type, this.isCancelled, required this.interview});
 
   @override
   State<ScheduleItemChat> createState() => _ScheduleItemChatState();
@@ -102,14 +105,17 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Catchup meeting",
+                  widget.interview.title,
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
                 Text(
-                  "60 minutes",
+                  getTimeDifference(widget.interview.startTime,
+                              widget.interview.endTime)
+                          .toString() +
+                      " minutes",
                   style: TextStyle(fontSize: 13, color: Colors.grey),
                 ),
               ],
@@ -118,14 +124,14 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
               height: 10,
             ),
             Text(
-              "Start time: Thursday 13/3/2024 15:00",
+              "Start time: " + formatDateTime(widget.interview.startTime),
               style: TextStyle(fontSize: 13),
             ),
             SizedBox(
               height: 10,
             ),
             Text(
-              "End time: Thursday 13/3/2024 16:00",
+              "End time: " + formatDateTime(widget.interview.endTime),
               style: TextStyle(fontSize: 13),
             ),
             SizedBox(
@@ -166,4 +172,12 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
       ),
     );
   }
+}
+
+int getTimeDifference(DateTime startTime, DateTime endTime) {
+  return endTime.difference(startTime).inMinutes;
+}
+
+String formatDateTime(DateTime date) {
+  return "${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute}";
 }

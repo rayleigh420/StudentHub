@@ -185,6 +185,7 @@ abstract class _MessageStore with Store {
         sender: MessageUser(id: msg['senderId'], fullname: ''),
         receiver: MessageUser(id: msg['receiverId'], fullname: ''),
         createdAt: DateTime.now(),
+        interview: null,
       );
       messages![index].messages.messages.add(newMessage);
 

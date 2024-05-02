@@ -5,6 +5,7 @@ import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 
 import 'package:boilerplate/domain/entity/message/message_user.dart';
@@ -14,6 +15,7 @@ import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -55,8 +57,8 @@ class _MessageDetailState extends State<MessageDetail> {
 
   @override
   void dispose() {
-    // socket.disconnect();
-    // socket.dispose();
+    socket.disconnect();
+    socket.dispose();
     super.dispose();
     // print("dispose detail message");
   }
@@ -69,6 +71,7 @@ class _MessageDetailState extends State<MessageDetail> {
         Endpoints.baseUrl,
         OptionBuilder()
             .setTransports(['websocket'])
+            .enableForceNewConnection()
             // .setExtraHeaders({'Authorization': 'Bearer $token'})
             .disableAutoConnect()
             .build());
@@ -99,13 +102,54 @@ class _MessageDetailState extends State<MessageDetail> {
       dynamic msg = data['notification']['message'];
       msg['projectId'] = widget.projectId;
       Message message = Message.fromJson({
-        "id": messages.last.id + 1,
+        "id": msg['id'],
         "content": msg['content'],
         "sender": {"id": msg['senderId'], "fullname": ""},
         "receiver": {"id": msg['receiverId'], "fullname": ""},
         "messageFlag": msg['messageFlag'],
-        "createdAt": DateTime.now().toString()
+        "createdAt": DateTime.now().toString(),
+        "interview": null
       });
+
+      setState(() {
+        messages.add(message);
+      });
+    });
+
+    socket.on("RECEIVE_INTERVIEW", (data) {
+      log("RECEIVE_INTERVIEW");
+      dynamic msg = data['notification']['message'];
+      dynamic interview = data['notification']['interview'];
+      dynamic meetingRoom = data['notification']['meetingRoom'];
+      dynamic sender = data['notification']['sender'];
+      dynamic receiver = data['notification']['receiver'];
+
+      Message message = Message.fromJson({
+        "id": messages.last.id + 1,
+        "content": msg['content'],
+        "sender": {"id": msg['senderId'], "fullname": sender['fullname']},
+        "receiver": {"id": msg['receiverId'], "fullname": receiver['fullname']},
+        "messageFlag": msg['messageFlag'],
+        "createdAt": DateTime.now().toString(),
+        "interview": Interview.fromJson({
+          "id": interview['id'],
+          "title": interview['title'],
+          "startTime": interview['startTime'],
+          "endTime": interview['endTime'],
+          "disableFlag": interview['disableFlag'],
+          "meetingRoomId": interview['meetingRoomId'],
+          "meetingRoom": {
+            "id": meetingRoom['id'],
+            "createdAt": meetingRoom['createdAt'],
+            "updatedAt": meetingRoom['updatedAt'],
+            "deletedAt": meetingRoom['deletedAt'],
+            "meetingRoomCode": meetingRoom['meetingRoomCode'],
+            "meetingRoomId": meetingRoom['meetingRoomId'],
+            "expiredAt": meetingRoom['expiredAt'],
+          }
+        })
+      });
+
       setState(() {
         messages.add(message);
       });
@@ -139,7 +183,7 @@ class _MessageDetailState extends State<MessageDetail> {
         other = _messageStore.messageList![index].sender;
       });
     }
-    // _connectSocket();
+    _connectSocket();
   }
 
   void newMessage(String content) {
@@ -148,7 +192,8 @@ class _MessageDetailState extends State<MessageDetail> {
         content: content,
         sender: me,
         receiver: other,
-        createdAt: DateTime.now());
+        createdAt: DateTime.now(),
+        interview: null);
     socket.emit("SEND_MESSAGE", {
       "content": newmesage.content,
       "senderId": newmesage.sender.id,
@@ -156,25 +201,18 @@ class _MessageDetailState extends State<MessageDetail> {
       "projectId": widget.projectId,
       "messageFlag": 0
     });
-    // socket.sendMessage(newmesage);
-
-    // setState(() {
-    //   messageProject.messages.add(newmesage);
-    // });
-    // scrollToBottom();
   }
 
   void newSchedule(String content) {
-    Message newmesage = Message(
-      id: messages.last.id + 1,
-      content: content,
-      sender: me,
-      receiver: other,
-      createdAt: DateTime.now(),
-    );
-    // socket.sendMessage(newmesage);
-    setState(() {
-      messages.add(newmesage);
+    socket.emit("SCHEDULE_INTERVIEW", {
+      "title": "Meeting",
+      "startTime": DateTime.now().toString(),
+      "endTime": DateTime.now().toString(),
+      "projectId": widget.projectId,
+      "senderId": me.id,
+      "receiverId": other.id,
+      "meeting_room_code": "abcde",
+      "meeting_room_id": "abcdf"
     });
   }
 
@@ -294,39 +332,53 @@ class _MessageDetailState extends State<MessageDetail> {
 
     return _messageStore.loading
         ? Center(child: CupertinoActivityIndicator())
-        : Column(
-            children: [
-              ListView.builder(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _messageStore.messages![i].messages.messages.length,
-                itemBuilder: (context, index) {
-                  if (_messageStore
-                          .messages![i].messages.messages[index].sender.id !=
-                      me.id) {
-                    if (_messageStore
-                            .messages![i].messages.messages[index].interview ==
-                        null) {
-                      return buildMessageFrom(context,
-                          _messageStore.messages![i].messages.messages[index]);
-                    } else
-                      return buildMessageSchedule(context, "12:00 AM", "Luis",
-                          "assets/images/student.png");
-                  } else {
-                    if (_messageStore
-                            .messages![i].messages.messages[index].interview ==
-                        null) {
-                      return buildMessageTo(context,
-                          _messageStore.messages![i].messages.messages[index]);
-                    }
-                    return buildMessageScheduleTo(context, "12:00 AM", "Luis",
-                        "assets/images/student.png");
-                  }
-                },
-              )
-            ],
+        : Observer(
+            builder: (context) {
+              return Column(
+                children: [
+                  ListView.builder(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount:
+                        _messageStore.messages![i].messages.messages.length,
+                    itemBuilder: (context, index) {
+                      if (_messageStore.messages![i].messages.messages[index]
+                              .sender.id !=
+                          me.id) {
+                        if (_messageStore.messages![i].messages.messages[index]
+                                .interview ==
+                            null) {
+                          return buildMessageFrom(
+                              context,
+                              _messageStore
+                                  .messages![i].messages.messages[index]);
+                        } else
+                          return buildMessageSchedule(
+                              context,
+                              _messageStore
+                                  .messages![i].messages.messages[index],
+                              "assets/images/student.png");
+                      } else {
+                        if (_messageStore.messages![i].messages.messages[index]
+                                .interview ==
+                            null) {
+                          return buildMessageTo(
+                              context,
+                              _messageStore
+                                  .messages![i].messages.messages[index]);
+                        }
+                        return buildMessageScheduleTo(
+                            context,
+                            _messageStore.messages![i].messages.messages[index],
+                            "assets/images/student.png");
+                      }
+                    },
+                  )
+                ],
+              );
+            },
           );
   }
 
@@ -378,86 +430,27 @@ class _MessageDetailState extends State<MessageDetail> {
         ));
   }
 
-  Widget buildMessage(BuildContext context, String message, String time,
-      String name, String avatarUrl) {
-    return Container(
-        padding: EdgeInsets.all(10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                  padding: EdgeInsets.all(10),
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    backgroundImage: AssetImage(avatarUrl),
-                  )),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                              child: Text(
-                            name,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          )),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Container(
-                              child: Text(
-                            time,
-                            style: TextStyle(fontSize: 15),
-                          )),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      message,
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )
-        ]));
-  }
-
   Widget buildMessageSchedule(
-      BuildContext context, String time, String name, String avatarUrl) {
+      BuildContext context, Message message, String avatarUrl) {
     return Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.all(10),
         // width: DeviceUtils.getScaledWidth(context, 0.5),
         child: ScheduleItemChat(
+          interview: message.interview!,
           isCancelled: false,
           type: 0,
         ));
   }
 
   Widget buildMessageScheduleTo(
-      BuildContext context, String time, String name, String avatarUrl) {
+      BuildContext context, Message message, String avatarUrl) {
     return Container(
         alignment: Alignment.centerRight,
         // width: DeviceUtils.getScaledWidth(context, 0.5),
         padding: EdgeInsets.all(10),
         child: ScheduleItemChat(
+          interview: message.interview!,
           isCancelled: false,
           type: 0,
         ));
