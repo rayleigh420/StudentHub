@@ -74,7 +74,7 @@ class Interview {
   final DateTime endTime;
   final int disableFlag;
   final int meetingRoomId;
-  final MeetingRoom meetingRoom;
+  MeetingRoom? meetingRoom;
   Interview({
     required this.id,
     required this.createdAt,
@@ -99,7 +99,9 @@ class Interview {
       endTime: DateTime.parse(map['endTime']),
       disableFlag: map['disableFlag'],
       meetingRoomId: map['meetingRoomId'],
-      meetingRoom: MeetingRoom.fromJson(map['meetingRoom']),
+      meetingRoom: map['meetingRoom'] == null
+          ? null
+          : MeetingRoom.fromJson(map['meetingRoom']),
     );
   }
 
@@ -114,7 +116,7 @@ class Interview {
       'endTime': endTime.toIso8601String(),
       'disableFlag': disableFlag,
       'meetingRoomId': meetingRoomId,
-      'meetingRoom': meetingRoom.toJson(),
+      'meetingRoom': meetingRoom?.toJson(),
     };
   }
 }

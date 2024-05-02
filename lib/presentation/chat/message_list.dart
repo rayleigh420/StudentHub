@@ -4,8 +4,10 @@ import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/interview.dart';
+import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/domain/entity/notification/message_noti.dart';
 import 'package:boilerplate/domain/entity/notification/notification.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/notification_service.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/chat/message_project_item.dart';
@@ -30,7 +32,7 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   // final SocketStore _socketStore = getIt<SocketStore>();
 
-  final _messageStore = getIt<MessageStore>();
+  final MessageStore _messageStore = getIt<MessageStore>();
   final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
   final ProfileStore _profileStore = getIt<ProfileStore>();
   final NotificationStore _notificationStore = getIt<NotificationStore>();
@@ -89,6 +91,17 @@ class _MessageListState extends State<MessageList> {
           notifyFlag: msg['notification']['notifyFlag'],
           typeNotifyFlag: msg['notification']['typeNotifyFlag'],
           messageNoti: MessageNoti.fromJson(msg['notification']['message']));
+      int index = _messageStore.newMessageListItem(
+          MessageUser(
+              id: msg['notification']['sender']['id'],
+              fullname: msg['notification']['sender']['fullname']),
+          MessageUser(
+              id: msg['notification']['receiver']['id'],
+              fullname: msg['notification']['receiver']['fullname']),
+          Project(
+            id: msg['notification']['message']['projectId'],
+            projectId: msg['notification']['message']['projectId'],
+          ));
       if (msg['notification']['senderId'] != _profileStore.profile!.id) {
         _notificationStore.addNotification(notification);
         NotificationService().showNotification(

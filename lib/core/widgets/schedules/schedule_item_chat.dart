@@ -52,8 +52,8 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                         backgroundColor: Colors.transparent,
                         builder: (context) {
                           return ScheduleMeetingModal(
-                            newSchedule: () {
-                              print("hello");
+                            newSchedule: (data) {
+                              log(data.toString());
                             },
                           );
                         },
