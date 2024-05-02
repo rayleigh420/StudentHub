@@ -77,12 +77,12 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   }
 
   void filterProject() {
-    final matchingProjects = _projectStore.projects!.projects!
+    final matchingProjects = _projectStore.projects?.projects!
         .where((project) =>
             _proposals.any((proposal) => proposal.projectId == project.id))
         .toList();
     setState(() {
-      _projects = matchingProjects;
+      _projects = matchingProjects ?? [];
     });
     print("Filter success");
   }

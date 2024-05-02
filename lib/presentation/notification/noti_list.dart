@@ -124,16 +124,15 @@ class _NotiListState extends State<NotiList> {
               height: 10,
             ),
             if (noti.notifyFlag == "0")
-                Center(
-                  
-
-                  child: ElevatedButton(
-                    onPressed: () {
-                            // Handle button press
-                          },
-                          child: Text('Agree'),
-                        ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    _updateProposalUseCase.call(
+                        params: UpdateProposalParam(1, "coverLetter", 3));
+                  },
+                  child: Text('Agree'),
                 ),
+              ),
             Divider(
               color: Colors.black,
               thickness: 1,
