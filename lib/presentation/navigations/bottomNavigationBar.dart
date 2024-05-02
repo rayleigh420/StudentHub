@@ -80,6 +80,7 @@
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -125,7 +126,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   final ProfileStore _profileStore = getIt<ProfileStore>();
   final ProjectStore _projectStore = getIt<ProjectStore>();
   final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
-
+  final TabStore _tabStore = getIt<TabStore>();
   final isLoggedIn = false;
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
@@ -206,9 +207,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   }
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    // setState(() {
+    //   _selectedIndex = index;
+    // });
+    _tabStore.setTabIndex(index);
   }
 
   @override
@@ -262,7 +264,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                               label: 'Profile',
                             ),
                           ],
-                          currentIndex: _selectedIndex,
+                          currentIndex: _tabStore.selectedIndex,
                           // selectedItemColor: Colors.blue,
                           onTap: _onItemTapped,
                         ),
