@@ -27,7 +27,7 @@ abstract class _ProfileStore with Store {
   Profile? profile;
 
   @observable
-  bool success2 = false;
+  bool success = false;
 
   @observable
   bool _fetchCompleted = false;
@@ -36,7 +36,7 @@ abstract class _ProfileStore with Store {
   String token = "";
 
   @computed
-  bool get success => _fetchCompleted == true;
+  bool get success2 => _fetchCompleted == true;
 
   @computed
   bool get loading => fetchProfileFuture.status == FutureStatus.pending;
@@ -54,7 +54,7 @@ abstract class _ProfileStore with Store {
       this.profile = profile;
       _fetchCompleted = true;
       token = tk!;
-      // success = true;
+      success = true;
     }).catchError((error) {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
