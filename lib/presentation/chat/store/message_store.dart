@@ -155,14 +155,14 @@ abstract class _MessageStore with Store {
           project: project);
       log("newMessageListItem: " + newMessageListItem.toJson().toString());
       final List<Message> emptyMessage = [];
-      messages?.add(ObservableMessages(
+      messages.add(ObservableMessages(
           messages: Messages(
               messages: emptyMessage,
               projectId: project.id!,
               receiverId: receiver.id,
               senderId: sender.id)));
-      messageList!.add(newMessageListItem);
-      return messageList!.length - 1;
+      messageList.add(newMessageListItem);
+      return messageList.length - 1;
     }
     return index;
   }
@@ -188,6 +188,7 @@ abstract class _MessageStore with Store {
         receiver: MessageUser(id: msg['receiverId'], fullname: ''),
         createdAt: DateTime.now(),
         interview: null,
+        messageFlag: msg['messageFlag'],
       );
       messages![index].messages.messages.add(newMessage);
 
