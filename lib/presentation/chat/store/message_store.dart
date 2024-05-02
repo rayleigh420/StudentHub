@@ -86,6 +86,10 @@ abstract class _MessageStore with Store {
     fetchMessageFuture = ObservableFuture(getAllMessageFuture);
 
     getAllMessageFuture.then((item) {
+      if (item.length == 0) {
+        success = true;
+        return;
+      }
       messageList.addAll(item);
       List<Future> futures = [];
       messageList!.forEach((element) {
@@ -106,7 +110,7 @@ abstract class _MessageStore with Store {
                   senderId: element.sender.id)));
 
           log("value nè: " + value[0].toJson().toString());
-          if (messages.length == messageList!.length) {
+          if (messages.length == messageList.length) {
             success = true;
           }
         });

@@ -9,11 +9,11 @@ part of 'profile_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ProfileStore on _ProfileStore, Store {
-  Computed<bool>? _$successComputed;
+  Computed<bool>? _$success2Computed;
 
   @override
-  bool get success => (_$successComputed ??=
-          Computed<bool>(() => super.success, name: '_ProfileStore.success'))
+  bool get success2 => (_$success2Computed ??=
+          Computed<bool>(() => super.success2, name: '_ProfileStore.success2'))
       .value;
   Computed<bool>? _$loadingComputed;
 
@@ -61,19 +61,19 @@ mixin _$ProfileStore on _ProfileStore, Store {
     });
   }
 
-  late final _$success2Atom =
-      Atom(name: '_ProfileStore.success2', context: context);
+  late final _$successAtom =
+      Atom(name: '_ProfileStore.success', context: context);
 
   @override
-  bool get success2 {
-    _$success2Atom.reportRead();
-    return super.success2;
+  bool get success {
+    _$successAtom.reportRead();
+    return super.success;
   }
 
   @override
-  set success2(bool value) {
-    _$success2Atom.reportWrite(value, super.success2, () {
-      super.success2 = value;
+  set success(bool value) {
+    _$successAtom.reportWrite(value, super.success, () {
+      super.success = value;
     });
   }
 
@@ -121,9 +121,9 @@ mixin _$ProfileStore on _ProfileStore, Store {
     return '''
 fetchProfileFuture: ${fetchProfileFuture},
 profile: ${profile},
-success2: ${success2},
-token: ${token},
 success: ${success},
+token: ${token},
+success2: ${success2},
 loading: ${loading},
 userRole: ${userRole}
     ''';
