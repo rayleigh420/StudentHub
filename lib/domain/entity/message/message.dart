@@ -1,3 +1,4 @@
+import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 
 class Message {
@@ -6,14 +7,14 @@ class Message {
   final MessageUser receiver;
   final DateTime createdAt;
   final String content;
-  final dynamic interview;
+  final Interview? interview;
   Message(
       {required this.id,
       required this.content,
       required this.sender,
       required this.receiver,
       required this.createdAt,
-      this.interview});
+      required this.interview});
 
   factory Message.fromJson(Map<String, dynamic> map) {
     return Message(
@@ -22,6 +23,9 @@ class Message {
       sender: MessageUser.fromJson(map['sender']),
       receiver: MessageUser.fromJson(map['receiver']),
       createdAt: DateTime.parse(map['createdAt']),
+      interview: map['interview'] == null
+          ? null
+          : Interview.fromJson(map['interview']),
     );
   }
 
@@ -32,6 +36,7 @@ class Message {
       'createdAt': createdAt.toIso8601String(),
       'sender': sender.toJson(),
       'receiver': receiver.toJson(),
+      'interview': interview?.toJson(),
     };
   }
 }
