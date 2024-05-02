@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/notification/notification.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/chat/message_project_item.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
@@ -85,12 +86,36 @@ class _MessageListState extends State<MessageList> {
           socket.onError((data) => print(data));
 
           socket.on("RECEIVE_MESSAGE", (data) {
-            log("RECEIVE_MESSAGE");
-            dynamic msg = data['notification']['message'];
-            msg['projectId'] = element.id;
-            log(msg.toString());
+            log("NOTI FOR RECEIVE_MESSAGE");
+            dynamic msg = data;
+            Noti notification = Noti(
+                id: msg['notification']['id'],
+                title: msg['notification']['title'],
+                content: msg['notification']['content'],
+                createdAt: DateTime.parse(msg['notification']['createdAt']),
+                notifyFlag: msg['notification']['notifyFlag'],
+                typeNotifyFlag: msg['notification']['typeNotifyFlag']);
+            log(notification.toJson().toString());
+            // _messageStore.receiveMessage(msg);
           });
-
+          socket.on(
+              "NOTI_${_profileStore.profile!.id}",
+              (data) => {
+                    log("NOTI_${_profileStore.profile!.id}"),
+                    log(data.toString())
+                  });
+          socket.on('RECEIVE_INTERVIEW', (data) {
+            log("NOTI FOR RECEIVE_INTERVIEW");
+            dynamic msg = data;
+            Noti notification = Noti(
+                id: msg['notification']['id'],
+                title: msg['notification']['title'],
+                content: msg['notification']['content'],
+                createdAt: DateTime.parse(msg['notification']['createdAt']),
+                notifyFlag: msg['notification']['notifyFlag'],
+                typeNotifyFlag: msg['notification']['typeNotifyFlag']);
+            log(notification.toJson().toString());
+          });
           socket.on("ERROR", (data) => print(data));
 
           _socketClientList.add(socket);
@@ -99,10 +124,9 @@ class _MessageListState extends State<MessageList> {
     }
   }
 
-  void handleReceiveMessageCompany(dynamic msg){
+  void handleReceiveMessageCompany(dynamic msg) {
     log("RECEIVE_MESSAGE");
     log(msg.toString());
-    
   }
 
   void _initSocketClient() {
