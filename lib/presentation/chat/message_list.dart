@@ -44,7 +44,7 @@ class _MessageListState extends State<MessageList> {
     // _connectSockets();
     // _loadId();
     this._initSocket2();
-    this._initSocket();
+    //this._initSocket();
   }
 
   @override

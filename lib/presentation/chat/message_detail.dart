@@ -193,7 +193,9 @@ class _MessageDetailState extends State<MessageDetail> {
         sender: me,
         receiver: other,
         createdAt: DateTime.now(),
-        interview: null);
+        interview: null)
+        ;
+        log(newmesage.toJson().toString());
     socket.emit("SEND_MESSAGE", {
       "content": newmesage.content,
       "senderId": newmesage.sender.id,
