@@ -121,7 +121,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                                     id: _profileStore.profile!.id,
                                     fullname: _profileStore.profile!.fullname),
                                 MessageUser(
-                                    id: widget.itemProposal!.student!.id,
+                                    id: widget.itemProposal!.student!.userId,
                                     fullname: widget.itemProposal!.student!
                                             .user!.fullname ??
                                         ""),
@@ -138,7 +138,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                                           index: index,
                                           projectId: widget.project.id!,
                                           receiverId:
-                                              widget.itemProposal!.student!.id,
+                                              widget.itemProposal!.student!.userId,
                                           senderId: _profileStore.profile!.id,
                                         ),
                                     maintainState: true));
