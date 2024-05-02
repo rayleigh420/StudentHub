@@ -4,7 +4,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> map) {
     return User(
-      fullname: map['fullname'],
+      fullname: map['fullname'] == null ? null : map['fullname'] as String?,
     );
   }
 

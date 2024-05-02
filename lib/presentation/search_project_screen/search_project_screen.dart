@@ -33,43 +33,6 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
 
   ThemeStore _themeStore = getIt<ThemeStore>();
 
-  final data = {
-    "title": "Senior frontend developer (Fintech)",
-    "props": [
-      "Students are looking for",
-      "Clear expectation about your project or deliverables",
-      "React",
-      "Redux",
-      "TypeScript",
-      "GraphQL",
-      "Node.js",
-      "AWS",
-    ],
-    "scopeFrom": 1,
-    "scopeFrom2": "month",
-    "scopeTo": 3,
-    "scopeTo2": "months",
-    "quantityRequired": "6",
-    "createdDate": DateTime.now().add(Duration(days: -3)),
-    "proposal": 6
-  };
-  final projDat = Project.fromJson({
-    "id": 25,
-    "createdAt": "2024-04-08T11:10:58.223Z",
-    "updatedAt": "2024-04-08T11:10:58.223Z",
-    "deletedAt": null,
-    "companyId": "31",
-    "projectScopeFlag": 0,
-    "title": "Backend dev",
-    "description": "Node",
-    "numberOfStudents": 5,
-    "typeFlag": 0,
-    "proposals": [],
-    "countProposals": 0,
-    "countMessages": 0,
-    "countHired": 0
-  });
-
   void searchProject(ProjectList result) {
     setState(() {
       projects = result.projects!;
