@@ -121,6 +121,22 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
+  late final _$doneReloadingAtom =
+      Atom(name: '_MessageStore.doneReloading', context: context);
+
+  @override
+  bool get doneReloading {
+    _$doneReloadingAtom.reportRead();
+    return super.doneReloading;
+  }
+
+  @override
+  set doneReloading(bool value) {
+    _$doneReloadingAtom.reportWrite(value, super.doneReloading, () {
+      super.doneReloading = value;
+    });
+  }
+
   late final _$successMessagesAtom =
       Atom(name: '_MessageStore.successMessages', context: context);
 
@@ -213,6 +229,7 @@ completedMessageLists: ${completedMessageLists},
 messages: ${messages},
 messageList: ${messageList},
 success: ${success},
+doneReloading: ${doneReloading},
 successMessages: ${successMessages},
 loading: ${loading},
 loadingMessageList: ${loadingMessageList}
