@@ -26,7 +26,7 @@ class WelcomeCompany extends StatelessWidget {
               child: const Text(
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
-                  "Welcome, Hai!"),
+                  "Welcome!"),
             ),
             Container(
               margin: const EdgeInsets.all(0),
@@ -49,7 +49,7 @@ class WelcomeCompany extends StatelessWidget {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                           builder: (context) => AppBottomNavigationBar(
-                                selectedIndex: 0,
+                                selectedIndex: 1,
                               )),
                     );
                     ;
