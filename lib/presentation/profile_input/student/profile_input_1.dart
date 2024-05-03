@@ -783,7 +783,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
               log("push");
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
-                return const ResumeUpload();
+                return const ProfileInput2();
               }));
             },
             child: Text("Next",
