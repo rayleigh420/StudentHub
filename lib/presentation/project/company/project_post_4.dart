@@ -149,12 +149,11 @@ class _ProjectPost4State extends State<ProjectPost4> {
                               widget.scopeType!,
                               widget.studentNumber!,
                               widget.describeProject!);
-                          Navigator.of(context, rootNavigator: true)
+                          Navigator.of(context)
                               .pushReplacement(MaterialPageRoute(
                                   builder: (context) => AppBottomNavigationBar(
                                         selectedIndex: 2,
-                                      ),
-                                  maintainState: true));
+                                      )));
                         },
                         child: const Text(
                             style: TextStyle(fontSize: 16), "Post job")),
