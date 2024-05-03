@@ -23,6 +23,7 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   GetProposalsStudentUseCase _getProposalsStudentUseCase =
       getIt<GetProposalsStudentUseCase>();
   final ProjectStore _projectStore = getIt<ProjectStore>();
+  final Map<int, int> offer = {};
 
   int selectedIndex = 0;
 
@@ -77,6 +78,9 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   }
 
   void filterProject() {
+    _proposals.forEach((proposal) => proposal.statusFlag == 2
+        ? offer[proposal.projectId] = proposal.id
+        : {});
     final matchingProjects = _projectStore.projects?.projects!
         .where((project) =>
             _proposals.any((proposal) => proposal.projectId == project.id))
@@ -100,7 +104,7 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                 physics: BouncingScrollPhysics(),
                 child: Container(
                     padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
-                    height: DeviceUtils.getScaledHeight(context, 1),
+                    // height: DeviceUtils.getScaledHeight(context, 1),
                     child: Column(
                       children: [
                         Row(
@@ -145,6 +149,7 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                             ..._projects
                                 .toList()
                                 .map((project) => SubmitedProjectItem(
+                                      offer: offer[project.id] ?? null,
                                       projDat: project,
                                     ))
                           else if (selectedIndex == 1)

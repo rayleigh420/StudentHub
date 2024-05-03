@@ -1,6 +1,7 @@
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 // import 'package:boilerplate/domain/entity/project/project.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/project/student/submit_project.dart';
@@ -9,8 +10,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ProjectModal extends StatefulWidget {
+  final bool? apply;
+  final int? offer;
   Project project;
-  ProjectModal({super.key, required this.project});
+  ProjectModal(
+      {super.key, required this.project, this.apply = false, this.offer});
   @override
   State<ProjectModal> createState() => _ProjectModalState();
 }
@@ -19,6 +23,8 @@ class _ProjectModalState extends State<ProjectModal> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
   AddFavoriteByStudentIdUseCase _addFavoriteByStudentIdUseCase =
       getIt<AddFavoriteByStudentIdUseCase>();
+  final UpdateProposalUseCase _updateProposalUseCase =
+      getIt<UpdateProposalUseCase>();
   @override
   void initState() {
     super.initState();
@@ -313,10 +319,20 @@ class _ProjectModalState extends State<ProjectModal> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                  builder: (context) =>
-                      SubmitProject(projectId: widget.project.id!),
-                  maintainState: true));
+              if (widget.apply == false) {
+                Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            SubmitProject(projectId: widget.project.id!),
+                        maintainState: true));
+              } else if (widget.offer != null) {
+                _updateProposalUseCase.call(
+                    params: UpdateProposalParam(widget.offer!, "Join", 3));
+                // Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+                //   builder: (context) => SubmitProject(projectId: widget.project.id!),
+                //   maintainState: true
+                // ));
+              }
             },
             child: Container(
               alignment: Alignment.center,
@@ -328,7 +344,11 @@ class _ProjectModalState extends State<ProjectModal> {
                   ),
               width: DeviceUtils.getScaledWidth(context, 0.4),
               child: Text(
-                "Apply Now",
+                widget.apply == false
+                    ? "Apply Now"
+                    : widget.offer != null
+                        ? "Join"
+                        : "Applied",
                 textAlign: TextAlign.center,
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
