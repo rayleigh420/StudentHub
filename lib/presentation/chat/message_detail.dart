@@ -101,8 +101,14 @@ class _MessageDetailState extends State<MessageDetail> {
       Message message = Message.fromJson({
         "id": msg['id'],
         "content": msg['content'],
-        "sender": {"id": msg['senderId'], "fullname": data['notification']['sender']['fullname']},
-        "receiver": {"id": msg['receiverId'], "fullname": data['notification']['receiver']['fullname']},
+        "sender": {
+          "id": msg['senderId'],
+          "fullname": data['notification']['sender']['fullname']
+        },
+        "receiver": {
+          "id": msg['receiverId'],
+          "fullname": data['notification']['receiver']['fullname']
+        },
         "messageFlag": msg['messageFlag'],
         "createdAt": DateTime.now().toString(),
         "interview": null
@@ -179,15 +185,19 @@ class _MessageDetailState extends State<MessageDetail> {
       messages = m;
     });
 
-    if (id == _messageStore.messageList![widget.index].sender.id) {
+    if (id ==
+        _messageStore.messages![widget.index].messages.messages[0].sender.id) {
       setState(() {
-        me = _messageStore.messageList![widget.index].sender;
-        other = _messageStore.messageList![widget.index].receiver;
+        me = _messageStore.messages![widget.index].messages.messages[0].sender;
+        other =
+            _messageStore.messages![widget.index].messages.messages[0].receiver;
       });
     } else {
       setState(() {
-        me = _messageStore.messageList![widget.index].receiver;
-        other = _messageStore.messageList![widget.index].sender;
+        me =
+            _messageStore.messages![widget.index].messages.messages[0].receiver;
+        other =
+            _messageStore.messages![widget.index].messages.messages[0].sender;
       });
     }
     _connectSocket();
@@ -222,8 +232,10 @@ class _MessageDetailState extends State<MessageDetail> {
       "projectId": widget.projectId,
       "senderId": me.id,
       "receiverId": other.id,
-      "meeting_room_code": "${other.id}_${me.id}_${DateTime.now()}",
-      "meeting_room_id": "${me.id}_${other.id}_${DateTime.now()}"
+      "meeting_room_code":
+          "${other.id}_${me.id}_${DateTime.now().toIso8601String()}",
+      "meeting_room_id":
+          "${me.id}_${other.id}_${DateTime.now().toIso8601String()}"
     };
     log("data nè " + msg.toString());
 
