@@ -23,22 +23,6 @@ mixin _$MessageStore on _MessageStore, Store {
               name: '_MessageStore.loadingMessageList'))
       .value;
 
-  late final _$initSocketAtom =
-      Atom(name: '_MessageStore.initSocket', context: context);
-
-  @override
-  bool get initSocket {
-    _$initSocketAtom.reportRead();
-    return super.initSocket;
-  }
-
-  @override
-  set initSocket(bool value) {
-    _$initSocketAtom.reportWrite(value, super.initSocket, () {
-      super.initSocket = value;
-    });
-  }
-
   late final _$fetchMessageFutureAtom =
       Atom(name: '_MessageStore.fetchMessageFuture', context: context);
 
@@ -72,17 +56,34 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
+  late final _$completedMessageListsAtom =
+      Atom(name: '_MessageStore.completedMessageLists', context: context);
+
+  @override
+  int get completedMessageLists {
+    _$completedMessageListsAtom.reportRead();
+    return super.completedMessageLists;
+  }
+
+  @override
+  set completedMessageLists(int value) {
+    _$completedMessageListsAtom.reportWrite(value, super.completedMessageLists,
+        () {
+      super.completedMessageLists = value;
+    });
+  }
+
   late final _$messagesAtom =
       Atom(name: '_MessageStore.messages', context: context);
 
   @override
-  List<Messages>? get messages {
+  ObservableList<ObservableMessages> get messages {
     _$messagesAtom.reportRead();
     return super.messages;
   }
 
   @override
-  set messages(List<Messages>? value) {
+  set messages(ObservableList<ObservableMessages> value) {
     _$messagesAtom.reportWrite(value, super.messages, () {
       super.messages = value;
     });
@@ -92,13 +93,13 @@ mixin _$MessageStore on _MessageStore, Store {
       Atom(name: '_MessageStore.messageList', context: context);
 
   @override
-  List<MessageListItem>? get messageList {
+  ObservableList<MessageListItem> get messageList {
     _$messageListAtom.reportRead();
     return super.messageList;
   }
 
   @override
-  set messageList(List<MessageListItem>? value) {
+  set messageList(ObservableList<MessageListItem> value) {
     _$messageListAtom.reportWrite(value, super.messageList, () {
       super.messageList = value;
     });
@@ -117,6 +118,22 @@ mixin _$MessageStore on _MessageStore, Store {
   set success(bool value) {
     _$successAtom.reportWrite(value, super.success, () {
       super.success = value;
+    });
+  }
+
+  late final _$doneReloadingAtom =
+      Atom(name: '_MessageStore.doneReloading', context: context);
+
+  @override
+  bool get doneReloading {
+    _$doneReloadingAtom.reportRead();
+    return super.doneReloading;
+  }
+
+  @override
+  set doneReloading(bool value) {
+    _$doneReloadingAtom.reportWrite(value, super.doneReloading, () {
+      super.doneReloading = value;
     });
   }
 
@@ -148,12 +165,34 @@ mixin _$MessageStore on _MessageStore, Store {
       ActionController(name: '_MessageStore', context: context);
 
   @override
-  int newMessageListItem(
-      MessageUser sender, MessageUser receiver, Project project) {
+  int getIndex(int projectId, int receiverId, int senderId) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.getIndex');
+    try {
+      return super.getIndex(projectId, receiverId, senderId);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  int newMessageListItem(MessageUser sender, MessageUser receiver,
+      Project project, Message? message) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
         name: '_MessageStore.newMessageListItem');
     try {
-      return super.newMessageListItem(sender, receiver, project);
+      return super.newMessageListItem(sender, receiver, project, message);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addNewMessageToIndex(int index, Message message) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.addNewMessageToIndex');
+    try {
+      return super.addNewMessageToIndex(index, message);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }
@@ -184,12 +223,13 @@ mixin _$MessageStore on _MessageStore, Store {
   @override
   String toString() {
     return '''
-initSocket: ${initSocket},
 fetchMessageFuture: ${fetchMessageFuture},
 fetchMessageListFuture: ${fetchMessageListFuture},
+completedMessageLists: ${completedMessageLists},
 messages: ${messages},
 messageList: ${messageList},
 success: ${success},
+doneReloading: ${doneReloading},
 successMessages: ${successMessages},
 loading: ${loading},
 loadingMessageList: ${loadingMessageList}

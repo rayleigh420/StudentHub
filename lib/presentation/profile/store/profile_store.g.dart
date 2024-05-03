@@ -9,6 +9,12 @@ part of 'profile_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ProfileStore on _ProfileStore, Store {
+  Computed<bool>? _$success2Computed;
+
+  @override
+  bool get success2 => (_$success2Computed ??=
+          Computed<bool>(() => super.success2, name: '_ProfileStore.success2'))
+      .value;
   Computed<bool>? _$loadingComputed;
 
   @override
@@ -71,6 +77,37 @@ mixin _$ProfileStore on _ProfileStore, Store {
     });
   }
 
+  late final _$_fetchCompletedAtom =
+      Atom(name: '_ProfileStore._fetchCompleted', context: context);
+
+  @override
+  bool get _fetchCompleted {
+    _$_fetchCompletedAtom.reportRead();
+    return super._fetchCompleted;
+  }
+
+  @override
+  set _fetchCompleted(bool value) {
+    _$_fetchCompletedAtom.reportWrite(value, super._fetchCompleted, () {
+      super._fetchCompleted = value;
+    });
+  }
+
+  late final _$tokenAtom = Atom(name: '_ProfileStore.token', context: context);
+
+  @override
+  String get token {
+    _$tokenAtom.reportRead();
+    return super.token;
+  }
+
+  @override
+  set token(String value) {
+    _$tokenAtom.reportWrite(value, super.token, () {
+      super.token = value;
+    });
+  }
+
   late final _$getProfileAsyncAction =
       AsyncAction('_ProfileStore.getProfile', context: context);
 
@@ -85,6 +122,8 @@ mixin _$ProfileStore on _ProfileStore, Store {
 fetchProfileFuture: ${fetchProfileFuture},
 profile: ${profile},
 success: ${success},
+token: ${token},
+success2: ${success2},
 loading: ${loading},
 userRole: ${userRole}
     ''';

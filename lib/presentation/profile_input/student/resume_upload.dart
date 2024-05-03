@@ -382,7 +382,7 @@ class _ResumeUploadState extends State<ResumeUpload> {
                   MaterialPageRoute(
                       builder: (context) => AppBottomNavigationBar(
                             // isStudent: true,
-                            selectedIndex: 0,
+                            selectedIndex: 1,
                           )),
                 );
               },

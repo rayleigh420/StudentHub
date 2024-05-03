@@ -1,6 +1,7 @@
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_logout_usecase.dart';
 import 'package:boilerplate/presentation/input_login/input_login.dart';
+import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
@@ -15,6 +16,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileStore _profileStore = getIt<ProfileStore>();
   final StudentHubLogoutUC _studentHubLogoutUC = getIt<StudentHubLogoutUC>();
+  final TabStore _tabStore = getIt<TabStore>();
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -106,10 +108,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: 'Logout',
                 onTap: () {
                   _studentHubLogoutUC.call(params: null);
-                  Navigator.of(context, rootNavigator: true)
-                      .pushReplacement(MaterialPageRoute(builder: (context) {
-                    return InputLogin();
-                  }));
+                  _tabStore.setTabIndex(1);
+                  Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => InputLogin()),
+                      (Route<dynamic> route) => false);
+                  ;
+                  // Navigator.of(context, rootNavigator: true)
+                  //     .pushReplacement(MaterialPageRoute(builder: (context) {
+                  //   return InputLogin();
+                  // }));
                   // Xử lý khi người dùng nhấn vào Logout
                 },
               ),
