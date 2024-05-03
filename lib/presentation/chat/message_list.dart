@@ -4,6 +4,7 @@ import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/interview.dart';
+import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/domain/entity/notification/message_noti.dart';
 import 'package:boilerplate/domain/entity/notification/notification.dart';
@@ -82,27 +83,76 @@ class _MessageListState extends State<MessageList> {
     socket.onError((data) => print(data));
 
     socket.on("NOTI_${_profileStore.profile!.id}", (data) {
-      dynamic msg = data;
+      dynamic noti = data;
       Noti notification = Noti(
-          id: msg['notification']['id'],
-          title: msg['notification']['title'],
-          content: msg['notification']['content'],
-          createdAt: DateTime.parse(msg['notification']['createdAt']),
-          notifyFlag: msg['notification']['notifyFlag'],
-          typeNotifyFlag: msg['notification']['typeNotifyFlag'],
-          messageNoti: MessageNoti.fromJson(msg['notification']['message']));
-      int index = _messageStore.newMessageListItem(
-          MessageUser(
-              id: msg['notification']['sender']['id'],
-              fullname: msg['notification']['sender']['fullname']),
-          MessageUser(
-              id: msg['notification']['receiver']['id'],
-              fullname: msg['notification']['receiver']['fullname']),
-          Project(
-            id: msg['notification']['message']['projectId'],
-            projectId: msg['notification']['message']['projectId'],
-          ));
-      if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+          id: noti['notification']['id'],
+          title: noti['notification']['title'],
+          content: noti['notification']['content'],
+          createdAt: DateTime.parse(noti['notification']['createdAt']),
+          notifyFlag: noti['notification']['notifyFlag'],
+          typeNotifyFlag: noti['notification']['typeNotifyFlag'],
+          messageNoti: MessageNoti.fromJson(noti['notification']['message']));
+      int index = _messageStore.getIndex(
+          noti['notification']['message']['projectId'],
+          noti['notification']['receiver']['id'],
+          noti['notification']['sender']['id']);
+      log("index ban đầu: $index");
+      if (index == -1) {
+        Message newMessage = Message(
+            id: noti['notification']['message']['id'],
+            content: noti['notification']['message']['content'],
+            createdAt:
+                DateTime.parse(noti['notification']['message']['createdAt']),
+            messageFlag: noti['notification']['message']['messageFlag'],
+            receiver: MessageUser(
+                id: noti['notification']['receiver']['id'],
+                fullname: noti['notification']['receiver']['fullname']),
+            sender: MessageUser(
+                id: noti['notification']['sender']['id'],
+                fullname: noti['notification']['sender']['fullname']),
+            interview: null);
+        if (noti['notification']['message']['messageFlag'] == 1) {
+          dynamic interview = data['notification']['interview'];
+          dynamic meetingRoom = data['notification']['meetingRoom'];
+          Interview interviewData = Interview.fromJson({
+            "id": interview['id'],
+            "title": interview['title'],
+            "createdAt": interview['createdAt'],
+            "updatedAt": interview['updatedAt'],
+            "deletedAt": interview['deletedAt'],
+            "startTime": interview['startTime'],
+            "endTime": interview['endTime'],
+            "disableFlag": interview['disableFlag'],
+            "meetingRoomId": interview['meetingRoomId'],
+          });
+          MeetingRoom meetingRoomData = MeetingRoom.fromJson({
+            "id": meetingRoom['id'],
+            "createdAt": meetingRoom['createdAt'],
+            "updatedAt": meetingRoom['updatedAt'],
+            "deletedAt": meetingRoom['deletedAt'],
+            "meeting_room_code": meetingRoom['meeting_room_code'],
+            "meeting_room_id": meetingRoom['meeting_room_id'],
+            "expired_at": meetingRoom['expired_at'],
+          });
+          interviewData.meetingRoom = meetingRoomData;
+          newMessage.interview = interviewData;
+        }
+        // _messageStore.addNewMessageToIndex(newIndex, newMessage);
+        int newIndex = _messageStore.newMessageListItem(
+            MessageUser(
+                id: noti['notification']['sender']['id'],
+                fullname: noti['notification']['sender']['fullname']),
+            MessageUser(
+                id: noti['notification']['receiver']['id'],
+                fullname: noti['notification']['receiver']['fullname']),
+            Project(
+                id: noti['notification']['message']['projectId'],
+                title:
+                    "Project id ${noti['notification']['message']['projectId']}"),
+            newMessage);
+        log("index thêm message: $newIndex");
+      }
+      if (noti['notification']['senderId'] != _profileStore.profile!.id) {
         _notificationStore.addNotification(notification);
         NotificationService().showNotification(
             title: notification.title, body: notification.content);
@@ -153,30 +203,8 @@ class _MessageListState extends State<MessageList> {
 
           socket.on("RECEIVE_MESSAGE", (data) {
             log("NOTI FOR RECEIVE_MESSAGE");
-            // dynamic msg = data;
-            // Noti notification = Noti(
-            //     id: msg['notification']['id'],
-            //     title: msg['notification']['title'],
-            //     content: msg['notification']['content'],
-            //     createdAt: DateTime.parse(msg['notification']['createdAt']),
-            //     notifyFlag: msg['notification']['notifyFlag'],
-            //     typeNotifyFlag: msg['notification']['typeNotifyFlag'],
-            //     messageNoti:
-            //         MessageNoti.fromJson(msg['notification']['message']));
-            // if (msg['notification']['senderId'] != _profileStore.profile!.id) {
-            //   _notificationStore.addNotification(notification);
-            //   NotificationService().showNotification(
-            //       title: notification.title, body: notification.content);
-            // }
-            // log(notification.toJson().toString());
-            // _messageStore.receiveMessage(msg);
           });
-          // socket.on(
-          //     "NOTI_${_profileStore.profile!.id}",
-          //     (data) => {
-          //           log("NOTI_${_profileStore.profile!.id}"),
-          //           log(data.toString())
-          //         });
+
           socket.on('RECEIVE_INTERVIEW', (data) {
             log("NOTI FOR RECEIVE_INTERVIEW");
             dynamic msg = data;
@@ -189,12 +217,6 @@ class _MessageListState extends State<MessageList> {
               typeNotifyFlag: msg['notification']['typeNotifyFlag'],
               messageNoti: MessageNoti.fromJson(msg['notification']['message']),
             );
-            // if (msg['notification']['senderId'] != _profileStore.profile!.id) {
-            //   _notificationStore.addNotification(notification);
-            //   NotificationService().showNotification(
-            //       title: notification.title, body: notification.content);
-            // }
-            // log(notification.toJson().toString());
           });
           socket.on("ERROR", (data) => print(data));
 
@@ -344,12 +366,16 @@ class _MessageListState extends State<MessageList> {
                       ),
                       ListView.builder(
                         shrinkWrap: true,
-                        itemCount: _messageStore.messageList!.length,
+                        itemCount: _messageStore.messageList.length,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
+                          final newIndex = _messageStore.getIndex(
+                              _messageStore.messageList[index].project.id!,
+                              _messageStore.messageList[index].receiver.id,
+                              _messageStore.messageList[index].sender.id);
                           return MessageProjectItem(
                             messageListItem: _messageStore.messageList![index],
-                            index: index,
+                            index: newIndex,
                           );
                         },
                       )

@@ -165,12 +165,23 @@ mixin _$MessageStore on _MessageStore, Store {
       ActionController(name: '_MessageStore', context: context);
 
   @override
-  int newMessageListItem(
-      MessageUser sender, MessageUser receiver, Project project) {
+  int newMessageListItem(MessageUser sender, MessageUser receiver,
+      Project project, Message? message) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
         name: '_MessageStore.newMessageListItem');
     try {
-      return super.newMessageListItem(sender, receiver, project);
+      return super.newMessageListItem(sender, receiver, project, message);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addNewMessageToIndex(int index, Message message) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.addNewMessageToIndex');
+    try {
+      return super.addNewMessageToIndex(index, message);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }

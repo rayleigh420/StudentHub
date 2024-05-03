@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
@@ -125,7 +127,9 @@ class _ProposalItemsState extends State<ProposalItems> {
                                     fullname: widget.itemProposal!.student!
                                             .user!.fullname ??
                                         ""),
-                                widget.project);
+                                widget.project,
+                                null);
+                            log("index moi ne: $index");
                             // Navigator.of(context).push(MaterialPageRoute(
                             //     builder: (context) => AppBottomNavigationBar(
                             //           selectedIndex: 1,
@@ -137,8 +141,8 @@ class _ProposalItemsState extends State<ProposalItems> {
                                     builder: (context) => MessageDetail(
                                           index: index,
                                           projectId: widget.project.id!,
-                                          receiverId:
-                                              widget.itemProposal!.student!.userId,
+                                          receiverId: widget
+                                              .itemProposal!.student!.userId,
                                           senderId: _profileStore.profile!.id,
                                         ),
                                     maintainState: true));

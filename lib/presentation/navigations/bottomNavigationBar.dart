@@ -206,10 +206,10 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   }
 
   void _onItemTapped(int index) {
-    // setState(() {
-    //   _selectedIndex = index;
-    // });
-    _tabStore.setTabIndex(index);
+    setState(() {
+      _selectedIndex = index;
+    });
+    // _tabStore.setTabIndex(index);
   }
 
   @override
@@ -263,7 +263,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                               label: 'Profile',
                             ),
                           ],
-                          currentIndex: _tabStore.selectedIndex,
+                          currentIndex: _selectedIndex,
                           // selectedItemColor: Colors.blue,
                           onTap: _onItemTapped,
                         ),
@@ -312,7 +312,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                                   label: 'Profile',
                                 ),
                               ],
-                              currentIndex: _tabStore.selectedIndex,
+                              currentIndex: _selectedIndex,
                               // selectedItemColor: Colors.blue,
                               onTap: _onItemTapped,
                             ),

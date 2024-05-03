@@ -142,9 +142,14 @@ abstract class _MessageStore with Store {
   }
 
   @action
-  int newMessageListItem(
-      MessageUser sender, MessageUser receiver, Project project) {
-    final index = getIndex(project.id!, sender.id, receiver.id);
+  int newMessageListItem(MessageUser sender, MessageUser receiver,
+      Project project, Message? message) {
+    final index = getIndex(
+      project.id!,
+      receiver.id,
+      sender.id,
+    );
+    log("index từ store: $index");
     if (index == -1) {
       final MessageListItem newMessageListItem = MessageListItem(
           id: 0,
@@ -155,6 +160,9 @@ abstract class _MessageStore with Store {
           project: project);
       log("newMessageListItem: " + newMessageListItem.toJson().toString());
       final List<Message> emptyMessage = [];
+      if (message != null) {
+        emptyMessage.add(message);
+      }
       messages.add(ObservableMessages(
           messages: Messages(
               messages: emptyMessage,
@@ -162,9 +170,14 @@ abstract class _MessageStore with Store {
               receiverId: receiver.id,
               senderId: sender.id)));
       messageList.add(newMessageListItem);
-      return messageList.length - 1;
+      return getIndex(project.id!, receiver.id, sender.id);
     }
     return index;
+  }
+
+  @action
+  void addNewMessageToIndex(int index, Message message) {
+    messages[index].messages.messages.add(message);
   }
 
   @action

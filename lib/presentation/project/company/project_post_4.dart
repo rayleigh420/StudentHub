@@ -150,12 +150,11 @@ class _ProjectPost4State extends State<ProjectPost4> {
                               widget.studentNumber!,
                               widget.describeProject!);
                           Navigator.of(context, rootNavigator: true)
-                              .push(MaterialPageRoute(
+                              .pushReplacement(MaterialPageRoute(
                                   builder: (context) => AppBottomNavigationBar(
-                                        // isStudent: false,
                                         selectedIndex: 2,
                                       ),
-                                  maintainState: false));
+                                  maintainState: true));
                         },
                         child: const Text(
                             style: TextStyle(fontSize: 16), "Post job")),
