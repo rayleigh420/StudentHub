@@ -1,12 +1,10 @@
 import 'dart:developer';
 
 import 'package:boilerplate/core/stores/error/error_store.dart';
-import 'package:boilerplate/data/network/socket_client_list.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_list.dart';
-import 'package:boilerplate/domain/entity/message/message_project.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/domain/entity/message/messages.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
@@ -18,30 +16,11 @@ import 'package:mobx/mobx.dart';
 
 part 'message_store.g.dart';
 
-class SenderReceiverProject {
-  final int senderId;
-  final int receiverId;
-  final int projectId;
+class ObservableMessages {
+  @observable
+  Messages messages;
 
-  SenderReceiverProject(
-      {required this.senderId,
-      required this.receiverId,
-      required this.projectId});
-
-  factory SenderReceiverProject.fromJson(Map<String, dynamic> json) {
-    return SenderReceiverProject(
-        senderId: json['senderId'],
-        receiverId: json['receiverId'],
-        projectId: json['projectId']);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'senderId': senderId,
-      'receiverId': receiverId,
-      'projectId': projectId
-    };
-  }
+  ObservableMessages({required this.messages});
 }
 
 class MessageStore = _MessageStore with _$MessageStore;
@@ -61,9 +40,6 @@ abstract class _MessageStore with Store {
       ObservableFuture.value(null);
 
   @observable
-  bool initSocket = false;
-
-  @observable
   ObservableFuture<List<MessageListItem>?> fetchMessageFuture =
       ObservableFuture<List<MessageListItem>?>(emptyMessageResponse);
 
@@ -75,19 +51,27 @@ abstract class _MessageStore with Store {
   // Map<int, List<Message>>? messages = {};
 
   @observable
-  List<Messages>? messages;
+  int completedMessageLists = 0;
 
   @observable
-  List<MessageListItem>? messageList;
+  ObservableList<ObservableMessages> messages =
+      ObservableList<ObservableMessages>();
+
+  @observable
+  ObservableList<MessageListItem> messageList =
+      ObservableList<MessageListItem>();
 
   @observable
   bool success = false;
 
   @observable
+  bool doneReloading = false;
+
+  @observable
   bool successMessages = false;
 
   @computed
-  bool get loading => fetchMessageFuture.status == FutureStatus.pending;
+  bool get loading => success == false;
 
   @computed
   bool get loadingMessageList =>
@@ -102,8 +86,16 @@ abstract class _MessageStore with Store {
     fetchMessageFuture = ObservableFuture(getAllMessageFuture);
 
     getAllMessageFuture.then((item) {
-      messageList = item;
-      messageList!.forEach((element) {
+      if (item.length == 0) {
+        success = true;
+        doneReloading = true;
+        return;
+      }
+      item.forEach((element) {
+        messageList.add(element);
+      });
+      List<Future> futures = [];
+      messageList.forEach((element) {
         final getMessageListFuture = _getProjectMessageUseCase.call(
             params: GetProjectMessageParams(
                 projectId: element.project.id!,
@@ -111,51 +103,74 @@ abstract class _MessageStore with Store {
                     ? element.sender.id
                     : element.receiver.id));
         fetchMessageListFuture = ObservableFuture(getMessageListFuture);
-
+        futures.add(getMessageListFuture);
         getMessageListFuture.then((value) {
-          if (messages == null) {
-            messages = [];
+          messages.add(ObservableMessages(
+              messages: Messages(
+                  messages: value,
+                  projectId: element.project.id!,
+                  receiverId: element.receiver.id,
+                  senderId: element.sender.id)));
+
+          log("value nè: " +
+              element.project.id!.toString() +
+              " " +
+              value[0].receiver.id.toString() +
+              " " +
+              value[0].sender.id.toString());
+          if (messages.length == messageList.length) {
+            success = true;
+            doneReloading = true;
           }
-
-          messages!.add(Messages(
-              messages: value,
-              projectId: element.project.id!,
-              receiverId: element.receiver.id,
-              senderId: element.sender.id));
-
-          log("value nè: " + value[0].toJson().toString());
         });
       });
-      log("messages 1 cout: ${messageList!.length.toString()}");
-      success = true;
+      log("message list length cout: ${messageList.length.toString()}");
+      // success = true;
     }).catchError((error) {
       errorStore.errorMessage = error.toString();
     });
   }
 
+  @action
   int getIndex(int projectId, int receiverId, int senderId) {
     int index = -1;
 
-    for (int i = 0; i < messages!.length; i++) {
-      if (messages![i].projectId == projectId) {
-        final x = messages![i].senderId == senderId &&
-            messages![i].receiverId == receiverId;
-        final y = messages![i].senderId == receiverId &&
-            messages![i].receiverId == senderId;
+    messages.forEach((element) {
+      if (element.messages.projectId == projectId) {
+        final x = element.messages.senderId == senderId &&
+            element.messages.receiverId == receiverId;
+        final y = element.messages.senderId == receiverId &&
+            element.messages.receiverId == senderId;
         if (x || y) {
-          index = i;
-          break;
+          index = messages.indexOf(element);
         }
       }
-    }
-
+    });
     return index;
+
+    // for (int i = 0; i < this.messages.length; i++) {
+    //   if (messages[i].messages.projectId == projectId) {
+    //     final x = messages[i].messages.senderId == senderId &&
+    //         messages![i].messages.receiverId == receiverId;
+    //     final y = messages![i].messages.senderId == receiverId &&
+    //         messages![i].messages.receiverId == senderId;
+    //     if (x || y) {
+    //       index = i;
+    //       break;
+    //     }
+    //   }
+    // }
   }
 
   @action
-  int newMessageListItem(
-      MessageUser sender, MessageUser receiver, Project project) {
-    final index = getIndex(project.id!, sender.id, receiver.id);
+  int newMessageListItem(MessageUser sender, MessageUser receiver,
+      Project project, Message? message) {
+    final index = getIndex(
+      project.id!,
+      receiver.id,
+      sender.id,
+    );
+    log("index từ store: $index");
     if (index == -1) {
       final MessageListItem newMessageListItem = MessageListItem(
           id: 0,
@@ -166,15 +181,24 @@ abstract class _MessageStore with Store {
           project: project);
       log("newMessageListItem: " + newMessageListItem.toJson().toString());
       final List<Message> emptyMessage = [];
-      messages?.add(Messages(
-          messages: emptyMessage,
-          projectId: project.id!,
-          receiverId: receiver.id,
-          senderId: sender.id));
-      messageList!.add(newMessageListItem);
-      return messageList!.length - 1;
+      if (message != null) {
+        emptyMessage.add(message);
+      }
+      messages.add(ObservableMessages(
+          messages: Messages(
+              messages: emptyMessage,
+              projectId: project.id!,
+              receiverId: receiver.id,
+              senderId: sender.id)));
+      messageList.add(newMessageListItem);
+      return getIndex(project.id!, receiver.id, sender.id);
     }
     return index;
+  }
+
+  @action
+  void addNewMessageToIndex(int index, Message message) {
+    messages[index].messages.messages.add(message);
   }
 
   @action
@@ -197,10 +221,10 @@ abstract class _MessageStore with Store {
         sender: MessageUser(id: msg['senderId'], fullname: ''),
         receiver: MessageUser(id: msg['receiverId'], fullname: ''),
         createdAt: DateTime.now(),
+        interview: null,
+        messageFlag: msg['messageFlag'],
       );
-      final x = messages;
-      x![index].messages.add(newMessage);
-      messages = x;
+      messages[index].messages.messages.add(newMessage);
 
       // messages![index].messages.add(newMessage);
     }
@@ -208,8 +232,10 @@ abstract class _MessageStore with Store {
 
   @action
   refreshMessage() {
-    messages = null;
-    // success = false;
+    messageList = ObservableList<MessageListItem>();
+
+    messages = ObservableList<ObservableMessages>();
+    doneReloading = false;
     errorStore.errorMessage = "";
     getMessages();
   }

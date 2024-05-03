@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:boilerplate/core/stores/error/error_store.dart';
 import 'package:boilerplate/core/stores/form/form_store.dart';
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart';
@@ -19,10 +20,12 @@ import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dar
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:boilerplate/presentation/chat/store/notification_store.dart';
 
 import 'package:boilerplate/presentation/home/store/language/language_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/login/store/login_store.dart';
+import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:boilerplate/presentation/post/store/post_store.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 
@@ -74,10 +77,8 @@ mixin StoreModule {
       getIt<ErrorStore>(),
     ));
 
-    getIt.registerSingleton(ProfileStore(
-      getIt<GetProfileUseCase>(),
-      getIt<ErrorStore>(),
-    ));
+    getIt.registerSingleton(ProfileStore(getIt<GetProfileUseCase>(),
+        getIt<ErrorStore>(), getIt<SharedPreferenceHelper>()));
 
     getIt.registerSingleton(
       ProjectCompanyStore(
@@ -96,5 +97,10 @@ mixin StoreModule {
         getIt<ErrorStore>(),
       ),
     );
+
+    getIt.registerSingleton(TabStore());
+
+    getIt.registerSingleton(NotificationStore(
+        getIt<SharedPreferenceHelper>(), getIt<ErrorStore>()));
   }
 }

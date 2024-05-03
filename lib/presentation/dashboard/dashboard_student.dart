@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:boilerplate/core/widgets/projects/list_project_company.dart';
 import 'package:boilerplate/core/widgets/projects/project_company_item.dart';
 import 'package:boilerplate/core/widgets/projects/submited_project_item.dart';
@@ -21,6 +23,7 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   GetProposalsStudentUseCase _getProposalsStudentUseCase =
       getIt<GetProposalsStudentUseCase>();
   final ProjectStore _projectStore = getIt<ProjectStore>();
+  final Map<int, int> offer = {};
 
   int selectedIndex = 0;
 
@@ -40,22 +43,32 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   @override
   void initState() {
     super.initState();
-    initializeData();
-    // getProposalStudent();
+    // initializeData();
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      // getProposalStudent();
+      initializeData();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    log("cc");
   }
 
   void initializeData() async {
     if (_projectStore.projects == null) {
       await getProject();
     }
-    getProposalStudent();
+    await getProposalStudent();
   }
 
   Future<void> getProject() async {
     await _projectStore.getProjects();
   }
 
-  void getProposalStudent() async {
+  Future<void> getProposalStudent() async {
+    log("cc");
     final proposals = await _getProposalsStudentUseCase.call(params: null);
     setState(() {
       _proposals = proposals;
@@ -65,12 +78,15 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
   }
 
   void filterProject() {
-    final matchingProjects = _projectStore.projects!.projects!
+    _proposals.forEach((proposal) => proposal.statusFlag == 2
+        ? offer[proposal.projectId] = proposal.id
+        : {});
+    final matchingProjects = _projectStore.projects?.projects!
         .where((project) =>
             _proposals.any((proposal) => proposal.projectId == project.id))
         .toList();
     setState(() {
-      _projects = matchingProjects;
+      _projects = matchingProjects ?? [];
     });
     print("Filter success");
   }
@@ -82,97 +98,85 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
             appBar: AppBar(
               title: Text('StudentHub'),
             ),
-            body: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                              "Your Projects"),
-                          // ElevatedButton(
-                          //     style: ElevatedButton.styleFrom(
-                          //         shape: RoundedRectangleBorder(
-                          //             borderRadius: BorderRadius.circular(5))),
-                          //     onPressed: () {
-                          //       Navigator.of(context, rootNavigator: true).push(
-                          //           MaterialPageRoute(
-                          //               builder: (context) => ProjectPost1(),
-                          //               maintainState: false));
-                          //       // Navigator.pushNamed(context, '/project_post_1');
-                          //     },
-                          //     child: const Text(
-                          //         style: TextStyle(fontSize: 16), "Post a job")),
-                        ],
-                      ),
-                      // Row(
-                      //   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      //   ],
-                      // ),
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: ToggleButtonsCompany(
-                          selected: selectedIndex,
-                          setSelected: (index) {
-                            setState(() {
-                              selectedIndex = index;
-                            });
-                          },
+            body: RefreshIndicator(
+              onRefresh: getProposalStudent,
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                    padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
+                    // height: DeviceUtils.getScaledHeight(context, 1),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                                "Your Projects"),
+                          ],
                         ),
-                      ),
-                      // ProjectItem(),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.only(top: 20),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Color(0xFF121212)
-                              : Colors.yellow,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          "You have a new message",
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                      if (_projects.isNotEmpty)
-                        if (selectedIndex == 0)
-                          ..._projects
-                              .toList()
-                              .map((project) => SubmitedProjectItem(
-                                    projDat: project,
-                                  ))
-                        else if (selectedIndex == 1)
-                          ..._projects
-                              .where((item) => item.typeFlag == 1)
-                              .toList()
-                              .map((project) => SubmitedProjectItem(
-                                    projDat: project,
-                                  ))
-                        else if (selectedIndex == 2)
-                          ..._projects
-                              .where((item) => item.typeFlag == 2)
-                              .toList()
-                              .map((project) => SubmitedProjectItem(
-                                    projDat: project,
-                                  )),
 
-                      // SubmitedProjectItem(
-                      //   projDat: _projects[0],
-                      // ),
-                      // SubmitedProjectItem(),
-                      // SubmitedProjectItem(),
-                      // SubmitedProjectItem(),
-                      const SizedBox(height: 20),
-                    ],
-                  )),
+                        Container(
+                          margin: EdgeInsets.only(top: 20),
+                          child: ToggleButtonsCompany(
+                            selected: selectedIndex,
+                            setSelected: (index) {
+                              setState(() {
+                                selectedIndex = index;
+                              });
+                            },
+                          ),
+                        ),
+                        // ProjectItem(),
+                        Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.only(top: 20),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Color(0xFF121212)
+                                    : Colors.yellow,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            "You have a new message",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        if (_projects.isNotEmpty)
+                          if (selectedIndex == 0)
+                            ..._projects
+                                .toList()
+                                .map((project) => SubmitedProjectItem(
+                                      offer: offer[project.id] ?? null,
+                                      projDat: project,
+                                    ))
+                          else if (selectedIndex == 1)
+                            ..._projects
+                                .where((item) => item.typeFlag == 1)
+                                .toList()
+                                .map((project) => SubmitedProjectItem(
+                                      projDat: project,
+                                    ))
+                          else if (selectedIndex == 2)
+                            ..._projects
+                                .where((item) => item.typeFlag == 2)
+                                .toList()
+                                .map((project) => SubmitedProjectItem(
+                                      projDat: project,
+                                    )),
+
+                        // SubmitedProjectItem(
+                        //   projDat: _projects[0],
+                        // ),
+                        // SubmitedProjectItem(),
+                        // SubmitedProjectItem(),
+                        // SubmitedProjectItem(),
+                        const SizedBox(height: 20),
+                      ],
+                    )),
+              ),
             )));
   }
 }

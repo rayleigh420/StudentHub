@@ -36,6 +36,18 @@ class _MessageProjectItemState extends State<MessageProjectItem> {
         ),
         child: InkWell(
           onTap: () {
+            log("data: " +
+                widget.messageListItem.sender.id.toString() +
+                " " +
+                widget.messageListItem.sender.fullname +
+                " " +
+                widget.messageListItem.receiver.id.toString() +
+                " " +
+                widget.messageListItem.receiver.fullname +
+                " " +
+                widget.messageListItem.project.id.toString() +
+                " " +
+                widget.messageListItem.project.title!);
             Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
                 builder: (context) => MessageDetail(
                       projectId: widget.messageListItem.project.id!,
@@ -94,9 +106,8 @@ class _MessageProjectItemState extends State<MessageProjectItem> {
                         ),
                         Row(
                           children: [
-                            // Text(
-                            //     '${messageProject.messages.last.sender.fullname}: ',
-                            //     style: TextStyle(fontSize: 15)),
+                            Text('${widget.messageListItem.sender.fullname}: ',
+                                style: TextStyle(fontSize: 15)),
                             Text(
                               widget.messageListItem.content,
                               style: TextStyle(fontSize: 15),

@@ -132,13 +132,40 @@ class _ProfileInput2State extends State<ProfileInput2> {
                       ),
                       const SizedBox(height: 20.0),
                       buildProject(context),
+                      const SizedBox(height: 20.0),
+                      ElevatedButton(
+                        onPressed: () {
+                          UpdateExperienceByStudentId();
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                            return const ResumeUpload();
+                          }));
+                        },
+                        child: Text("Next",
+                            style: TextStyle(
+                                color: _themeStore.darkMode
+                                    ? Colors.black
+                                    : Colors.white)),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(borderColor),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0),
+                                      side: BorderSide(color: borderColor))),
+                          padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
               ),
             ),
-            const Spacer(),
-            buildNext(context)
+            // const Spacer(),
+            // buildNext(context)
           ],
         ),
       ),

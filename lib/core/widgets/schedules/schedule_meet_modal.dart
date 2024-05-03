@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
@@ -7,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleMeetingModal extends StatefulWidget {
-  final VoidCallback? newSchedule;
+  final void Function(dynamic)? newSchedule;
   const ScheduleMeetingModal({super.key, required this.newSchedule});
 
   @override
@@ -19,6 +21,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
   DateTime selectedStartTime = DateTime.now();
   DateTime selectedEndDate = DateTime.now();
   DateTime selectedEndTime = DateTime.now();
+  final TextEditingController _titleController = new TextEditingController();
   final FocusNode fcNode = FocusNode();
   final ThemeStore _themeStore = getIt<ThemeStore>();
   @override
@@ -63,6 +66,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                       height: 16,
                     ),
                     TextField(
+                      controller: _titleController,
                       focusNode: fcNode,
                       decoration: InputDecoration(
                         hintText: "Enter title",
@@ -200,9 +204,6 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                                       ),
                                     ),
                                     child: CupertinoTimerPicker(
-                                      initialTimerDuration:
-                                          TimeUtil.getDurationFromDateTime(
-                                              selectedStartDate),
                                       onTimerDurationChanged: (value) {
                                         setState(() {
                                           selectedStartTime =
@@ -305,7 +306,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        "${selectedStartDate.toLocal()}".split(' ')[0],
+                        "${selectedEndDate.toLocal()}".split(' ')[0],
                       ),
                     ),
                   ),
@@ -346,14 +347,13 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                                       ),
                                     ),
                                     child: CupertinoTimerPicker(
-                                      initialTimerDuration:
-                                          TimeUtil.getDurationFromDateTime(
-                                              selectedStartDate),
                                       onTimerDurationChanged: (value) {
                                         setState(() {
-                                          selectedStartTime =
-                                              selectedStartDate.add(value);
+                                          selectedEndTime =
+                                              selectedEndDate.add(value);
                                         });
+                                        log(selectedEndTime.toIso8601String()
+                                            as String);
                                       },
                                     ),
                                   ),
@@ -371,7 +371,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        "${DateFormat('HH:mm:ss').format(selectedStartTime)}",
+                        "${DateFormat('HH:mm:ss').format(selectedEndTime)}",
                       ),
                     ),
                   ),
@@ -458,7 +458,15 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
           ),
           GestureDetector(
             onTap: () {
-              widget.newSchedule!();
+              dynamic data = {
+                "title": _titleController.text,
+                "content": _titleController.text,
+                "startTime": selectedStartTime.toIso8601String().toString(),
+                "endTime": selectedEndTime.toIso8601String().toString(),
+          
+              };
+              log("data từ schedule meet modal: "+data.toString());
+              widget.newSchedule!(data);
               Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
