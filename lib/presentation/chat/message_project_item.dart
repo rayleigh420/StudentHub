@@ -94,9 +94,8 @@ class _MessageProjectItemState extends State<MessageProjectItem> {
                         ),
                         Row(
                           children: [
-                            // Text(
-                            //     '${messageProject.messages.last.sender.fullname}: ',
-                            //     style: TextStyle(fontSize: 15)),
+                            Text('${widget.messageListItem.sender.fullname}: ',
+                                style: TextStyle(fontSize: 15)),
                             Text(
                               widget.messageListItem.content,
                               style: TextStyle(fontSize: 15),

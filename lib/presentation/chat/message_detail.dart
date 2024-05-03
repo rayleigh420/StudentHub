@@ -101,8 +101,8 @@ class _MessageDetailState extends State<MessageDetail> {
       Message message = Message.fromJson({
         "id": msg['id'],
         "content": msg['content'],
-        "sender": {"id": msg['senderId'], "fullname": ""},
-        "receiver": {"id": msg['receiverId'], "fullname": ""},
+        "sender": {"id": msg['senderId'], "fullname": data['notification']['sender']['fullname']},
+        "receiver": {"id": msg['receiverId'], "fullname": data['notification']['receiver']['fullname']},
         "messageFlag": msg['messageFlag'],
         "createdAt": DateTime.now().toString(),
         "interview": null
@@ -166,23 +166,28 @@ class _MessageDetailState extends State<MessageDetail> {
     setState(() {
       token = tk!;
     });
+    log(widget.projectId.toString() +
+        " " +
+        widget.receiverId.toString() +
+        " " +
+        widget.senderId.toString());
     int index = _messageStore.getIndex(
         widget.projectId, widget.receiverId, widget.senderId);
-    List<Message> m = _messageStore.messages![index].messages.messages;
-
+    List<Message> m = _messageStore.messages![widget.index].messages.messages;
+    log("index tu widget message_detail" + widget.index.toString());
     setState(() {
       messages = m;
     });
 
-    if (id == _messageStore.messageList![index].sender.id) {
+    if (id == _messageStore.messageList![widget.index].sender.id) {
       setState(() {
-        me = _messageStore.messageList![index].sender;
-        other = _messageStore.messageList![index].receiver;
+        me = _messageStore.messageList![widget.index].sender;
+        other = _messageStore.messageList![widget.index].receiver;
       });
     } else {
       setState(() {
-        me = _messageStore.messageList![index].receiver;
-        other = _messageStore.messageList![index].sender;
+        me = _messageStore.messageList![widget.index].receiver;
+        other = _messageStore.messageList![widget.index].sender;
       });
     }
     _connectSocket();
