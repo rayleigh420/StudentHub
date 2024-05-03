@@ -17,6 +17,7 @@ import 'package:boilerplate/presentation/chat/store/notification_store.dart';
 
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -331,9 +332,9 @@ class _MessageListState extends State<MessageList> {
   Widget buildMainContent() {
     return Observer(
       builder: (context) {
-        if (_messageStore.loading) {
+        if (_messageStore.doneReloading == false) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CupertinoActivityIndicator(),
           );
         } else {
           return RefreshIndicator(
