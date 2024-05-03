@@ -5,6 +5,7 @@ import 'package:boilerplate/presentation/browse_project/store/project_store.dart
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/saved_project/saved_project.dart';
 import 'package:boilerplate/presentation/search_project_screen/search_project_input.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -152,7 +153,9 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
   Widget buildProjectContent(BuildContext context) {
     return Observer(builder: (context) {
       return _projectStore.loading
-          ? Text("Fetching data...")
+          ? Center(
+              child: CupertinoActivityIndicator(),
+            )
           : buildListProjects(context);
     });
   }

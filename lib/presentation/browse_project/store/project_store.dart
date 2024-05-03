@@ -37,6 +37,7 @@ abstract class _ProjectStore with Store {
     fetchProjectsFuture = ObservableFuture(future);
     future.then((projectList) {
       this.projects = projectList;
+      success = true;
     }).catchError((error) {
       errorStore.errorMessage = error.toString();
     });

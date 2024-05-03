@@ -90,6 +90,7 @@ class _HireOfferState extends State<HireOffer> {
                     ),
                     selectedIndex == 0
                         ? Proposal1(
+                            project: widget.project!,
                             listItem: listItemProposal
                                 .where((item) => item.statusFlag != 3)
                                 .toList(),
@@ -105,10 +106,18 @@ class _HireOfferState extends State<HireOffer> {
                                   });
                                 },
                               )
-                            : Proposal1(
-                                listItem: listItemProposal
-                                    .where((item) => item.statusFlag == 3)
-                                    .toList()),
+                            : selectedIndex == 2
+                                ? Proposal1(
+                                    project: widget.project!,
+                                    listItem: listItemProposal
+                                        .where((item) => item.statusFlag == 1)
+                                        .toList(),
+                                  )
+                                : Proposal1(
+                                    project: widget.project!,
+                                    listItem: listItemProposal
+                                        .where((item) => item.statusFlag == 3)
+                                        .toList()),
                   ],
                 ),
               )),
@@ -119,9 +128,11 @@ class _HireOfferState extends State<HireOffer> {
 }
 
 class Proposal1 extends StatelessWidget {
+  final Project project;
   final List<ItemProposal> listItem;
   Proposal1({
     super.key,
+    required this.project,
     required this.listItem,
   });
 
@@ -129,7 +140,12 @@ class Proposal1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ...listItem.map((e) => ProposalItems(itemProposal: e)).toList(),
+        ...listItem
+            .map((e) => ProposalItems(
+                  itemProposal: e,
+                  project: project,
+                ))
+            .toList(),
         SizedBox(
           height: 50,
         ),
@@ -168,21 +184,28 @@ class ProjectDetail_2 extends StatelessWidget {
               SizedBox(
                 height: 25,
               ),
-              Text(
-                "- Clear expectation about your project or deliverables",
-                style: TextStyle(fontSize: 14),
+              FractionallySizedBox(
+                widthFactor: 1.0,
+                child: Text(
+                  "- ${project!.description}",
+                  style: TextStyle(fontSize: 14),
+                ),
               ),
+              // Text(
+              //   "- Clear expectation about your project or deliverables",
+              //   style: TextStyle(fontSize: 14),
+              // ),
               SizedBox(
                 height: 10,
               ),
-              Text(
-                "- The skills required for your project",
-                style: TextStyle(fontSize: 14),
-              ),
-              Text(
-                "- Detail about your project",
-                style: TextStyle(fontSize: 14),
-              )
+              // Text(
+              //   "- The skills required for your project",
+              //   style: TextStyle(fontSize: 14),
+              // ),
+              // Text(
+              //   "- Detail about your project",
+              //   style: TextStyle(fontSize: 14),
+              // )
             ],
           ),
         ),

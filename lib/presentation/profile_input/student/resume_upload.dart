@@ -456,8 +456,8 @@ if (result != null) {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                       builder: (context) => AppBottomNavigationBar(
-                            isStudent: true,
-                            selectedIndex: 0,
+                            // isStudent: true,
+                            selectedIndex: 1,
                           )),
                 );
 

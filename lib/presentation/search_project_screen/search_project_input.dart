@@ -42,7 +42,7 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
                 projectList: result,
                 searchQuery: searchQuery,
               ),
-          maintainState: true));
+          maintainState: false));
     }
   }
 
@@ -126,7 +126,7 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
           )),
           GestureDetector(
               onTap: () {
-                Navigator.of(context, rootNavigator: true).pop();
+                Navigator.of(context).pop();
               },
               child: Container(
                 padding: EdgeInsets.all(5),

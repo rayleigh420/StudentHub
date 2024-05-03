@@ -3,8 +3,9 @@ import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:flutter/material.dart';
 
 class SubmitedProjectItem extends StatefulWidget {
+  final int? offer;
   final Project projDat;
-  const SubmitedProjectItem({Key? key, required this.projDat})
+  const SubmitedProjectItem({Key? key, required this.projDat, this.offer})
       : super(key: key);
   @override
   _SubmitedProjectItemState createState() => _SubmitedProjectItemState();
@@ -24,6 +25,8 @@ class _SubmitedProjectItemState extends State<SubmitedProjectItem> {
             backgroundColor: Colors.transparent,
             builder: (context) {
               return ProjectModal(
+                apply: true,
+                offer: widget.offer,
                 project: widget.projDat,
               );
             },

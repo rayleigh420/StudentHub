@@ -1,29 +1,34 @@
+import 'package:boilerplate/domain/entity/message/interview.dart';
+import 'package:boilerplate/domain/entity/message/message_user.dart';
 
 class Message {
-  final String id;
-  final int sender;
-  final int receiver;
+  final int id;
+  final MessageUser sender;
+  final MessageUser receiver;
   final DateTime createdAt;
-  final String type;
   final String content;
+  final int? messageFlag;
+  Interview? interview;
+  Message(
+      {required this.id,
+      required this.content,
+      required this.sender,
+      required this.receiver,
+      required this.createdAt,
+      required this.messageFlag,
+      required this.interview});
 
-  Message({
-    required this.id,
-    required this.content,
-    required this.sender,
-    required this.receiver,
-    required this.createdAt,
-    required this.type,
-  });
-
-  factory Message.fromJson(Map<String, dynamic> json) {
+  factory Message.fromJson(Map<String, dynamic> map) {
     return Message(
-      id: json['id'],
-      content: json['content'],
-      sender: json['sender'],
-      receiver: json['receiver'],
-      createdAt: DateTime.parse(json['createdAt']),
-      type: json['type'],
+      id: map['id'],
+      content: map['content'],
+      sender: MessageUser.fromJson(map['sender']),
+      receiver: MessageUser.fromJson(map['receiver']),
+      createdAt: DateTime.parse(map['createdAt']),
+      messageFlag: map['messageFlag'] == null ? null : map['messageFlag'],
+      interview: map['interview'] == null
+          ? null
+          : Interview.fromJson(map['interview']),
     );
   }
 
@@ -31,10 +36,11 @@ class Message {
     return {
       'id': id,
       'content': content,
-      'sender': sender,
-      'receiver': receiver,
       'createdAt': createdAt.toIso8601String(),
-      'type': type,
+      'sender': sender.toJson(),
+      'receiver': receiver.toJson(),
+      'messageFlag': messageFlag,
+      'interview': interview?.toJson(),
     };
   }
 }
