@@ -27,6 +27,18 @@ class TranscriptRepositoryImpl implements TranscriptRepository {
       throw e;
     }
   }
+  Future<String> getTranscript() async {
+    try {
+      final token = await _sharedPreferenceHelper.authToken;
+      int? studentId = await _sharedPreferenceHelper.currentStudentId;
+      String res = await _transcriptApi.getTranscript(studentId!, token!);
+        String fileName = Uri.parse(res).pathSegments.last.split("-").last;
+          print(fileName); // Output: abc.pdf
+      return fileName;
+    } catch (e) {
+      throw e;
+    }
+  }
 
 
    

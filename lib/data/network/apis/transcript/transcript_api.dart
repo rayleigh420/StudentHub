@@ -49,4 +49,20 @@ class TranscriptApi {
       throw e;
     }
   }
+  Future<String> getTranscript(int id, String token) async {
+    try {
+      final authToken = "Bearer ${token}";
+      final res = await _dioClient.dio.get(Endpoints.getTranscript+"/$id"+"/transcript",
+      options: Options(
+        headers: {
+          'Authorization': authToken,
+        },
+      ),
+      );
+      return res.data["result"];
+    } catch (e) {
+      throw e;
+    }
+
+  }
 }

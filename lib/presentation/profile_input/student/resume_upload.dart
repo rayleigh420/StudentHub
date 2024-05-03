@@ -257,7 +257,9 @@
 //             )));
 //   }
 // }
+import 'package:boilerplate/domain/usecase/resume/get_resume.dart';
 import 'package:boilerplate/domain/usecase/resume/post_resume.dart';
+import 'package:boilerplate/domain/usecase/transcript/get_transcript.dart';
 import 'package:boilerplate/domain/usecase/transcript/post_transcript.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:flutter/material.dart';
@@ -278,6 +280,8 @@ class _ResumeUploadState extends State<ResumeUpload> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
   final PostResumeUseCase _postResumeUseCase = getIt<PostResumeUseCase>();
   final PostTranscriptUseCase _postTranscriptUseCase = getIt<PostTranscriptUseCase>();
+  final GetResumeUseCase  _getResumeUseCase = getIt<GetResumeUseCase>();
+  final GetTranscriptUseCase _getTranscriptUseCase = getIt<GetTranscriptUseCase>();
   PlatformFile? _cvPaths;
   List<PlatformFile>? _transcriptPaths;
   String? _cvFileName;
@@ -288,9 +292,24 @@ class _ResumeUploadState extends State<ResumeUpload> {
   @override
   void initState() {
     super.initState();
-    _cvFileName = 'Choose CV file to upload';
-    _transcriptFileName = 'Choose Transcript file to upload';
+    _getFiles();
+    // _cvFileName = 'Choose CV file to upload';
+    // _transcriptFileName = 'Choose Transcript file to upload';
   }
+  Future<void> _getFiles() async {
+    try {
+      final cv = await _getResumeUseCase.call(params: null);
+      final transcript = await _getTranscriptUseCase.call(params: null);
+      setState(() {
+      _cvFileName = cv??'Choose CV file to upload';
+      _transcriptFileName = transcript??'Choose Transcript file to upload';
+    });
+    } catch (e) {
+      print("Error getting files: $e");
+    }
+    
+  }
+      
 
   Future<void> _pickCvFile() async {
     setState(() {

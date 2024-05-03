@@ -51,4 +51,23 @@ class ResumeApi {
       throw e;
     }
   }
+  Future<String> getResume(int id, String token) async {
+    try {
+      final authToken = "Bearer ${token}";
+      final res = await _dioClient.dio.get(Endpoints.getResume+"/$id"+"/resume",
+      options: Options(
+        headers: {
+          'Authorization': authToken,
+          }
+        )
+      );
+      if (res.statusCode == 200) {
+        return res.data["result"];
+      } else {
+        throw Exception(res.data);
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
 }
