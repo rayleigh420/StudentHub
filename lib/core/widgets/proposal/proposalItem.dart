@@ -14,9 +14,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProposalItems extends StatefulWidget {
+  final bool? apply;
   final ItemProposal? itemProposal;
   final Project project;
-  const ProposalItems({super.key, this.itemProposal, required this.project});
+  const ProposalItems(
+      {super.key, this.itemProposal, required this.project, this.apply});
 
   @override
   State<ProposalItems> createState() => _ProposalItemsState();
@@ -113,11 +115,13 @@ class _ProposalItemsState extends State<ProposalItems> {
                                   side: BorderSide(color: Colors.black))),
                           onPressed: () {
                             //setSelected(2);
-                            _updateProposalUseCase.call(
-                                params: UpdateProposalParam(
-                                    widget.itemProposal!.id,
-                                    widget.itemProposal!.coverLetter!,
-                                    1));
+                            if (widget.itemProposal?.statusFlag == 0) {
+                              _updateProposalUseCase.call(
+                                  params: UpdateProposalParam(
+                                      widget.itemProposal!.id,
+                                      widget.itemProposal!.coverLetter!,
+                                      1));
+                            }
                             int index = _messageStore.newMessageListItem(
                                 MessageUser(
                                     id: _profileStore.profile!.id,
