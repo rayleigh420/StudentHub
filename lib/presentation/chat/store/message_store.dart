@@ -65,6 +65,9 @@ abstract class _MessageStore with Store {
   bool success = false;
 
   @observable
+  bool doneReloading = false;
+
+  @observable
   bool successMessages = false;
 
   @computed
@@ -85,6 +88,7 @@ abstract class _MessageStore with Store {
     getAllMessageFuture.then((item) {
       if (item.length == 0) {
         success = true;
+        doneReloading = true;
         return;
       }
       item.forEach((element) {
@@ -116,6 +120,7 @@ abstract class _MessageStore with Store {
               value[0].sender.id.toString());
           if (messages.length == messageList.length) {
             success = true;
+            doneReloading = true;
           }
         });
       });
@@ -227,8 +232,10 @@ abstract class _MessageStore with Store {
 
   @action
   refreshMessage() {
+    messageList = ObservableList<MessageListItem>();
+
     messages = ObservableList<ObservableMessages>();
-    // success = false;
+    doneReloading = false;
     errorStore.errorMessage = "";
     getMessages();
   }
