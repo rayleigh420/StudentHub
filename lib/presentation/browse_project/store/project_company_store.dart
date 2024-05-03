@@ -53,6 +53,10 @@ abstract class _ProjectCompanyStore with Store {
 
     future.then((companyProjects) {
       this.companyProjects = companyProjects;
+      this
+          .companyProjects
+          ?.projects
+          ?.sort((a, b) => b.updatedAt!.compareTo(a.updatedAt!));
       success = true;
     }).catchError((error) {
       ProjectList projects = ProjectList(projects: []);
