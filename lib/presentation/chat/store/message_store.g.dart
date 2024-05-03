@@ -23,22 +23,6 @@ mixin _$MessageStore on _MessageStore, Store {
               name: '_MessageStore.loadingMessageList'))
       .value;
 
-  late final _$initSocketAtom =
-      Atom(name: '_MessageStore.initSocket', context: context);
-
-  @override
-  bool get initSocket {
-    _$initSocketAtom.reportRead();
-    return super.initSocket;
-  }
-
-  @override
-  set initSocket(bool value) {
-    _$initSocketAtom.reportWrite(value, super.initSocket, () {
-      super.initSocket = value;
-    });
-  }
-
   late final _$fetchMessageFutureAtom =
       Atom(name: '_MessageStore.fetchMessageFuture', context: context);
 
@@ -165,6 +149,17 @@ mixin _$MessageStore on _MessageStore, Store {
       ActionController(name: '_MessageStore', context: context);
 
   @override
+  int getIndex(int projectId, int receiverId, int senderId) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.getIndex');
+    try {
+      return super.getIndex(projectId, receiverId, senderId);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   int newMessageListItem(MessageUser sender, MessageUser receiver,
       Project project, Message? message) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
@@ -212,7 +207,6 @@ mixin _$MessageStore on _MessageStore, Store {
   @override
   String toString() {
     return '''
-initSocket: ${initSocket},
 fetchMessageFuture: ${fetchMessageFuture},
 fetchMessageListFuture: ${fetchMessageListFuture},
 completedMessageLists: ${completedMessageLists},
