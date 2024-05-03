@@ -2,10 +2,10 @@
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 
 class Proposal {
-  bool hasNext;
+  bool? hasNext;
   String? offset;
   String? limit;
-  int total;
+  int? total;
   List<ItemProposal>? items;
   Proposal({
     required this.hasNext,

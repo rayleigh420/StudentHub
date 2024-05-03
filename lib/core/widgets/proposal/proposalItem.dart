@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
@@ -6,14 +8,17 @@ import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:boilerplate/presentation/chat/message_detail.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
+import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProposalItems extends StatefulWidget {
+  final bool? apply;
   final ItemProposal? itemProposal;
   final Project project;
-  const ProposalItems({super.key, this.itemProposal, required this.project});
+  const ProposalItems(
+      {super.key, this.itemProposal, required this.project, this.apply});
 
   @override
   State<ProposalItems> createState() => _ProposalItemsState();
@@ -23,6 +28,7 @@ class _ProposalItemsState extends State<ProposalItems> {
   UpdateProposalUseCase _updateProposalUseCase = getIt<UpdateProposalUseCase>();
   final MessageStore _messageStore = getIt<MessageStore>();
   final ProfileStore _profileStore = getIt<ProfileStore>();
+  final TabStore _tabStore = getIt<TabStore>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -109,33 +115,38 @@ class _ProposalItemsState extends State<ProposalItems> {
                                   side: BorderSide(color: Colors.black))),
                           onPressed: () {
                             //setSelected(2);
-                            _updateProposalUseCase.call(
-                                params: UpdateProposalParam(
-                                    widget.itemProposal!.id,
-                                    widget.itemProposal!.coverLetter!,
-                                    1));
+                            if (widget.itemProposal?.statusFlag == 0) {
+                              _updateProposalUseCase.call(
+                                  params: UpdateProposalParam(
+                                      widget.itemProposal!.id,
+                                      widget.itemProposal!.coverLetter!,
+                                      1));
+                            }
                             int index = _messageStore.newMessageListItem(
                                 MessageUser(
                                     id: _profileStore.profile!.id,
                                     fullname: _profileStore.profile!.fullname),
                                 MessageUser(
-                                    id: widget.itemProposal!.student!.id,
+                                    id: widget.itemProposal!.student!.userId,
                                     fullname: widget.itemProposal!.student!
                                             .user!.fullname ??
                                         ""),
-                                widget.project);
+                                widget.project,
+                                null);
+                            log("index moi ne: $index");
                             // Navigator.of(context).push(MaterialPageRoute(
                             //     builder: (context) => AppBottomNavigationBar(
                             //           selectedIndex: 1,
                             //         ),
                             //     maintainState: true));
+                            _tabStore.setTabIndex(1);
                             Navigator.of(context, rootNavigator: true)
                                 .push(MaterialPageRoute(
                                     builder: (context) => MessageDetail(
                                           index: index,
                                           projectId: widget.project.id!,
-                                          receiverId:
-                                              widget.itemProposal!.student!.id,
+                                          receiverId: widget
+                                              .itemProposal!.student!.userId,
                                           senderId: _profileStore.profile!.id,
                                         ),
                                     maintainState: true));

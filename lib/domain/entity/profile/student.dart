@@ -1,7 +1,8 @@
 import 'package:boilerplate/domain/entity/educations/education.dart';
 import 'package:boilerplate/domain/entity/experiences/experience.dart';
-import 'package:boilerplate/domain/entity/language/Language.dart';
 import 'package:boilerplate/domain/entity/language/language_student.dart';
+// import 'package:boilerplate/domain/entity/language/Language.dart';
+import 'package:boilerplate/domain/entity/proposal/proposal.dart';
 import 'package:boilerplate/domain/entity/skillSet/skillSet.dart';
 import 'package:boilerplate/domain/entity/techStack/teachStack.dart';
 import 'package:boilerplate/domain/entity/profile/user.dart';
@@ -15,7 +16,7 @@ class Student {
   int techStackId;
   User? user;
   TechStack? techStack;
-  List<dynamic>? proposals;
+  List<Proposal>? proposals;
   List<Education>? educations;
   List<LanguageStudent>? languages;
   List<Experience>? experiences;
@@ -53,7 +54,8 @@ class Student {
       techStack:
           map['techStack'] != null ? TechStack.fromMap(map['techStack']) : null,
       user: map['user'] != null ? User.fromJson(map['user']) : null,
-      proposals: map['proposals'],
+      proposals: List<Proposal>.from(
+          map['proposals']?.map((x) => Proposal.fromJson(x))?.toList() ?? []),
       educations: List<Education>.from(
           map['educations']?.map((x) => Education.fromMap(x))?.toList() ?? []),
       languages: List<LanguageStudent>.from(
@@ -78,7 +80,8 @@ class Student {
       'transcript': transcript,
       'techStack': techStack?.toMap(),
       'user': user?.toJson(),
-      'proposals': proposals,
+      'proposals':
+          proposals != null ? proposals!.map((x) => x.toJson()).toList() : null,
       'educations': educations != null
           ? educations!.map((x) => x.toMap()).toList()
           : null,
