@@ -72,7 +72,7 @@ class Interview {
   String title;
   DateTime startTime;
   DateTime endTime;
-  final int disableFlag;
+  int disableFlag;
   final int meetingRoomId;
   MeetingRoom? meetingRoom;
   Interview({

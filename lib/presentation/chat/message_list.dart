@@ -86,6 +86,25 @@ class _MessageListState extends State<MessageList> {
     socket.onError((data) => print(data));
 
     socket.on("NOTI_${_profileStore.profile!.id}", (data) {
+      if (data['notification'] == null) {
+        final projectId = data['projectId'];
+        final receiverId = data['receiverId'];
+        final senderId = data['senderId'];
+        final messageId = data['messageId'];
+        int index = _messageStore.getIndex(
+          projectId,
+          receiverId,
+          senderId,
+        );
+        log("index update cancel: $index");
+        if (index != -1) {
+          return;
+        }
+        if (_currentMessageStore.index != index) {
+          _messageStore.updateInterviewCancelled(index, messageId);
+        }
+        return;
+      }
       dynamic noti = data;
       Noti notification = Noti(
           id: noti['notification']['id'],
@@ -180,12 +199,8 @@ class _MessageListState extends State<MessageList> {
             log(notification.toJson().toString());
           }
         } else {
-          if (noti['notification']['content'] == "Interview updated") {
-            _messageStore.updateInterview(index, newMessage.interview!);
-          } else {
-            _messageStore.updateMessageListTitle(index2,
-                "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
-          }
+          _messageStore.updateMessageListTitle(index2,
+              "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
         }
       }
     });

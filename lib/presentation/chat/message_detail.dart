@@ -124,6 +124,27 @@ class _MessageDetailState extends State<MessageDetail> {
 
     socket.on("RECEIVE_INTERVIEW", (data) {
       log("RECEIVE_INTERVIEW");
+      if (data['notification'] == null) {
+        log("CANCEL_INTERVIEW");
+        final projectId = data['projectId'];
+        final receiverId = data['receiverId'];
+        final senderId = data['senderId'];
+        final messageId = data['messageId'];
+        int index = _messageStore.getIndex(
+          projectId,
+          receiverId,
+          senderId,
+        );
+        setState(() {
+          messages.forEach((element) {
+            if (element.id == messageId) {
+              element.interview!.disableFlag = 1;
+            }
+          });
+        });
+        return;
+      }
+      log("NORMAL_EVENT");
       dynamic msg = data['notification']['message'];
       dynamic interview = data['notification']['interview'];
       dynamic meetingRoom = data['notification']['meetingRoom'];
@@ -162,7 +183,6 @@ class _MessageDetailState extends State<MessageDetail> {
 
       message.interview = interviewData;
       log(message.toJson().toString());
-
       if (data['notification']['content'] == 'Interview updated') {
         final interviewId = interview['id'];
         final newTitle = interview['title'];
@@ -287,7 +307,21 @@ class _MessageDetailState extends State<MessageDetail> {
     currentInterview.startTime = DateTime.parse(dataInterview['startTime']);
     currentInterview.endTime = DateTime.parse(dataInterview['endTime']);
 
-    _messageStore.updateInterview(widget.index, currentInterview);
+    // _messageStore.updateInterview(widget.index, currentInterview);
+    setState(() {
+      messages = _messageStore.messages[widget.index].messages.messages;
+    });
+    this.socket.emit("UPDATE_INTERVIEW", msg);
+  }
+
+  void deleteSchedule(int projectId) {
+    dynamic msg = {
+      "interviewId": projectId,
+      "projectId": widget.projectId,
+      "senderId": me.id,
+      "receiverId": other.id,
+      "deleteAction": true
+    };
     setState(() {
       messages = _messageStore.messages[widget.index].messages.messages;
     });
@@ -511,17 +545,25 @@ class _MessageDetailState extends State<MessageDetail> {
 
   Widget buildMessageScheduleTo(
       BuildContext context, Message message, String avatarUrl) {
-    return Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.all(10),
-        child: ScheduleItemChat(
-          interview: message.interview!,
-          isCancelled: false,
-          type: 1,
-          updateSchedule: (data) {
-            updateSchedule(data);
-          },
-        ));
+    return GestureDetector(
+      onTap: () {
+        log(message.id.toString());
+      },
+      child: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.all(10),
+          child: ScheduleItemChat(
+            interview: message.interview!,
+            isCancelled: false,
+            type: 1,
+            updateSchedule: (data) {
+              updateSchedule(data);
+            },
+            deleteSchedule: (data) {
+              deleteSchedule(data);
+            },
+          )),
+    );
   }
 
   Widget buildChatDivider(BuildContext context, String date) {
