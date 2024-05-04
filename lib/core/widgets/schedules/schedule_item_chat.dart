@@ -16,12 +16,14 @@ class ScheduleItemChat extends StatefulWidget {
   final isCancelled;
   final int? type;
   final void Function(dynamic)? updateSchedule;
+  final void Function(int)? deleteSchedule;
   const ScheduleItemChat(
       {super.key,
       this.type,
       this.isCancelled,
       required this.interview,
-      this.updateSchedule});
+      this.updateSchedule,
+      this.deleteSchedule});
 
   @override
   State<ScheduleItemChat> createState() => _ScheduleItemChatState();
@@ -72,9 +74,7 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                     CupertinoActionSheetAction(
                       onPressed: () {
                         log("cancelled tapped");
-                        setState(() {
-                          isCancelled = true;
-                        });
+                        widget.deleteSchedule!(widget.interview.id);
                         Navigator.of(context).pop();
                       },
                       child: Text("Cancel meeting",
@@ -152,7 +152,7 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    isCancelled
+                    widget.interview.disableFlag == 1
                         ? null
                         : Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
@@ -163,10 +163,12 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                     // margin: EdgeInsets.only(right: 8),
                     padding: EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: isCancelled ? Colors.white : Colors.blueAccent,
+                      color: widget.interview.disableFlag == 1
+                          ? Colors.white
+                          : Colors.blueAccent,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: isCancelled
+                    child: widget.interview.disableFlag == 1
                         ? Text(
                             "Meeting Cancelled",
                             textAlign: TextAlign.center,

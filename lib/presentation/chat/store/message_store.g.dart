@@ -250,6 +250,17 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
+  dynamic updateInterviewCancelled(int index, int messageId) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.updateInterviewCancelled');
+    try {
+      return super.updateInterviewCancelled(index, messageId);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic receiveMessage(dynamic data) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
         name: '_MessageStore.receiveMessage');
