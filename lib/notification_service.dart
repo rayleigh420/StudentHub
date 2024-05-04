@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -61,10 +63,12 @@ class NotificationService {
             android: initializationSettingsAndroid,
             iOS: initializationSettingsIOS,
             macOS: null);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (NotificationResponse response) {
-      selectNotification(response.payload);
-    });
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) {
+        print("onDidReceiveNotificationResponse: ${details.payload}");
+      },
+    );
     tz.initializeTimeZones();
     // tz.setLocalLocation(tz.getLocation('Asia/Ho_Chi_Minh'));
   }
@@ -85,8 +89,8 @@ class NotificationService {
   Future showNotification(
       {int id = 0, String? title, String? body, String? payload}) async {
     print("noti");
-    return flutterLocalNotificationsPlugin.show(
-        id, title, body, await notificationDetails());
+    return flutterLocalNotificationsPlugin
+        .show(id, title, body, await notificationDetails(), payload: payload);
   }
 
   void selectNotification(dynamic payload) {

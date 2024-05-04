@@ -4,7 +4,6 @@ import 'package:boilerplate/di/service_locator.dart';
 
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
-import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/signup/input_signup/verify_screen.dart';
 
 import 'package:boilerplate/utils/device/device_utils.dart';
@@ -27,7 +26,7 @@ class _InputSignUpState extends State<InputSignUp> {
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
   final StudentHubSignupUC _authRepository = getIt<StudentHubSignupUC>();
-  final _formKey = GlobalKey<FormState>();
+  final _inputFormKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -141,7 +140,7 @@ class _InputSignUpState extends State<InputSignUp> {
 
   Widget buildForm(BuildContext context) {
     return Form(
-      key: _formKey,
+      key: _inputFormKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

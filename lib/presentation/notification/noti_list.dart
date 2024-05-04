@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/notification/notification.dart';
 import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:boilerplate/presentation/chat/store/notification_store.dart';
+import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -76,69 +79,70 @@ class _NotiListState extends State<NotiList> {
 
   Widget buildListNoti() {
     return Observer(
-      builder: (_) {
+      builder: (context) {
         return ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
           itemCount: _notificationStore.notifications.length,
-          itemBuilder: (context, index) {
-            return buildNotiItem(_notificationStore.notifications[index]);
+          itemBuilder: (_, index) {
+            return buildNotiItem(
+                context, _notificationStore.notifications[index]);
           },
         );
       },
     );
   }
 
-  Widget buildNotiItem(Noti noti) {
-    return Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.circle_notifications_outlined,
-                  size: 30,
-                  color: Colors.black,
-                  weight: 300,
+  Widget buildNotiItem(BuildContext context, Noti noti) {
+    return GestureDetector(
+      onTap: () {
+        log("dd");
+        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+            builder: (context) => AppBottomNavigationBar(
+                  selectedIndex: 1,
                 ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                    child: Text(
-                  noti.title,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-                margin: EdgeInsets.only(left: 40),
-                child: Text(formatDate(noti.createdAt))),
-            SizedBox(
-              height: 10,
-            ),
-            if (noti.notifyFlag == "0")
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _updateProposalUseCase.call(
-                        params: UpdateProposalParam(1, "coverLetter", 3));
-                  },
-                  child: Text('Agree'),
-                ),
+            maintainState: true));
+      },
+      child: Container(
+          margin: EdgeInsets.only(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.circle_notifications_outlined,
+                    size: 30,
+                    color: Colors.black,
+                    weight: 300,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: Text(
+                    noti.title,
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
+                ],
               ),
-            Divider(
-              color: Colors.black,
-              thickness: 1,
-            ),
-          ],
-        ));
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                  margin: EdgeInsets.only(left: 40),
+                  child: Text(formatDate(noti.createdAt))),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                color: Colors.black,
+                thickness: 1,
+              ),
+            ],
+          )),
+    );
   }
 }
 

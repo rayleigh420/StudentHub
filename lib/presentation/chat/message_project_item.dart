@@ -4,6 +4,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_list.dart';
 import 'package:boilerplate/presentation/chat/message_detail.dart';
+import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,8 @@ class MessageProjectItem extends StatefulWidget {
 }
 
 class _MessageProjectItemState extends State<MessageProjectItem> {
-  final MessageStore _messageStore = getIt<MessageStore>();
+  final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
+
   @override
   void initState() {
     super.initState();
@@ -36,18 +38,8 @@ class _MessageProjectItemState extends State<MessageProjectItem> {
         ),
         child: InkWell(
           onTap: () {
-            log("data: " +
-                widget.messageListItem.sender.id.toString() +
-                " " +
-                widget.messageListItem.sender.fullname +
-                " " +
-                widget.messageListItem.receiver.id.toString() +
-                " " +
-                widget.messageListItem.receiver.fullname +
-                " " +
-                widget.messageListItem.project.id.toString() +
-                " " +
-                widget.messageListItem.project.title!);
+            _currentMessageStore.setIndex(widget.index);
+            
             Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
                 builder: (context) => MessageDetail(
                       projectId: widget.messageListItem.project.id!,
