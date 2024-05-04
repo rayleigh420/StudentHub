@@ -19,6 +19,7 @@ import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
+import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/chat/store/notification_store.dart';
 
@@ -102,5 +103,11 @@ mixin StoreModule {
 
     getIt.registerSingleton(NotificationStore(
         getIt<SharedPreferenceHelper>(), getIt<ErrorStore>()));
+
+    getIt.registerSingleton(
+      CurrentMessageStore(
+        getIt<ErrorStore>(),
+      ),
+    );
   }
 }
