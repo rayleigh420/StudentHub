@@ -24,6 +24,19 @@ class ObservableMessages {
   ObservableMessages({required this.messages});
 }
 
+class InterviewItem {
+  Interview interview;
+  int projectId;
+  int receiverId;
+  int senderId;
+
+  InterviewItem(
+      {required this.interview,
+      required this.projectId,
+      required this.receiverId,
+      required this.senderId});
+}
+
 class MessageStore = _MessageStore with _$MessageStore;
 
 abstract class _MessageStore with Store {
@@ -63,12 +76,16 @@ abstract class _MessageStore with Store {
       ObservableList<Observable<MessageListItem>>();
 
   @computed
-  List<Interview> get interviews {
-    List<Interview> result = [];
+  List<InterviewItem> get interviews {
+    List<InterviewItem> result = [];
     for (var observableMessages in this.messages) {
       for (var message in observableMessages.messages.messages) {
         if (message.interview != null) {
-          result.add(message.interview!);
+          result.add(InterviewItem(
+              interview: message.interview!,
+              projectId: observableMessages.messages.projectId,
+              receiverId: observableMessages.messages.receiverId,
+              senderId: observableMessages.messages.senderId));
         }
       }
     }
