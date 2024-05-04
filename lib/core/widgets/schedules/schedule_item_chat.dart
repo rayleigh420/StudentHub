@@ -17,13 +17,15 @@ class ScheduleItemChat extends StatefulWidget {
   final int? type;
   final void Function(dynamic)? updateSchedule;
   final void Function(int)? deleteSchedule;
+  final void Function(dynamic)? onTap;
   const ScheduleItemChat(
       {super.key,
       this.type,
       this.isCancelled,
       required this.interview,
       this.updateSchedule,
-      this.deleteSchedule});
+      this.deleteSchedule,
+      this.onTap});
 
   @override
   State<ScheduleItemChat> createState() => _ScheduleItemChatState();
@@ -40,8 +42,12 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        log("tapped");
+        widget.onTap!(null);
+      },
       onLongPress: () {
-        if (widget.type == 1) {
+        if (widget.type == 1 && widget.interview.disableFlag != 1) {
           showCupertinoModalPopup(
               context: context,
               builder: (context) {

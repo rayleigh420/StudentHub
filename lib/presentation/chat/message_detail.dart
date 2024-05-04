@@ -220,27 +220,26 @@ class _MessageDetailState extends State<MessageDetail> {
         widget.receiverId.toString() +
         " " +
         widget.senderId.toString());
-    int index = _messageStore.getIndex(
-        widget.projectId, widget.receiverId, widget.senderId);
-    List<Message> m = _messageStore.messages![widget.index].messages.messages;
+
+    List<Message> m = _messageStore.messages[widget.index].messages.messages;
     log("index tu widget message_detail" + widget.index.toString());
     setState(() {
       messages = m;
     });
 
     if (id ==
-        _messageStore.messages![widget.index].messages.messages[0].sender.id) {
+        _messageStore.messages[widget.index].messages.messages[0].sender.id) {
       setState(() {
-        me = _messageStore.messages![widget.index].messages.messages[0].sender;
+        me = _messageStore.messages[widget.index].messages.messages[0].sender;
         other =
-            _messageStore.messages![widget.index].messages.messages[0].receiver;
+            _messageStore.messages[widget.index].messages.messages[0].receiver;
       });
     } else {
       setState(() {
         me =
-            _messageStore.messages![widget.index].messages.messages[0].receiver;
+            _messageStore.messages[widget.index].messages.messages[0].receiver;
         other =
-            _messageStore.messages![widget.index].messages.messages[0].sender;
+            _messageStore.messages[widget.index].messages.messages[0].sender;
       });
     }
     _connectSocket();
