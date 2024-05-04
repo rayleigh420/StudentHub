@@ -15,8 +15,17 @@ class ScheduleItemChat extends StatefulWidget {
   final Interview interview;
   final isCancelled;
   final int? type;
+  final void Function(dynamic)? updateSchedule;
+  final void Function(int)? deleteSchedule;
+  final void Function(dynamic)? onTap;
   const ScheduleItemChat(
-      {super.key, this.type, this.isCancelled, required this.interview});
+      {super.key,
+      this.type,
+      this.isCancelled,
+      required this.interview,
+      this.updateSchedule,
+      this.deleteSchedule,
+      this.onTap});
 
   @override
   State<ScheduleItemChat> createState() => _ScheduleItemChatState();
@@ -33,61 +42,68 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        log("tapped");
+        widget.onTap!(null);
+      },
       onLongPress: () {
-        showCupertinoModalPopup(
-            context: context,
-            builder: (context) {
-              return CupertinoActionSheet(
-                title: Text("Reschedule or cancel meeting"),
-                actions: [
-                  CupertinoActionSheetAction(
+        if (widget.type == 1 && widget.interview.disableFlag != 1) {
+          showCupertinoModalPopup(
+              context: context,
+              builder: (context) {
+                return CupertinoActionSheet(
+                  title: Text("Reschedule or cancel meeting"),
+                  actions: [
+                    CupertinoActionSheetAction(
+                      onPressed: () {
+                        // Navigator.of(context).pop();
+                        showModalBottomSheet(
+                          isDismissible: true,
+                          context: context,
+                          isScrollControlled: true,
+                          useRootNavigator: true,
+                          enableDrag: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) {
+                            return ScheduleMeetingModal(
+                              interview: widget.interview,
+                              updateSchedule: (data) {
+                                widget.updateSchedule!(data);
+                              },
+                              isUpdate: true,
+                            );
+                          },
+                        );
+                      },
+                      child: Text("Re-schedule"),
+                    ),
+                    CupertinoActionSheetAction(
+                      onPressed: () {
+                        log("cancelled tapped");
+                        widget.deleteSchedule!(widget.interview.id);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Cancel meeting",
+                          style: TextStyle(color: Colors.grey)),
+                    ),
+                  ],
+                  cancelButton: CupertinoActionSheetAction(
                     onPressed: () {
-                      // Navigator.of(context).pop();
-                      showModalBottomSheet(
-                        isDismissible: true,
-                        context: context,
-                        isScrollControlled: true,
-                        useRootNavigator: true,
-                        enableDrag: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) {
-                          return ScheduleMeetingModal(
-                            newSchedule: (data) {
-                              log(data.toString());
-                            },
-                          );
-                        },
-                      );
+                      Navigator.pop(context);
                     },
-                    child: Text("Re-schedule"),
+                    child: Text("Cancel", style: TextStyle(color: Colors.red)),
                   ),
-                  CupertinoActionSheetAction(
-                    onPressed: () {
-                      log("cancelled tapped");
-                      setState(() {
-                        isCancelled = true;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Cancel meeting",
-                        style: TextStyle(color: Colors.grey)),
-                  ),
-                ],
-                cancelButton: CupertinoActionSheetAction(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Cancel", style: TextStyle(color: Colors.red)),
-                ),
-              );
-            });
+                );
+              });
+        }
+        ;
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(12, 16, 12, 12),
         // margin: EdgeInsets.fromLTRB(15, 0, 15, 15),
         width: DeviceUtils.getScaledWidth(context, 0.7),
         decoration: BoxDecoration(
-          color: widget.type == 0 ? Color(0xfff0f0f0) : Colors.blueAccent,
+          color: Color(0xfff0f0f0),
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -142,17 +158,23 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MeetingScreen()));
+                    widget.interview.disableFlag == 1
+                        ? null
+                        : Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                                builder: (context) => MeetingScreen(),
+                                maintainState: true));
                   },
                   child: Container(
                     // margin: EdgeInsets.only(right: 8),
                     padding: EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: isCancelled ? Colors.white : Colors.blueAccent,
+                      color: widget.interview.disableFlag == 1
+                          ? Colors.white
+                          : Colors.blueAccent,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: isCancelled
+                    child: widget.interview.disableFlag == 1
                         ? Text(
                             "Meeting Cancelled",
                             textAlign: TextAlign.center,

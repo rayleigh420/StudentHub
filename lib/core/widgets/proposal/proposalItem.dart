@@ -6,6 +6,7 @@ import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/entity/proposal/itemProposal.dart';
 import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:boilerplate/presentation/chat/message_detail.dart';
+import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/navigations/tab_store.dart';
@@ -28,6 +29,7 @@ class _ProposalItemsState extends State<ProposalItems> {
   UpdateProposalUseCase _updateProposalUseCase = getIt<UpdateProposalUseCase>();
   final MessageStore _messageStore = getIt<MessageStore>();
   final ProfileStore _profileStore = getIt<ProfileStore>();
+  final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
   final TabStore _tabStore = getIt<TabStore>();
   @override
   Widget build(BuildContext context) {
@@ -134,12 +136,14 @@ class _ProposalItemsState extends State<ProposalItems> {
                                 widget.project,
                                 null);
                             log("index moi ne: $index");
+
                             // Navigator.of(context).push(MaterialPageRoute(
                             //     builder: (context) => AppBottomNavigationBar(
                             //           selectedIndex: 1,
                             //         ),
                             //     maintainState: true));
                             _tabStore.setTabIndex(1);
+                            _currentMessageStore.setIndex(index);
                             Navigator.of(context, rootNavigator: true)
                                 .push(MaterialPageRoute(
                                     builder: (context) => MessageDetail(
