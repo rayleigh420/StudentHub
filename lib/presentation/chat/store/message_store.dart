@@ -258,6 +258,19 @@ abstract class _MessageStore with Store {
   }
 
   @action
+  updateInterviewCancelled(int index, int messageId) {
+    messages[index].messages.messages.forEach((element) {
+      if (element.interview != null) {
+        if (element.id == messageId) {
+          Interview interview = element.interview!;
+          interview.disableFlag = 1;
+          element.interview = interview;
+        }
+      }
+    });
+  }
+
+  @action
   receiveMessage(dynamic data) {
     log("data nè " + data.toString());
     final msg = {
