@@ -160,17 +160,24 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
     });
   }
 
+  Future<void> _pullRefresh() async {
+    _projectStore.getProjects();
+  }
+
   Widget buildListProjects(BuildContext context) {
     return _projectStore.projects != null
-        ? ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: _projectStore.projects!.projects!.length,
-            itemBuilder: (context, index) {
-              return ProjectItem(
-                  projDat: _projectStore.projects!.projects![index]);
-            },
-          )
+        ? RefreshIndicator(
+            child: SingleChildScrollView(
+                child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: _projectStore.projects!.projects!.length,
+              itemBuilder: (context, index) {
+                return ProjectItem(
+                    projDat: _projectStore.projects!.projects![index]);
+              },
+            )),
+            onRefresh: _pullRefresh)
         : Center(
             child: Text("No project found"),
           );
