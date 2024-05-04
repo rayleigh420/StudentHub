@@ -12,6 +12,7 @@ import 'package:boilerplate/domain/entity/notification/notification.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/notification_service.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
+import 'package:boilerplate/presentation/chat/message_detail.dart';
 import 'package:boilerplate/presentation/chat/message_project_item.dart';
 import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
@@ -371,33 +372,54 @@ class _MessageListState extends State<MessageList> {
 
   Widget buildInterviewTab() {
     final filteredInterviews = _messageStore.interviews
-        .where((interview) => interview.disableFlag == 0)
+        .where((interview) => interview.interview.disableFlag == 0)
         .toList();
-    filteredInterviews.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    filteredInterviews
+        .sort((a, b) => b.interview.createdAt.compareTo(a.interview.createdAt));
 
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: _messageStore.interviews.length,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              final interview = filteredInterviews[index];
+    return RefreshIndicator(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: filteredInterviews.length,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final interview = filteredInterviews[index];
 
-              return Container(
-                padding: EdgeInsets.all(10),
-                child: ScheduleItemChat(
-                  interview: interview,
-                  isCancelled: interview.disableFlag == 1 ? true : false,
-                  type: 0,
-                ),
-              );
-            },
+                  return Container(
+                    padding: EdgeInsets.all(10),
+                    child: ScheduleItemChat(
+                      interview: interview.interview,
+                      isCancelled:
+                          interview.interview.disableFlag == 1 ? true : false,
+                      type: 1,
+                      onTap: (p0) {
+                        final index = _messageStore.getIndex(
+                          interview.projectId,
+                          interview.receiverId,
+                          interview.senderId,
+                        );
+                        log("hey index: $index");
+                        Navigator.of(context, rootNavigator: true)
+                            .push(MaterialPageRoute(
+                                builder: (context) => MessageDetail(
+                                      projectId: interview.projectId,
+                                      receiverId: interview.receiverId,
+                                      senderId: interview.senderId,
+                                      index: index,
+                                    ),
+                                maintainState: false));
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+        onRefresh: _pullRefresh);
   }
 }
