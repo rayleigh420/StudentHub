@@ -141,6 +141,7 @@ class _MessageListState extends State<MessageList> {
         newMessage.interview = interviewData;
       }
       if (index == -1) {
+        //handle new item
         int newIndex = _messageStore.newMessageListItem(
             MessageUser(
                 id: noti['notification']['sender']['id'],
@@ -155,27 +156,36 @@ class _MessageListState extends State<MessageList> {
             newMessage);
         log("index thêm message: $newIndex");
       } else {
+        //handle
         int index2 = _messageStore.getIndexMessageList(
             noti['notification']['message']['projectId'],
             noti['notification']['receiver']['id'],
             noti['notification']['sender']['id']);
 
         if (_currentMessageStore.index != index) {
-          //handle update ui
-          _messageStore.addNewMessageToIndex(index, newMessage);
-          _messageStore.updateMessageListTitle(index2,
-              "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
+          //handle update ui if not in current chat
+          if (noti['notification']['content'] == "Interview updated") {
+            _messageStore.updateInterview(index, newMessage.interview!);
+          } else {
+            _messageStore.addNewMessageToIndex(index, newMessage);
+            _messageStore.updateMessageListTitle(index2,
+                "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
 
-          //notification
-          if (noti['notification']['senderId'] != _profileStore.profile!.id) {
-            _notificationStore.addNotification(notification);
-            NotificationService().showNotification(
-                title: notification.title, body: notification.content);
+            //notification
+            if (noti['notification']['senderId'] != _profileStore.profile!.id) {
+              _notificationStore.addNotification(notification);
+              NotificationService().showNotification(
+                  title: notification.title, body: notification.content);
+            }
+            log(notification.toJson().toString());
           }
-          log(notification.toJson().toString());
         } else {
-          _messageStore.updateMessageListTitle(index2,
-              "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
+          if (noti['notification']['content'] == "Interview updated") {
+            _messageStore.updateInterview(index, newMessage.interview!);
+          } else {
+            _messageStore.updateMessageListTitle(index2,
+                "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
+          }
         }
       }
     });
@@ -291,23 +301,23 @@ class _MessageListState extends State<MessageList> {
     //           onRefresh: _pullRefresh)
   }
 
-  Widget buildMessageListTab(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: _messageStore.messageList.length,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final newIndex = _messageStore.getIndex(
-            _messageStore.messageList[index].value.project.id!,
-            _messageStore.messageList[index].value.receiver.id,
-            _messageStore.messageList[index].value.sender.id);
-        return MessageProjectItem(
-          messageListItem: _messageStore.messageList![index].value,
-          index: newIndex,
-        );
-      },
-    );
-  }
+  // Widget buildMessageListTab(BuildContext context) {
+  //   return ListView.builder(
+  //     shrinkWrap: true,
+  //     itemCount: _messageStore.messageList.length,
+  //     physics: NeverScrollableScrollPhysics(),
+  //     itemBuilder: (context, index) {
+  //       final newIndex = _messageStore.getIndex(
+  //           _messageStore.messageList[index].value.project.id!,
+  //           _messageStore.messageList[index].value.receiver.id,
+  //           _messageStore.messageList[index].value.sender.id);
+  //       return MessageProjectItem(
+  //         messageListItem: _messageStore.messageList![index].value,
+  //         index: newIndex,
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget buildChatTab() {
     _messageStore.messageList
@@ -327,9 +337,14 @@ class _MessageListState extends State<MessageList> {
                     _messageStore.messageList[index].value.receiver.id,
                     _messageStore.messageList[index].value.sender.id,
                   );
+                  final newIndex2 = _messageStore.getIndexMessageList(
+                      _messageStore.messageList[index].value.project.id!,
+                      _messageStore.messageList[index].value.receiver.id,
+                      _messageStore.messageList[index].value.sender.id);
                   return MessageProjectItem(
                     messageListItem: _messageStore.messageList![index].value,
                     index: newIndex,
+                    index2: newIndex2,
                   );
                 },
               ),
