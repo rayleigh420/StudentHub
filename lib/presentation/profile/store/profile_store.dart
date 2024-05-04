@@ -59,4 +59,11 @@ abstract class _ProfileStore with Store {
       errorStore.errorMessage = DioErrorUtil.handleError(error);
     });
   }
+
+  @action
+  void clearStoreData() {
+    profile = null;
+    _fetchCompleted = false;
+    success = false;
+  }
 }
