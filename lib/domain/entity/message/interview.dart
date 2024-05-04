@@ -69,9 +69,9 @@ class Interview {
   final DateTime createdAt;
   final DateTime updatedAt;
   final dynamic deletedAt;
-  final String title;
-  final DateTime startTime;
-  final DateTime endTime;
+  String title;
+  DateTime startTime;
+  DateTime endTime;
   final int disableFlag;
   final int meetingRoomId;
   MeetingRoom? meetingRoom;

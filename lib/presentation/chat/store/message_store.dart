@@ -240,6 +240,24 @@ abstract class _MessageStore with Store {
   }
 
   @action
+  Interview getInterview(int index, int interviewId) {
+    return this.messages[index].messages.messages.firstWhere((element) {
+      return element.interview != null && element.interview!.id == interviewId;
+    }).interview!;
+  }
+
+  @action
+  updateInterview(int index, Interview interview) {
+    messages[index].messages.messages.forEach((element) {
+      if (element.interview != null) {
+        if (element.interview!.id == interview.id) {
+          element.interview = interview;
+        }
+      }
+    });
+  }
+
+  @action
   receiveMessage(dynamic data) {
     log("data nè " + data.toString());
     final msg = {

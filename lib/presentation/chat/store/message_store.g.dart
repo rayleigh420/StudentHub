@@ -228,6 +228,28 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
+  Interview getInterview(int index, int interviewId) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.getInterview');
+    try {
+      return super.getInterview(index, interviewId);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateInterview(int index, Interview interview) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.updateInterview');
+    try {
+      return super.updateInterview(index, interview);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic receiveMessage(dynamic data) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
         name: '_MessageStore.receiveMessage');
