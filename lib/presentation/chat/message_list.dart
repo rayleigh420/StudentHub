@@ -1,0 +1,394 @@
+import 'dart:developer';
+
+import 'package:boilerplate/data/network/constants/endpoints.dart';
+import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/message/interview.dart';
+import 'package:boilerplate/domain/entity/message/message.dart';
+import 'package:boilerplate/domain/entity/message/message_user.dart';
+import 'package:boilerplate/domain/entity/notification/message_noti.dart';
+import 'package:boilerplate/domain/entity/notification/notification.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/notification_service.dart';
+import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
+import 'package:boilerplate/presentation/chat/message_project_item.dart';
+import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:boilerplate/presentation/chat/store/notification_store.dart';
+
+import 'package:boilerplate/presentation/profile/store/profile_store.dart';
+import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
+import 'package:socket_io_client/socket_io_client.dart';
+
+class MessageList extends StatefulWidget {
+  const MessageList({super.key});
+
+  @override
+  State<MessageList> createState() => _MessageListState();
+}
+
+class _MessageListState extends State<MessageList> {
+  // final SocketStore _socketStore = getIt<SocketStore>();
+
+  final MessageStore _messageStore = getIt<MessageStore>();
+  final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
+  final ProfileStore _profileStore = getIt<ProfileStore>();
+  final NotificationStore _notificationStore = getIt<NotificationStore>();
+
+  late List<Socket> _socketClientList = [];
+  // late int myId = -1;+
+
+  @override
+  void initState() {
+    super.initState();
+    // _connectSockets();
+    // _loadId();
+    this._initSocket2();
+    //this._initSocket();
+  }
+
+  @override
+  void dispose() {
+    _socketClientList.forEach((element) {
+      element.dispose();
+      element.disconnect();
+    });
+    super.dispose();
+  }
+
+  void _initSocket2() {
+    final token = _profileStore.token;
+    final socket = io(
+        Endpoints.baseUrl,
+        OptionBuilder()
+            .setTransports(['websocket'])
+            .enableForceNewConnection()
+            .disableAutoConnect()
+            .build());
+    socket.io.options?['extraHeaders'] = {
+      'Authorization': 'Bearer ${token}',
+    };
+    socket.connect();
+    socket.onConnect((data) {
+      log("Connected to user socket");
+    });
+
+    socket.onDisconnect((data) => {
+          print('Disconnected'),
+        });
+    socket.onConnectError((data) => print('$data'));
+    socket.onError((data) => print(data));
+
+    socket.on("NOTI_${_profileStore.profile!.id}", (data) {
+      dynamic noti = data;
+      Noti notification = Noti(
+          id: noti['notification']['id'],
+          title: noti['notification']['title'],
+          content: noti['notification']['content'],
+          createdAt: DateTime.parse(noti['notification']['createdAt']),
+          notifyFlag: noti['notification']['notifyFlag'],
+          typeNotifyFlag: noti['notification']['typeNotifyFlag'],
+          messageNoti: MessageNoti.fromJson(noti['notification']['message']));
+      int index = _messageStore.getIndex(
+          noti['notification']['message']['projectId'],
+          noti['notification']['receiver']['id'],
+          noti['notification']['sender']['id']);
+      log("index ban đầu: $index");
+      if (index == -1) {
+        Message newMessage = Message(
+            id: noti['notification']['message']['id'],
+            content: noti['notification']['message']['content'],
+            createdAt:
+                DateTime.parse(noti['notification']['message']['createdAt']),
+            messageFlag: noti['notification']['message']['messageFlag'],
+            receiver: MessageUser(
+                id: noti['notification']['receiver']['id'],
+                fullname: noti['notification']['receiver']['fullname']),
+            sender: MessageUser(
+                id: noti['notification']['sender']['id'],
+                fullname: noti['notification']['sender']['fullname']),
+            interview: null);
+        if (noti['notification']['message']['messageFlag'] == 1) {
+          dynamic interview = data['notification']['interview'];
+          dynamic meetingRoom = data['notification']['meetingRoom'];
+          Interview interviewData = Interview.fromJson({
+            "id": interview['id'],
+            "title": interview['title'],
+            "createdAt": interview['createdAt'],
+            "updatedAt": interview['updatedAt'],
+            "deletedAt": interview['deletedAt'],
+            "startTime": interview['startTime'],
+            "endTime": interview['endTime'],
+            "disableFlag": interview['disableFlag'],
+            "meetingRoomId": interview['meetingRoomId'],
+          });
+          MeetingRoom meetingRoomData = MeetingRoom.fromJson({
+            "id": meetingRoom['id'],
+            "createdAt": meetingRoom['createdAt'],
+            "updatedAt": meetingRoom['updatedAt'],
+            "deletedAt": meetingRoom['deletedAt'],
+            "meeting_room_code": meetingRoom['meeting_room_code'],
+            "meeting_room_id": meetingRoom['meeting_room_id'],
+            "expired_at": meetingRoom['expired_at'],
+          });
+          interviewData.meetingRoom = meetingRoomData;
+          newMessage.interview = interviewData;
+        }
+        // _messageStore.addNewMessageToIndex(newIndex, newMessage);
+        int newIndex = _messageStore.newMessageListItem(
+            MessageUser(
+                id: noti['notification']['sender']['id'],
+                fullname: noti['notification']['sender']['fullname']),
+            MessageUser(
+                id: noti['notification']['receiver']['id'],
+                fullname: noti['notification']['receiver']['fullname']),
+            Project(
+                id: noti['notification']['message']['projectId'],
+                title:
+                    "Project id ${noti['notification']['message']['projectId']}"),
+            newMessage);
+        log("index thêm message: $newIndex");
+      }
+      if (noti['notification']['senderId'] != _profileStore.profile!.id) {
+        _notificationStore.addNotification(notification);
+        NotificationService().showNotification(
+            title: notification.title, body: notification.content);
+      }
+      log(notification.toJson().toString());
+    });
+
+    socket.on("ERROR", (data) => print(data));
+
+    _socketClientList.add(socket);
+  }
+
+  void _initSocket() {
+    final userRole = _profileStore.profile!.roles[0];
+    if (userRole == 0) {
+      _initSocketClient();
+    } else if (userRole == 1) {
+      _initSocketCompany();
+    }
+  }
+
+  void _initSocketCompany() {
+    final token = _profileStore.token;
+    if (_projectCompanyStore.companyProjects != null) {
+      if (_projectCompanyStore.companyProjects!.projects != null) {
+        _projectCompanyStore.companyProjects!.projects!.forEach((element) {
+          final socket = io(
+              Endpoints.baseUrl,
+              OptionBuilder()
+                  .setTransports(['websocket'])
+                  .enableForceNewConnection()
+                  .disableAutoConnect()
+                  .build());
+          socket.io.options?['extraHeaders'] = {
+            'Authorization': 'Bearer ${token}',
+          };
+          socket.io.options?['query'] = {'project_id': element.id};
+          socket.connect();
+          socket.onConnect((data) {
+            log("Connected to project id ${element.id}");
+          });
+
+          socket.onDisconnect((data) => {
+                print('Disconnected'),
+              });
+          socket.onConnectError((data) => print('$data'));
+          socket.onError((data) => print(data));
+
+          socket.on("RECEIVE_MESSAGE", (data) {
+            log("NOTI FOR RECEIVE_MESSAGE");
+          });
+
+          socket.on('RECEIVE_INTERVIEW', (data) {
+            log("NOTI FOR RECEIVE_INTERVIEW");
+            dynamic msg = data;
+            Noti notification = Noti(
+              id: msg['notification']['id'],
+              title: msg['notification']['title'],
+              content: msg['notification']['content'],
+              createdAt: DateTime.parse(msg['notification']['createdAt']),
+              notifyFlag: msg['notification']['notifyFlag'],
+              typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+              messageNoti: MessageNoti.fromJson(msg['notification']['message']),
+            );
+          });
+          socket.on("ERROR", (data) => print(data));
+
+          _socketClientList.add(socket);
+        });
+      }
+    }
+  }
+
+  void _initSocketClient() {
+    final token = _profileStore.token;
+    if (_messageStore.messageList != null) {
+      final uniqueProjects = _messageStore.messageList!
+          .map((message) => message.project)
+          .toSet()
+          .toList();
+      uniqueProjects.forEach((element) {
+        Socket socket = io(
+            Endpoints.baseUrl,
+            OptionBuilder()
+                .setTransports(['websocket'])
+                .enableForceNewConnection()
+                .disableAutoConnect()
+                .build());
+        socket.io.options?['extraHeaders'] = {
+          'Authorization': 'Bearer ${token}',
+        };
+        socket.io.options?['query'] = {'project_id': element.id};
+        socket.connect();
+        socket.onConnect((data) {
+          print('Connected');
+          log("Connected to project id ${element.id}");
+        });
+
+        socket.onDisconnect((data) => {
+              print('Disconnected'),
+            });
+        socket.onConnectError((data) => print('$data'));
+        socket.onError((data) => print(data));
+
+        socket.on("RECEIVE_MESSAGE", (data) {
+          log("NOTI FOR RECEIVE_MESSAGE");
+          dynamic msg = data;
+          Noti notification = Noti(
+              id: msg['notification']['id'],
+              title: msg['notification']['title'],
+              content: msg['notification']['content'],
+              createdAt: DateTime.parse(msg['notification']['createdAt']),
+              notifyFlag: msg['notification']['notifyFlag'],
+              typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+              messageNoti:
+                  MessageNoti.fromJson(msg['notification']['message']));
+          if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+            _notificationStore.addNotification(notification);
+            NotificationService().showNotification(
+                title: notification.title, body: notification.content);
+          }
+          log(notification.toJson().toString());
+        });
+
+        // socket.on(
+        //     "NOTI_${_profileStore.profile!.id}",
+        //     (data) => {
+        //           log("NOTI_${_profileStore.profile!.id}"),
+        //           log(data.toString())
+        //         });
+        socket.on('RECEIVE_INTERVIEW', (data) {
+          log("NOTI FOR RECEIVE_INTERVIEW");
+          dynamic msg = data;
+          Noti notification = Noti(
+            id: msg['notification']['id'],
+            title: msg['notification']['title'],
+            content: msg['notification']['content'],
+            createdAt: DateTime.parse(msg['notification']['createdAt']),
+            notifyFlag: msg['notification']['notifyFlag'],
+            typeNotifyFlag: msg['notification']['typeNotifyFlag'],
+            messageNoti: MessageNoti.fromJson(msg['notification']['message']),
+          );
+          if (msg['notification']['senderId'] != _profileStore.profile!.id) {
+            _notificationStore.addNotification(notification);
+            NotificationService().showNotification(
+                title: notification.title, body: notification.content);
+          }
+          log(notification.toJson().toString());
+        });
+
+        socket.on("ERROR", (data) => print(data));
+
+        _socketClientList.add(socket);
+      });
+    }
+  }
+
+  Future<void> _pullRefresh() async {
+    _messageStore.refreshMessage();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text('StudentHub'),
+      ),
+      body: Container(
+        padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
+        child: buildMainContent(),
+      ),
+    ));
+  }
+
+  Widget buildMainContent() {
+    return Observer(
+      builder: (context) {
+        if (_messageStore.doneReloading == false) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        } else {
+          return RefreshIndicator(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                  // height: DeviceUtils.getScaledHeight(context, 1),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          maxLines: 1,
+                          onTapOutside: (event) =>
+                              FocusScope.of(context).unfocus(),
+                          decoration: const InputDecoration(
+                            hintText: 'Search ',
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                            contentPadding: EdgeInsets.all(10),
+                          ),
+                          onChanged: (value) {},
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _messageStore.messageList.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final newIndex = _messageStore.getIndex(
+                              _messageStore.messageList[index].project.id!,
+                              _messageStore.messageList[index].receiver.id,
+                              _messageStore.messageList[index].sender.id);
+                          return MessageProjectItem(
+                            messageListItem: _messageStore.messageList![index],
+                            index: newIndex,
+                          );
+                        },
+                      )
+
+                      // MessageProjectItem(),
+                    ],
+                  ),
+                ),
+              ),
+              onRefresh: _pullRefresh);
+        }
+      },
+    );
+  }
+}

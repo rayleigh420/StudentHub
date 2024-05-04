@@ -17,4 +17,22 @@ class Language {
     required this.language,
     this.dictionary,
   });
+
+  factory Language.fromMap(Map<String, dynamic> map) {
+    return Language(
+      code: map['code'],
+      locale: map['locale'],
+      language: map['language'],
+      dictionary: map['dictionary'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'code': code,
+      'locale': locale,
+      'language': language,
+      'dictionary': dictionary,
+    };
+  }
 }

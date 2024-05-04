@@ -37,7 +37,8 @@ abstract class _ThemeStore with Store {
 
   // general methods:-----------------------------------------------------------
   Future init() async {
-    _darkMode = _repository.isDarkMode;
+    // _darkMode = _repository.isDarkMode;
+    _darkMode = false;
   }
 
   bool isPlatformDark(BuildContext context) =>
