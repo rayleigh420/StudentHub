@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:boilerplate/core/stores/error/error_store.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_list.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
@@ -58,8 +59,21 @@ abstract class _MessageStore with Store {
       ObservableList<ObservableMessages>();
 
   @observable
-  ObservableList<MessageListItem> messageList =
-      ObservableList<MessageListItem>();
+  ObservableList<Observable<MessageListItem>> messageList =
+      ObservableList<Observable<MessageListItem>>();
+
+  @computed
+  List<Interview> get interviews {
+    List<Interview> result = [];
+    for (var observableMessages in this.messages) {
+      for (var message in observableMessages.messages.messages) {
+        if (message.interview != null) {
+          result.add(message.interview!);
+        }
+      }
+    }
+    return result;
+  }
 
   @observable
   bool success = false;
@@ -92,28 +106,28 @@ abstract class _MessageStore with Store {
         return;
       }
       item.forEach((element) {
-        messageList.add(element);
+        messageList.add(Observable<MessageListItem>(element));
       });
       List<Future> futures = [];
       messageList.forEach((element) {
         final getMessageListFuture = _getProjectMessageUseCase.call(
             params: GetProjectMessageParams(
-                projectId: element.project.id!,
-                receiverId: myId == element.receiver.id
-                    ? element.sender.id
-                    : element.receiver.id));
+                projectId: element.value.project.id!,
+                receiverId: myId == element.value.receiver.id
+                    ? element.value.sender.id
+                    : element.value.receiver.id));
         fetchMessageListFuture = ObservableFuture(getMessageListFuture);
         futures.add(getMessageListFuture);
         getMessageListFuture.then((value) {
           messages.add(ObservableMessages(
               messages: Messages(
                   messages: value,
-                  projectId: element.project.id!,
-                  receiverId: element.receiver.id,
-                  senderId: element.sender.id)));
+                  projectId: element.value.project.id!,
+                  receiverId: element.value.receiver.id,
+                  senderId: element.value.sender.id)));
 
           log("value nè: " +
-              element.project.id!.toString() +
+              element.value.project.id!.toString() +
               " " +
               value[0].receiver.id.toString() +
               " " +
@@ -163,6 +177,25 @@ abstract class _MessageStore with Store {
   }
 
   @action
+  int getIndexMessageList(int projectId, int receiverId, int senderId) {
+    int index = -1;
+    for (int i = 0; i < this.messageList.length; i++) {
+      if (messageList[i].value.project.id == projectId) {
+        final x = messageList[i].value.sender.id == senderId &&
+            messageList[i].value.receiver.id == receiverId;
+        final y = messageList[i].value.sender.id == receiverId &&
+            messageList[i].value.receiver.id == senderId;
+        if (x || y) {
+          index = i;
+          break;
+        }
+      }
+    }
+
+    return index;
+  }
+
+  @action
   int newMessageListItem(MessageUser sender, MessageUser receiver,
       Project project, Message? message) {
     final index = getIndex(
@@ -190,7 +223,7 @@ abstract class _MessageStore with Store {
               projectId: project.id!,
               receiverId: receiver.id,
               senderId: sender.id)));
-      messageList.add(newMessageListItem);
+      messageList.add(Observable<MessageListItem>(newMessageListItem));
       return getIndex(project.id!, receiver.id, sender.id);
     }
     return index;
@@ -198,7 +231,12 @@ abstract class _MessageStore with Store {
 
   @action
   void addNewMessageToIndex(int index, Message message) {
-    messages[index].messages.messages.add(message);
+    this.messages[index].messages.messages.add(message);
+  }
+
+  @action
+  void updateMessageListTitle(int index, String title) {
+    messageList[index].value.content = title;
   }
 
   @action
@@ -232,7 +270,7 @@ abstract class _MessageStore with Store {
 
   @action
   refreshMessage() {
-    messageList = ObservableList<MessageListItem>();
+    messageList = ObservableList<Observable<MessageListItem>>();
 
     messages = ObservableList<ObservableMessages>();
     doneReloading = false;
