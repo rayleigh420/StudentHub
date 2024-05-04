@@ -9,6 +9,7 @@ import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 
 import 'package:boilerplate/domain/entity/message/message_user.dart';
+import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 
 // import 'package:boilerplate/presentation/chat/message_list.dart';
@@ -47,6 +48,7 @@ class _MessageDetailState extends State<MessageDetail> {
   List<Message> messages = [];
   String token = '';
   late Socket socket;
+  final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
 
   @override
   void initState() {
@@ -60,6 +62,7 @@ class _MessageDetailState extends State<MessageDetail> {
     socket.disconnect();
     socket.dispose();
     super.dispose();
+    _currentMessageStore.clearMessageListItem();
     // print("dispose detail message");
   }
 
