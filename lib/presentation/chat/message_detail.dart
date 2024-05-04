@@ -47,6 +47,7 @@ class _MessageDetailState extends State<MessageDetail> {
   late MessageUser other = MessageUser(id: -1, fullname: "");
   List<Message> messages = [];
   String token = '';
+  int index = -1;
   late Socket socket;
   final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
 
@@ -189,7 +190,7 @@ class _MessageDetailState extends State<MessageDetail> {
         final newStartTime = interview['startTime'];
         final newEndTime = interview['endTime'];
         Interview currentInterview =
-            _messageStore.getInterview(widget.index, interviewId);
+            _messageStore.getInterview(this.index, interviewId);
         currentInterview.title = newTitle;
         currentInterview.startTime = newStartTime;
         currentInterview.endTime = newEndTime;
@@ -220,26 +221,30 @@ class _MessageDetailState extends State<MessageDetail> {
         widget.receiverId.toString() +
         " " +
         widget.senderId.toString());
-
-    List<Message> m = _messageStore.messages[widget.index].messages.messages;
-    log("index tu widget message_detail" + widget.index.toString());
+    if (widget.index == null) {
+      this.index = _messageStore.getIndex(
+          widget.projectId, widget.receiverId, widget.senderId);
+    } else {
+      this.index = widget.index;
+    }
+    List<Message> m = _messageStore.messages[this.index].messages.messages;
+    log("index tu widget message_detail" + this.index.toString());
     setState(() {
       messages = m;
     });
 
     if (id ==
-        _messageStore.messages[widget.index].messages.messages[0].sender.id) {
+        _messageStore.messages[this.index].messages.messages[0].sender.id) {
       setState(() {
-        me = _messageStore.messages[widget.index].messages.messages[0].sender;
+        me = _messageStore.messages[this.index].messages.messages[0].sender;
         other =
-            _messageStore.messages[widget.index].messages.messages[0].receiver;
+            _messageStore.messages[this.index].messages.messages[0].receiver;
       });
     } else {
       setState(() {
-        me =
-            _messageStore.messages[widget.index].messages.messages[0].receiver;
+        me = _messageStore.messages[this.index].messages.messages[0].receiver;
         other =
-            _messageStore.messages[widget.index].messages.messages[0].sender;
+            _messageStore.messages[this.index].messages.messages[0].sender;
       });
     }
     _connectSocket();
@@ -300,7 +305,7 @@ class _MessageDetailState extends State<MessageDetail> {
     log(msg.toString());
 
     Interview currentInterview =
-        _messageStore.getInterview(widget.index, dataInterview['id']);
+        _messageStore.getInterview(this.index, dataInterview['id']);
     log("current interview " + currentInterview.toJson().toString());
     currentInterview.title = dataInterview['title'];
     currentInterview.startTime = DateTime.parse(dataInterview['startTime']);
@@ -308,7 +313,7 @@ class _MessageDetailState extends State<MessageDetail> {
 
     // _messageStore.updateInterview(widget.index, currentInterview);
     setState(() {
-      messages = _messageStore.messages[widget.index].messages.messages;
+      messages = _messageStore.messages[this.index].messages.messages;
     });
     this.socket.emit("UPDATE_INTERVIEW", msg);
   }
@@ -322,7 +327,7 @@ class _MessageDetailState extends State<MessageDetail> {
       "deleteAction": true
     };
     setState(() {
-      messages = _messageStore.messages[widget.index].messages.messages;
+      messages = _messageStore.messages[this.index].messages.messages;
     });
     this.socket.emit("UPDATE_INTERVIEW", msg);
   }

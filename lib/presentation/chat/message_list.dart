@@ -195,7 +195,10 @@ class _MessageListState extends State<MessageList> {
             if (noti['notification']['senderId'] != _profileStore.profile!.id) {
               _notificationStore.addNotification(notification);
               NotificationService().showNotification(
-                  title: notification.title, body: notification.content);
+                  title: notification.title,
+                  body: notification.content,
+                  payload:
+                      "${noti['notification']['message']['projectId']}_${noti['notification']['receiver']['id']}_${noti['notification']['sender']['id']}");
             }
             log(notification.toJson().toString());
           }
@@ -375,7 +378,7 @@ class _MessageListState extends State<MessageList> {
         .where((interview) => interview.interview.disableFlag == 0)
         .toList();
     filteredInterviews
-        .sort((a, b) => b.interview.createdAt.compareTo(a.interview.createdAt));
+        .sort((a, b) => b.interview.startTime.compareTo(a.interview.startTime));
 
     return RefreshIndicator(
         child: SingleChildScrollView(
