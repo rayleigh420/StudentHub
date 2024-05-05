@@ -100,6 +100,24 @@ class AuthApi {
     }
   }
 
+  Future<bool> changePassword(String oldPassword, String newPassword) async {
+    try {
+      final res = await _dioClient.dio.put(Endpoints.changePassword, data: {
+        'oldPassword': oldPassword,
+        'newPassword': newPassword,
+      });
+      log("cout<<change password response");
+      log(res.statusCode.toString());
+      if (res.statusCode.toString() == "200") {
+        return true;
+      } else
+        throw Exception("Failed to change password");
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
   /// sample api call with default rest client
 //  Future<PostsList> getPosts() {
 //

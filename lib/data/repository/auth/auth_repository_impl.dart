@@ -87,4 +87,14 @@ class AuthRepositoryImpl extends AuthRepository {
       throw new Exception(e.toString());
     }
   }
+
+  @override
+  Future<bool> changePassword(String oldPassword, String newPassword) {
+    try {
+      final res = _authApi.changePassword(oldPassword, newPassword);
+      return res;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
+import 'package:boilerplate/presentation/user/change_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -101,6 +102,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: 'Settings',
                 onTap: () {
                   // Xử lý khi người dùng nhấn vào Settings
+                },
+              ),
+              AccountItem(
+                icon: Icons.password,
+                title: 'Change Password',
+                onTap: () {
+                  Navigator.of(context, rootNavigator: false).push(
+                      MaterialPageRoute(
+                          builder: (context) => ChangePassword(),
+                          maintainState: false));
+                  ;
+                  // Navigator.of(context, rootNavigator: true)
+                  //     .pushReplacement(MaterialPageRoute(builder: (context) {
+                  //   return InputLogin();
+                  // }));
+                  // Xử lý khi người dùng nhấn vào Logout
                 },
               ),
               AccountItem(
