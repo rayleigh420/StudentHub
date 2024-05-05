@@ -4,8 +4,10 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/notification/notification.dart';
 import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
 import 'package:boilerplate/presentation/chat/store/notification_store.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -19,7 +21,8 @@ class NotiList extends StatefulWidget {
 
 class _NotiListState extends State<NotiList> {
   final NotificationStore _notificationStore = getIt<NotificationStore>();
-  UpdateProposalUseCase _updateProposalUseCase = getIt<UpdateProposalUseCase>();
+  final ThemeStore _themeStore = getIt<ThemeStore>();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -50,7 +53,8 @@ class _NotiListState extends State<NotiList> {
             : SafeArea(
                 child: Scaffold(
                 appBar: AppBar(
-                  title: Text('Notification'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('notification_title')),
                 ),
                 body: RefreshIndicator(
                   onRefresh: () async {
@@ -114,7 +118,9 @@ class _NotiListState extends State<NotiList> {
                   Icon(
                     Icons.circle_notifications_outlined,
                     size: 30,
-                    color: Colors.black,
+                    color: _themeStore.darkMode == true
+                        ? Colors.white
+                        : Colors.black,
                     weight: 300,
                   ),
                   SizedBox(

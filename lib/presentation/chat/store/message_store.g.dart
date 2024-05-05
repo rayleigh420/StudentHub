@@ -283,6 +283,17 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
+  dynamic clearStoreData() {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.clearStoreData');
+    try {
+      return super.clearStoreData();
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 fetchMessageFuture: ${fetchMessageFuture},

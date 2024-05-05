@@ -325,4 +325,13 @@ abstract class _MessageStore with Store {
     errorStore.errorMessage = "";
     getMessages();
   }
+
+  @action
+  clearStoreData() {
+    messageList = ObservableList<Observable<MessageListItem>>();
+    messages = ObservableList<ObservableMessages>();
+    success = false;
+    doneReloading = false;
+    successMessages = false;
+  }
 }
