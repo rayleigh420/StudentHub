@@ -7,6 +7,7 @@ import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/signup/input_signup/verify_screen.dart';
 
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class InputSignUp extends StatefulWidget {
@@ -85,7 +86,7 @@ class _InputSignUpState extends State<InputSignUp> {
             children: [
               const SizedBox(height: 17.0),
               Text(
-                'Sign up as ${(widget.type == 1) ? 'Company' : 'Student'}',
+                '${AppLocalizations.of(context).translate('sign_up_as_text')} ${(widget.type == 1) ? AppLocalizations.of(context).translate('company_text') : AppLocalizations.of(context).translate('student_text')}',
                 // textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold
                     //fontFamily: "GGX88Reg_Light",
@@ -147,7 +148,7 @@ class _InputSignUpState extends State<InputSignUp> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
             child: Text(
-              'Full name',
+              AppLocalizations.of(context).translate('full_name_text'),
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -168,7 +169,7 @@ class _InputSignUpState extends State<InputSignUp> {
             style: TextStyle(
               color: textFieldColor,
             ),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
               contentPadding: EdgeInsets.all(16),
@@ -182,7 +183,8 @@ class _InputSignUpState extends State<InputSignUp> {
                 borderSide: const BorderSide(color: Colors.red, width: 0.0),
               ),
               border: OutlineInputBorder(borderSide: BorderSide.none),
-              hintText: 'Enter your name',
+              hintText:
+                  AppLocalizations.of(context).translate('full_name_hint_text'),
               hintStyle: TextStyle(
                 //fontFamily: "GGX88Reg_Light",
 
@@ -215,7 +217,7 @@ class _InputSignUpState extends State<InputSignUp> {
             style: TextStyle(
               color: textFieldColor,
             ),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
               contentPadding: EdgeInsets.all(16),
@@ -229,7 +231,8 @@ class _InputSignUpState extends State<InputSignUp> {
                 borderSide: const BorderSide(color: Colors.red, width: 0.0),
               ),
               border: OutlineInputBorder(borderSide: BorderSide.none),
-              hintText: 'Enter your email',
+              hintText: AppLocalizations.of(context)
+                  .translate('enter_your_email_hint_text'),
               hintStyle: TextStyle(
                 //fontFamily: "GGX88Reg_Light",
                 color: Color(0xFFc6c6c6),
@@ -272,7 +275,8 @@ class _InputSignUpState extends State<InputSignUp> {
                 borderSide: const BorderSide(color: Colors.red, width: 0.0),
               ),
               border: const OutlineInputBorder(borderSide: BorderSide.none),
-              hintText: 'Enter your password (8 or more characters)',
+              hintText: AppLocalizations.of(context)
+                  .translate('enter_your_password_hint_text'),
               hintStyle: const TextStyle(
                 //fontFamily: "GGX88Reg_Light",
                 color: Color(0xFFc6c6c6),
@@ -318,7 +322,7 @@ class _InputSignUpState extends State<InputSignUp> {
                 Container(
                   width: DeviceUtils.getScaledWidth(context, 0.8),
                   child: Text(
-                    'Yes, I understand and agree to StudentHub',
+                    AppLocalizations.of(context).translate('compromise_text'),
                     maxLines: 1,
                     softWrap: false,
                     overflow: TextOverflow.clip,
@@ -355,8 +359,8 @@ class _InputSignUpState extends State<InputSignUp> {
               onPress();
             }
           },
-          child: const Text(
-            'Create Account',
+          child: Text(
+            AppLocalizations.of(context).translate('create_account_text'),
             style: TextStyle(
               fontSize: 16,
               //fontFamily: "GGX88Reg",
@@ -374,7 +378,8 @@ class _InputSignUpState extends State<InputSignUp> {
         children: [
           Container(
             alignment: Alignment.bottomCenter,
-            child: Text("Looking for projects?"),
+            child: Text(AppLocalizations.of(context)
+                .translate('looking_for_project_text')),
           ),
           GestureDetector(
             onTap: () {
@@ -386,7 +391,7 @@ class _InputSignUpState extends State<InputSignUp> {
               }));
             },
             child: Text(
-              " Apply as ${(widget.type == 1) ? 'Company' : 'Student'}",
+              " ${AppLocalizations.of(context).translate('apply_as_text')} ${(widget.type == 1) ? AppLocalizations.of(context).translate('company_text') : AppLocalizations.of(context).translate('student_text')}",
               style: const TextStyle(
                 color: Color(0xFF4285F4),
                 fontWeight: FontWeight.bold,

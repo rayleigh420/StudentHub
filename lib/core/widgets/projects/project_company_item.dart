@@ -11,6 +11,7 @@ import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -76,7 +77,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        "${dateDiff(DateTime.now(), widget.project.createdAt!).toString()} day ago",
+                        "${dateDiff(DateTime.now(), widget.project.createdAt!).toString()} ${AppLocalizations.of(context).translate('days_ago_text')}",
                         style: TextStyle(fontSize: 13),
                       )
                     ],
@@ -94,11 +95,13 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "Students are looking for",
+                    AppLocalizations.of(context)
+                        .translate('student_looking_for_text'),
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    "Everyone",
+                    AppLocalizations.of(context)
+                        .translate('every_student_text'),
                     style: TextStyle(fontSize: 14),
                   )
                   // if (widget.project.criteria.isNotEmpty)
@@ -238,7 +241,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ),
                 ListTile(
                   leading: Icon(Icons.close),
-                  title: Text('Close posting'),
+                  title: Text('Archive posting'),
                   // onTap: () =>
                   //     {updateProjectsUseCase.call(params: widget.project)},
                   onTap: () {

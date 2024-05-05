@@ -1,4 +1,5 @@
 import 'package:boilerplate/presentation/input_login/input_login.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: Text('Verify Email'),
+        title:
+            Text(AppLocalizations.of(context).translate('verify_email_text')),
       ),
       body: Container(
         child: Column(
@@ -28,14 +30,16 @@ class _VerifyScreenState extends State<VerifyScreen> {
             Container(
               padding: EdgeInsets.all(20),
               child: Text(
-                "Please verify your email address to continue.",
+                AppLocalizations.of(context)
+                    .translate('please_verify_email_text'),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             Container(
               padding: EdgeInsets.all(20),
               child: Text(
-                "We have sent a verification link to your email address. Please click on the link to verify your email address.",
+                AppLocalizations.of(context)
+                    .translate('verify_email_description_text'),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -60,7 +64,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
                     }));
                   },
                   child: Text(
-                    "Redirect to Gmail",
+                    AppLocalizations.of(context)
+                        .translate('redirect_to_gmail_text'),
                     style: TextStyle(color: Colors.white),
                   )),
             ),
@@ -82,7 +87,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       return InputLogin();
                     }));
                   },
-                  child: Text("Back to Login")),
+                  child: Text(AppLocalizations.of(context)
+                      .translate('back_to_login_text'))),
             ),
             SizedBox(
               height: 20,

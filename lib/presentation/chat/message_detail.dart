@@ -11,9 +11,11 @@ import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 
 // import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -41,12 +43,13 @@ class _MessageDetailState extends State<MessageDetail> {
   final TextEditingController _messagecontroller = new TextEditingController();
   final ScrollController _controller = new ScrollController();
   final SharedPreferenceHelper _sharePref = getIt<SharedPreferenceHelper>();
-
+  final ThemeStore _themeStore = getIt<ThemeStore>();
   final MessageStore _messageStore = getIt<MessageStore>();
   late MessageUser me = MessageUser(id: -1, fullname: "");
   late MessageUser other = MessageUser(id: -1, fullname: "");
   List<Message> messages = [];
   String token = '';
+  int index = -1;
   late Socket socket;
   final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
 
@@ -189,7 +192,7 @@ class _MessageDetailState extends State<MessageDetail> {
         final newStartTime = interview['startTime'];
         final newEndTime = interview['endTime'];
         Interview currentInterview =
-            _messageStore.getInterview(widget.index, interviewId);
+            _messageStore.getInterview(this.index, interviewId);
         currentInterview.title = newTitle;
         currentInterview.startTime = newStartTime;
         currentInterview.endTime = newEndTime;
@@ -220,26 +223,29 @@ class _MessageDetailState extends State<MessageDetail> {
         widget.receiverId.toString() +
         " " +
         widget.senderId.toString());
-
-    List<Message> m = _messageStore.messages[widget.index].messages.messages;
-    log("index tu widget message_detail" + widget.index.toString());
+    if (widget.index == null) {
+      this.index = _messageStore.getIndex(
+          widget.projectId, widget.receiverId, widget.senderId);
+    } else {
+      this.index = widget.index;
+    }
+    List<Message> m = _messageStore.messages[this.index].messages.messages;
+    log("index tu widget message_detail" + this.index.toString());
     setState(() {
       messages = m;
     });
 
     if (id ==
-        _messageStore.messages[widget.index].messages.messages[0].sender.id) {
+        _messageStore.messages[this.index].messages.messages[0].sender.id) {
       setState(() {
-        me = _messageStore.messages[widget.index].messages.messages[0].sender;
+        me = _messageStore.messages[this.index].messages.messages[0].sender;
         other =
-            _messageStore.messages[widget.index].messages.messages[0].receiver;
+            _messageStore.messages[this.index].messages.messages[0].receiver;
       });
     } else {
       setState(() {
-        me =
-            _messageStore.messages[widget.index].messages.messages[0].receiver;
-        other =
-            _messageStore.messages[widget.index].messages.messages[0].sender;
+        me = _messageStore.messages[this.index].messages.messages[0].receiver;
+        other = _messageStore.messages[this.index].messages.messages[0].sender;
       });
     }
     _connectSocket();
@@ -300,7 +306,7 @@ class _MessageDetailState extends State<MessageDetail> {
     log(msg.toString());
 
     Interview currentInterview =
-        _messageStore.getInterview(widget.index, dataInterview['id']);
+        _messageStore.getInterview(this.index, dataInterview['id']);
     log("current interview " + currentInterview.toJson().toString());
     currentInterview.title = dataInterview['title'];
     currentInterview.startTime = DateTime.parse(dataInterview['startTime']);
@@ -308,7 +314,7 @@ class _MessageDetailState extends State<MessageDetail> {
 
     // _messageStore.updateInterview(widget.index, currentInterview);
     setState(() {
-      messages = _messageStore.messages[widget.index].messages.messages;
+      messages = _messageStore.messages[this.index].messages.messages;
     });
     this.socket.emit("UPDATE_INTERVIEW", msg);
   }
@@ -322,7 +328,7 @@ class _MessageDetailState extends State<MessageDetail> {
       "deleteAction": true
     };
     setState(() {
-      messages = _messageStore.messages[widget.index].messages.messages;
+      messages = _messageStore.messages[this.index].messages.messages;
     });
     this.socket.emit("UPDATE_INTERVIEW", msg);
   }
@@ -387,15 +393,18 @@ class _MessageDetailState extends State<MessageDetail> {
                             );
                             // Navigator.pop(context);
                           },
-                          child: Text("Schedule a meeting"),
+                          child: Text(AppLocalizations.of(context)
+                              .translate('schedule_a_meeting_text')),
                         ),
                       ],
                       cancelButton: CupertinoActionSheetAction(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child:
-                            Text("Cancel", style: TextStyle(color: Colors.red)),
+                        child: Text(
+                            AppLocalizations.of(context)
+                                .translate('cancel_text'),
+                            style: TextStyle(color: Colors.red)),
                       ),
                     );
                   });
@@ -517,7 +526,7 @@ class _MessageDetailState extends State<MessageDetail> {
               margin: EdgeInsets.all(10),
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Color(0xffF0F0F0),
+                color: _themeStore.darkMode ? Colors.black : Color(0xffF0F0F0),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -680,7 +689,8 @@ class _MessageDetailState extends State<MessageDetail> {
                 //   FocusScope.of(context).unfocus();
                 // },
                 decoration: InputDecoration(
-                    hintText: "Write message...",
+                    hintText: AppLocalizations.of(context)
+                        .translate('input_message_hint_text'),
                     hintStyle: TextStyle(color: Colors.black54),
                     border: InputBorder.none),
               ),

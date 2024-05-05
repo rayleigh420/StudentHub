@@ -1,16 +1,15 @@
 {
-  "login_start": "Below are list of strings for login es ",
-  "login_et_user_email": "Ingrese el correo electrónico del usuario",
-  "login_et_user_password": "Introducir la contraseña",
-  "login_btn_forgot_password": "¿Se te olvidó tu contraseña",
-  "login_btn_sign_in": "Registrarse",
-  "login_error_fill_fields": "Por favor complete todos los campos e",
-  "login_end": "------------------------------------------------------------------------------------",
+  "studet_text": "Student",
+  "students_text": "Students",
+  "days_ago_text": "days ago",
+  "browse_project_text": "Browse Projects",
+  "search_project_text": "Search Projects",
+  "no_project_found_text": "No projects found",
+  "created_at_text": "Created at",
+  "one_to_three_months": "1-3 months",
+  "three_to_six_months": "3-6 months",
+  "student_looking_for_text": "Students are looking for",
+  "student_description_text": "Students who can",
+  "every_student_text": "Everyone"
 
-  "home_start": "Below are list of strings for home",
-  "home_tv_posts": "Publicaciones",
-  "home_tv_error": "Error",
-  "home_tv_no_post_found": "No se han encontrado publicaciones",
-  "home_tv_choose_language": "Elige lengua",
-  "home_end": "-------------------------------------------------------------------------------------"
 }

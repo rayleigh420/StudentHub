@@ -112,6 +112,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   final int selectedIndex;
+  
+  static void pushToNextPage(BuildContext context, Widget nextPage) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => nextPage,
+      maintainState: true,
+    ));
+  }
 
   AppBottomNavigationBar({required this.selectedIndex});
   @override
@@ -126,6 +133,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
   final ProjectCompanyStore _projectCompanyStore = getIt<ProjectCompanyStore>();
   final TabStore _tabStore = getIt<TabStore>();
   final isLoggedIn = false;
+
   static List<Widget> _widgetOptions = <Widget>[
     BrowseProjectScreen(),
     MessageList(),
