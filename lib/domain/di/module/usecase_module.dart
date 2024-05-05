@@ -14,6 +14,7 @@ import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart
 import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
+import 'package:boilerplate/domain/usecase/auth/change_password_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_logout_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_signup_usecase.dart';
@@ -54,6 +55,7 @@ import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
+import 'package:boilerplate/presentation/user/change_password.dart';
 
 import '../../../di/service_locator.dart';
 
@@ -87,7 +89,7 @@ mixin UseCaseModule {
       DeletePostUseCase(getIt<PostRepository>()),
     );
 
-    //
+    // Auth
     getIt.registerSingleton<StudentHubLoginUC>(
       StudentHubLoginUC(getIt<AuthRepository>()),
     );
@@ -98,6 +100,10 @@ mixin UseCaseModule {
     getIt.registerSingleton<StudentHubLogoutUC>(StudentHubLogoutUC(
       getIt<AuthRepository>(),
     ));
+
+    getIt.registerSingleton<ChangePasswordUC>(
+      ChangePasswordUC(getIt<AuthRepository>()),
+    );
 
     // Profile:--------------------------------------------------------------------
     getIt.registerSingleton<ProfileTestUC>(

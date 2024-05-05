@@ -9,4 +9,5 @@ abstract class AuthRepository {
   Future<void> saveIsLoggedIn(bool value);
   Future<String> testToken();
   Future<void> logOut();
+  Future<bool> changePassword(String oldPassword, String newPassword);
 }
