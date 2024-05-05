@@ -2,6 +2,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/signup/input_signup/input_signup.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -56,8 +57,9 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
             //       fontWeight: FontWeight.bold),
             // ),
             const SizedBox(height: 17.0),
-            const Text(
-              'Join us as company or student',
+            Text(
+              AppLocalizations.of(context)
+                  .translate('join_us_as_company_student_text'),
               // textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 17,
@@ -94,7 +96,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               width: y,
             ),
             boxValue: 1,
-            text: "I am a company, find engineer for project"),
+            text: AppLocalizations.of(context).translate('i_am_company_text')),
         checkBoxItem(
             image: Image.asset(
               '${platformImage}company.png',
@@ -102,7 +104,7 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
               width: y,
             ),
             boxValue: 0,
-            text: "I am a student, find company for experience (money)"),
+            text: AppLocalizations.of(context).translate('i_am_student_text')),
       ],
     );
   }
@@ -121,8 +123,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
                 MediaQuery.of(context).size.height * 0.06),
           ),
           onPressed: onPress,
-          child: const Text(
-            'Create Account',
+          child: Text(
+            AppLocalizations.of(context).translate('create_account_text'),
             style: TextStyle(
               fontSize: 16,
               //fontFamily: "GGX88Reg",
@@ -140,7 +142,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
         children: [
           Container(
             alignment: Alignment.bottomCenter,
-            child: const Text("Already have a Student Hub account?"),
+            child: Text(AppLocalizations.of(context)
+                .translate('already_have_account_text')),
           ),
           const SizedBox(width: 5),
           GestureDetector(
@@ -149,8 +152,8 @@ class _SignUpIdentityState extends State<SignUpIdentity> {
                 return const InputLogin();
               }));
             },
-            child: const Text(
-              "Login",
+            child: Text(
+              AppLocalizations.of(context).translate('sign_in_text'),
               style: TextStyle(
                 color: Color(0xFF4285F4),
                 fontWeight: FontWeight.bold,
