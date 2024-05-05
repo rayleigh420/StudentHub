@@ -116,6 +116,20 @@ mixin _$ProfileStore on _ProfileStore, Store {
     return _$getProfileAsyncAction.run(() => super.getProfile());
   }
 
+  late final _$_ProfileStoreActionController =
+      ActionController(name: '_ProfileStore', context: context);
+
+  @override
+  void clearStoreData() {
+    final _$actionInfo = _$_ProfileStoreActionController.startAction(
+        name: '_ProfileStore.clearStoreData');
+    try {
+      return super.clearStoreData();
+    } finally {
+      _$_ProfileStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

@@ -6,6 +6,7 @@ import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
@@ -99,7 +100,8 @@ class _InputLoginState extends State<InputLogin> {
             children: [
               const SizedBox(height: 17.0),
               Text(
-                'Add your email and password',
+                AppLocalizations.of(context)
+                    .translate('add_your_email_and_password_text'),
                 // textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 17,
@@ -262,7 +264,8 @@ class _InputLoginState extends State<InputLogin> {
                 //     ? OutlineInputBorder(
                 //         borderSide: BorderSide(color: Colors.red))
                 //     : OutlineInputBorder(borderSide: BorderSide.none),
-                hintText: 'Enter your email',
+                hintText: AppLocalizations.of(context)
+                    .translate('enter_your_email_hint_text'),
                 hintStyle: TextStyle(
                   // //fontFamily: "GGX88Reg_Light",
                   color: Color(0xFFc6c6c6),
@@ -275,9 +278,11 @@ class _InputLoginState extends State<InputLogin> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return AppLocalizations.of(context)
+                      .translate('email_validator_empy_text');
                 } else if (!EmailValidate.isEmail(value)) {
-                  return 'Please enter a valid email';
+                  return AppLocalizations.of(context)
+                      .translate('email_validator_invalid_text');
                 }
                 return null;
               },
@@ -321,7 +326,8 @@ class _InputLoginState extends State<InputLogin> {
                 errorBorder: const OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red, width: 0.0),
                 ),
-                hintText: 'Enter your password',
+                hintText: AppLocalizations.of(context)
+                    .translate('enter_your_password_hint_text'),
                 hintStyle: const TextStyle(
                   //fontFamily: "GGX88Reg_Light",
 
@@ -345,9 +351,11 @@ class _InputLoginState extends State<InputLogin> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return AppLocalizations.of(context)
+                      .translate('password_validator_empy_text');
                 } else if (value.length < 8) {
-                  return 'Password must be at least 8 characters';
+                  return AppLocalizations.of(context)
+                      .translate('password_validator_invalid_text');
                 }
                 return null;
               },
@@ -359,7 +367,7 @@ class _InputLoginState extends State<InputLogin> {
                 ? Container(
                     height: 20,
                     child: Text(
-                      "Error: ${_loginFailText}",
+                      "${AppLocalizations.of(context).translate('error_text')}: ${_loginFailText}",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
@@ -383,8 +391,8 @@ class _InputLoginState extends State<InputLogin> {
                 MediaQuery.of(context).size.height * 0.06),
           ),
           onPressed: () => onPress(),
-          child: const Text(
-            'Sign In',
+          child: Text(
+            AppLocalizations.of(context).translate('sign_in_text'),
             style: TextStyle(
               fontSize: 16,
               //fontFamily: "GGX88Reg",
@@ -401,7 +409,8 @@ class _InputLoginState extends State<InputLogin> {
       children: [
         Container(
           alignment: Alignment.bottomCenter,
-          child: Text("Don't have Student Hub account?",
+          child: Text(
+              AppLocalizations.of(context).translate('dont_have_account_text'),
               style: TextStyle(fontSize: 14)),
         ),
         const SizedBox(width: 5),
@@ -412,8 +421,8 @@ class _InputLoginState extends State<InputLogin> {
               return const SignUpIdentity();
             }));
           },
-          child: const Text(
-            "Sign Up",
+          child:  Text(
+            AppLocalizations.of(context).translate('sign_up_text'),
             style: TextStyle(
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,

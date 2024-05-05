@@ -12,6 +12,7 @@ import 'package:boilerplate/domain/usecase/proposal/get_proposal_student.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_store.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class DashboardStudentScreen extends StatefulWidget {
@@ -110,9 +111,10 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                                 style: TextStyle(fontWeight: FontWeight.w600),
-                                "Your Projects"),
+                                AppLocalizations.of(context)
+                                    .translate('your_projects_text')),
                           ],
                         ),
 
@@ -140,7 +142,8 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            "You have a new message",
+                            AppLocalizations.of(context)
+                                .translate('you_have_new_message_text'),
                             style: TextStyle(fontSize: 15),
                           ),
                         ),

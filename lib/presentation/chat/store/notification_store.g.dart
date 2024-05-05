@@ -92,6 +92,17 @@ mixin _$NotificationStore on _NotificationStore, Store {
   }
 
   @override
+  dynamic clearStoreData() {
+    final _$actionInfo = _$_NotificationStoreActionController.startAction(
+        name: '_NotificationStore.clearStoreData');
+    try {
+      return super.clearStoreData();
+    } finally {
+      _$_NotificationStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 fetchNotifromSharedPref: ${fetchNotifromSharedPref},

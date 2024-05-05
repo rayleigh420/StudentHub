@@ -7,6 +7,7 @@ import 'package:boilerplate/domain/entity/project_2/project_list.dart';
 
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class SearchProjectScreen extends StatefulWidget {
@@ -44,7 +45,8 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
-              title: Text("Search Project"),
+              title: Text(AppLocalizations.of(context)
+                  .translate('search_project_text')),
             ),
             resizeToAvoidBottomInset: false,
             body: Container(

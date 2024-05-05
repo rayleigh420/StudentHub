@@ -7,6 +7,7 @@ import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
@@ -64,7 +65,8 @@ class _ChangePasswordState extends State<ChangePassword> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password'),
+        title: Text(AppLocalizations.of(context)
+            .translate('change_password_title_text')),
         // actions: [
         //   IconButton(
         //     icon: Icon(
@@ -91,7 +93,8 @@ class _ChangePasswordState extends State<ChangePassword> {
             children: [
               const SizedBox(height: 17.0),
               Text(
-                'Add your old password and new password',
+                AppLocalizations.of(context)
+                    .translate('add_your_old_password_and_new_text'),
                 // textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 17,
@@ -138,7 +141,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                'Old Password',
+                AppLocalizations.of(context).translate('old_password_text'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -173,7 +176,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                 errorBorder: const OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red, width: 0.0),
                 ),
-                hintText: 'Enter your old password',
+                hintText: AppLocalizations.of(context)
+                    .translate('enter_your_old_password_hint_text'),
                 hintStyle: const TextStyle(
                   //fontFamily: "GGX88Reg_Light",
 
@@ -197,9 +201,11 @@ class _ChangePasswordState extends State<ChangePassword> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return AppLocalizations.of(context)
+                      .translate('old_password_validator_empy_text');
                 } else if (value.length < 8) {
-                  return 'Password must be at least 8 characters';
+                  return AppLocalizations.of(context)
+                      .translate('old_password_validator_invalid_text');
                 }
                 return null;
               },
@@ -211,7 +217,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
               child: Text(
-                'New Password',
+                AppLocalizations.of(context).translate('new_password_text'),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -246,7 +252,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                 errorBorder: const OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.red, width: 0.0),
                 ),
-                hintText: 'Enter your password',
+                hintText: AppLocalizations.of(context)
+                    .translate('enter_your_new_password_hint_text'),
                 hintStyle: const TextStyle(
                   //fontFamily: "GGX88Reg_Light",
 
@@ -270,9 +277,11 @@ class _ChangePasswordState extends State<ChangePassword> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter some text';
+                  return AppLocalizations.of(context)
+                      .translate('new_password_validator_empy_text');
                 } else if (value.length < 8) {
-                  return 'Password must be at least 8 characters';
+                  return AppLocalizations.of(context)
+                      .translate('new_password_validator_invalid_text');
                 }
                 return null;
               },
@@ -284,7 +293,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 ? Container(
                     height: 20,
                     child: Text(
-                      "Error: ${_loginFailText}",
+                      "${AppLocalizations.of(context).translate('error_text')}: ${_loginFailText}",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           color: Colors.red, fontWeight: FontWeight.bold),
@@ -308,8 +317,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                 MediaQuery.of(context).size.height * 0.06),
           ),
           onPressed: () => onPress(),
-          child: const Text(
-            'Change Password',
+          child: Text(
+            AppLocalizations.of(context).translate('change_password_text'),
             style: TextStyle(
               fontSize: 16,
               //fontFamily: "GGX88Reg",
