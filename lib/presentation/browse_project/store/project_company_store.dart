@@ -112,4 +112,10 @@ abstract class _ProjectCompanyStore with Store {
     errorStore.errorMessage = "";
     getCompanyProjects();
   }
+
+  @action
+  clearStoreData() {
+    companyProjects = null;
+    success = false;
+  }
 }
