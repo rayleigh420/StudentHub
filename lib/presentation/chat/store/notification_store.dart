@@ -46,4 +46,10 @@ abstract class _NotificationStore with Store {
     errorStore.errorMessage = "";
     getNotifications();
   }
+
+  @action
+  clearStoreData() {
+    notifications.clear();
+    success = false;
+  }
 }

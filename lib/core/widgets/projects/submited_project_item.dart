@@ -1,5 +1,6 @@
 import 'package:boilerplate/core/widgets/project_modal.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class SubmitedProjectItem extends StatefulWidget {
@@ -73,7 +74,7 @@ class _SubmitedProjectItemState extends State<SubmitedProjectItem> {
                         height: 5,
                       ),
                       Text(
-                        "Submitted 3 days ago",
+                        "${AppLocalizations.of(context).translate('submitted_text')} 3 ${AppLocalizations.of(context).translate('days_ago_text')}",
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                       const SizedBox(
@@ -82,7 +83,9 @@ class _SubmitedProjectItemState extends State<SubmitedProjectItem> {
                       const SizedBox(
                         height: 5,
                       ),
-                      const Text("Student are looking for",
+                      Text(
+                          AppLocalizations.of(context)
+                              .translate('student_looking_for_text'),
                           style: TextStyle(fontSize: 13)),
                       ListView.builder(
                         shrinkWrap: true,

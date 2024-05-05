@@ -119,6 +119,17 @@ mixin _$ProjectCompanyStore on _ProjectCompanyStore, Store {
   }
 
   @override
+  dynamic clearStoreData() {
+    final _$actionInfo = _$_ProjectCompanyStoreActionController.startAction(
+        name: '_ProjectCompanyStore.clearStoreData');
+    try {
+      return super.clearStoreData();
+    } finally {
+      _$_ProjectCompanyStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 fetchCompanyProjectFuture: ${fetchCompanyProjectFuture},
