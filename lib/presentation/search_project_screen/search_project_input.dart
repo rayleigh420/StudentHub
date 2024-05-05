@@ -7,6 +7,7 @@ import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/saved_project/saved_project.dart';
 import 'package:boilerplate/presentation/search_project_screen/search_project_screen.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -112,7 +113,8 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
               focusNode: focusNode,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Search for projects",
+                hintText: AppLocalizations.of(context)
+                    .translate('search_project_text'),
                 prefixIcon: Icon(Icons.search, color: Colors.grey),
               ),
               onSubmitted: (value) {
@@ -132,7 +134,7 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
                 padding: EdgeInsets.all(5),
                 margin: EdgeInsets.all(5),
                 child: Text(
-                  "Cancel",
+                  AppLocalizations.of(context).translate('cancel_text'),
                   style: TextStyle(color: Colors.blue),
                 ),
               ))

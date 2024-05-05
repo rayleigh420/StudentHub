@@ -1,9 +1,12 @@
 import 'dart:developer';
 
 import 'package:boilerplate/core/widgets/schedules/schedule_meet_modal.dart';
+import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/message/interview.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/meeting/meeting.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +36,7 @@ class ScheduleItemChat extends StatefulWidget {
 
 class _ScheduleItemChatState extends State<ScheduleItemChat> {
   bool isCancelled = false;
+  final ThemeStore _themeStore = getIt<ThemeStore>();
   @override
   void initState() {
     super.initState();
@@ -52,7 +56,8 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
               context: context,
               builder: (context) {
                 return CupertinoActionSheet(
-                  title: Text("Reschedule or cancel meeting"),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('reschedule_or_cancel_meeting_text')),
                   actions: [
                     CupertinoActionSheetAction(
                       onPressed: () {
@@ -75,7 +80,8 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                           },
                         );
                       },
-                      child: Text("Re-schedule"),
+                      child: Text(AppLocalizations.of(context)
+                          .translate('reschedule_text')),
                     ),
                     CupertinoActionSheetAction(
                       onPressed: () {
@@ -83,7 +89,9 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                         widget.deleteSchedule!(widget.interview.id);
                         Navigator.of(context).pop();
                       },
-                      child: Text("Cancel meeting",
+                      child: Text(
+                          AppLocalizations.of(context)
+                              .translate('cancel_meeting_text'),
                           style: TextStyle(color: Colors.grey)),
                     ),
                   ],
@@ -91,7 +99,9 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text("Cancel", style: TextStyle(color: Colors.red)),
+                    child: Text(
+                        AppLocalizations.of(context).translate('cancel_text'),
+                        style: TextStyle(color: Colors.red)),
                   ),
                 );
               });
@@ -131,7 +141,7 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
                   getTimeDifference(widget.interview.startTime,
                               widget.interview.endTime)
                           .toString() +
-                      " minutes",
+                      " ${AppLocalizations.of(context).translate('minutes_text')}",
                   style: TextStyle(fontSize: 13, color: Colors.grey),
                 ),
               ],
@@ -140,15 +150,25 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
               height: 10,
             ),
             Text(
-              "Start time: " + formatDateTime(widget.interview.startTime),
-              style: TextStyle(fontSize: 13),
+              "${AppLocalizations.of(context).translate('start_time_text')}: " +
+                  formatDateTime(widget.interview.startTime),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: _themeStore.isPlatformDark(context)
+                      ? Colors.white
+                      : Colors.black),
             ),
             SizedBox(
               height: 10,
             ),
-            Text(
-              "End time: " + formatDateTime(widget.interview.endTime),
-              style: TextStyle(fontSize: 13),
+          Text(
+              "${AppLocalizations.of(context).translate('end_time_text')}: " +
+                  formatDateTime(widget.interview.endTime),
+              style: TextStyle(
+                  fontSize: 13,
+                  color: _themeStore.isPlatformDark(context)
+                      ? Colors.white
+                      : Colors.black),
             ),
             SizedBox(
               height: 10,
