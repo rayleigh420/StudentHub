@@ -11,9 +11,11 @@ import 'package:boilerplate/domain/entity/message/message.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
 import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 
 // import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -41,7 +43,7 @@ class _MessageDetailState extends State<MessageDetail> {
   final TextEditingController _messagecontroller = new TextEditingController();
   final ScrollController _controller = new ScrollController();
   final SharedPreferenceHelper _sharePref = getIt<SharedPreferenceHelper>();
-
+  final ThemeStore _themeStore = getIt<ThemeStore>();
   final MessageStore _messageStore = getIt<MessageStore>();
   late MessageUser me = MessageUser(id: -1, fullname: "");
   late MessageUser other = MessageUser(id: -1, fullname: "");
@@ -243,8 +245,7 @@ class _MessageDetailState extends State<MessageDetail> {
     } else {
       setState(() {
         me = _messageStore.messages[this.index].messages.messages[0].receiver;
-        other =
-            _messageStore.messages[this.index].messages.messages[0].sender;
+        other = _messageStore.messages[this.index].messages.messages[0].sender;
       });
     }
     _connectSocket();
@@ -392,15 +393,18 @@ class _MessageDetailState extends State<MessageDetail> {
                             );
                             // Navigator.pop(context);
                           },
-                          child: Text("Schedule a meeting"),
+                          child: Text(AppLocalizations.of(context)
+                              .translate('schedule_a_meeting_text')),
                         ),
                       ],
                       cancelButton: CupertinoActionSheetAction(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child:
-                            Text("Cancel", style: TextStyle(color: Colors.red)),
+                        child: Text(
+                            AppLocalizations.of(context)
+                                .translate('cancel_text'),
+                            style: TextStyle(color: Colors.red)),
                       ),
                     );
                   });
@@ -522,7 +526,7 @@ class _MessageDetailState extends State<MessageDetail> {
               margin: EdgeInsets.all(10),
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Color(0xffF0F0F0),
+                color: _themeStore.darkMode ? Colors.black : Color(0xffF0F0F0),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -685,7 +689,8 @@ class _MessageDetailState extends State<MessageDetail> {
                 //   FocusScope.of(context).unfocus();
                 // },
                 decoration: InputDecoration(
-                    hintText: "Write message...",
+                    hintText: AppLocalizations.of(context)
+                        .translate('input_message_hint_text'),
                     hintStyle: TextStyle(color: Colors.black54),
                     border: InputBorder.none),
               ),

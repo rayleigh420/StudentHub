@@ -3,6 +3,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/favorite/get_favorite_by_student_id.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 // import 'package:boilerplate/domain/entity/project/project.dart';
 
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class _ProjectItemState extends State<ProjectItem> {
                   children: [
                     widget.projDat.createdAt != null
                         ? Text(
-                            "Created ${dateDiff(DateTime.now(), widget.projDat.createdAt!)} days ago",
+                            "${AppLocalizations.of(context).translate("created_at_text")} ${dateDiff(DateTime.now(), widget.projDat.createdAt!)} ${AppLocalizations.of(context).translate("days_ago_text")}",
                             style: TextStyle(fontSize: 12, color: Colors.grey),
                           )
                         : Container(),
@@ -86,14 +87,14 @@ class _ProjectItemState extends State<ProjectItem> {
                       children: [
                         Text(
                             // "${widget.projDat.scopeFrom} ${widget.projDat.scopeFrom2} - ${widget.projDat.scopeTo} ${widget.projDat.scopeTo2}",
-                            "${widget.projDat.projectScopeFlag == 0 ? "One to three months" : "Three to six months"}",
+                            "${widget.projDat.projectScopeFlag == 0 ? AppLocalizations.of(context).translate("one_to_three_months") : AppLocalizations.of(context).translate("three_to_six_months")}",
                             style:
                                 TextStyle(fontSize: 13, color: Colors.black)),
                         Text(", ",
                             style:
                                 TextStyle(fontSize: 13, color: Colors.black)),
                         Text(
-                            "${widget.projDat.numberOfStudents} ${widget.projDat.numberOfStudents! > 1 ? "students" : "student"}",
+                            "${widget.projDat.numberOfStudents} ${widget.projDat.numberOfStudents! > 1 ? AppLocalizations.of(context).translate("students_text") : AppLocalizations.of(context).translate("student_text")}",
                             style:
                                 TextStyle(fontSize: 13, color: Colors.black)),
                       ],
@@ -101,7 +102,9 @@ class _ProjectItemState extends State<ProjectItem> {
                     const SizedBox(
                       height: 5,
                     ),
-                    const Text("Student are looking for",
+                    Text(
+                        AppLocalizations.of(context)
+                            .translate("student_looking_for_text"),
                         style: TextStyle(fontSize: 13, color: Colors.black)),
                     ListView.builder(
                       shrinkWrap: true,
@@ -111,7 +114,7 @@ class _ProjectItemState extends State<ProjectItem> {
                         return Padding(
                           padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 5.0),
                           child: Text(
-                              "${widget.projDat.description != null ? "-   Student who can ${widget.projDat.description!}" : "Everyone"}",
+                              "${widget.projDat.description != null ? "-   ${AppLocalizations.of(context).translate("student_description_text")} ${widget.projDat.description!}" : AppLocalizations.of(context).translate("every_student_text")}",
                               style:
                                   TextStyle(fontSize: 13, color: Colors.black)),
                         );
@@ -120,7 +123,8 @@ class _ProjectItemState extends State<ProjectItem> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Text("Proposals: ${widget.projDat.countProposals} proposals",
+                    Text(
+                        "Proposals: ${widget.projDat.countProposals} proposals",
                         // "Proposals: ${widget.projDat.proposals != null ? widget.projDat.proposals : 0} proposals",
                         style: TextStyle(fontSize: 13, color: Colors.black)),
                   ],

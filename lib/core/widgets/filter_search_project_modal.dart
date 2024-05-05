@@ -2,6 +2,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/usecase/project/search_project_usecase.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,8 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text("Filter", style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context).translate('filter_text'),
+                style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(
               height: DeviceUtils.getScaledHeight(context, 0.6),
               child: SingleChildScrollView(
@@ -68,11 +70,17 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                     SizedBox(height: 10),
                     const Divider(),
                     SizedBox(height: 10),
-                    const Text("Project length", style: TextStyle()),
+                    Text(
+                        AppLocalizations.of(context)
+                            .translate('project_length_text'),
+                        style: TextStyle()),
                     SizedBox(height: 10),
                     buildRadios(context),
                     SizedBox(height: 20),
-                    const Text("Students needed", style: TextStyle()),
+                    Text(
+                        AppLocalizations.of(context)
+                            .translate('student_needed_text'),
+                        style: TextStyle()),
                     SizedBox(height: 10),
                     Container(
                       padding: EdgeInsets.only(left: 15),
@@ -92,7 +100,8 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Number of students",
+                          hintText: AppLocalizations.of(context)
+                              .translate('input_student_needed_text'),
                         ),
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
@@ -104,7 +113,10 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text("Proposals less than", style: TextStyle()),
+                    Text(
+                        AppLocalizations.of(context)
+                            .translate('proposal_less_than_text'),
+                        style: TextStyle()),
                     SizedBox(height: 10),
                     Container(
                       padding: EdgeInsets.only(left: 15),
@@ -125,7 +137,8 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                         },
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Input proposal amount",
+                          hintText: AppLocalizations.of(context)
+                              .translate('input_proposal_amount_text'),
                         ),
                         onChanged: (value) {
                           // Handle search text change
@@ -169,7 +182,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
               },
             ),
             const SizedBox(width: 15),
-            const Text("1 to 3 months")
+            Text(AppLocalizations.of(context).translate('one_to_three_months'))
           ],
         ),
         const SizedBox(height: 10),
@@ -190,7 +203,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
               },
             ),
             const SizedBox(width: 15),
-            const Text("3 to 6 months")
+            Text(AppLocalizations.of(context).translate('three_to_six_months'))
           ],
         ),
         const SizedBox(height: 10),
@@ -224,7 +237,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                   ),
               width: DeviceUtils.getScaledWidth(context, 0.4),
               child: Text(
-                "Apply Now",
+                "Apply",
                 textAlign: TextAlign.center,
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -242,7 +255,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
             ),
             width: DeviceUtils.getScaledWidth(context, 0.4),
             child: Text(
-              "Save",
+              AppLocalizations.of(context).translate('save_text'),
               textAlign: TextAlign.center,
               style:
                   TextStyle(fontWeight: FontWeight.bold, color: Colors.black),

@@ -20,6 +20,7 @@ import 'package:boilerplate/presentation/chat/store/notification_store.dart';
 
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -48,10 +49,8 @@ class _MessageListState extends State<MessageList> {
   @override
   void initState() {
     super.initState();
-    // _connectSockets();
-    // _loadId();
+
     this._initSocket2();
-    //this._initSocket();
   }
 
   @override
@@ -250,8 +249,9 @@ class _MessageListState extends State<MessageList> {
                     keyboardType: TextInputType.text,
                     maxLines: 1,
                     onTapOutside: (event) => FocusScope.of(context).unfocus(),
-                    decoration: const InputDecoration(
-                      hintText: 'Search ',
+                    decoration: InputDecoration(
+                      hintText:
+                          AppLocalizations.of(context).translate('search_text'),
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -282,42 +282,6 @@ class _MessageListState extends State<MessageList> {
         }
       },
     );
-    // RefreshIndicator(
-    //           child: SingleChildScrollView(
-    //             physics: BouncingScrollPhysics(),
-    //             child: Container(
-    //               // height: DeviceUtils.getScaledHeight(context, 1),
-    //               child: Column(
-    //                 children: [
-    //                   Container(
-    //                     margin: EdgeInsets.only(top: 20),
-    //                     child: TextField(
-    //                       keyboardType: TextInputType.text,
-    //                       maxLines: 1,
-    //                       onTapOutside: (event) =>
-    //                           FocusScope.of(context).unfocus(),
-    //                       decoration: const InputDecoration(
-    //                         hintText: 'Search ',
-    //                         prefixIcon: Icon(Icons.search),
-    //                         border: OutlineInputBorder(
-    //                             borderRadius:
-    //                                 BorderRadius.all(Radius.circular(20))),
-    //                         contentPadding: EdgeInsets.all(10),
-    //                       ),
-    //                       onChanged: (value) {},
-    //                     ),
-    //                   ),
-    //                   SizedBox(
-    //                     height: 20,
-    //                   ),
-    //                   buildMessageListTab(context),
-
-    //                   // MessageProjectItem(),
-    //                 ],
-    //               ),
-    //             ),
-    //           ),
-    //           onRefresh: _pullRefresh)
   }
 
   // Widget buildMessageListTab(BuildContext context) {

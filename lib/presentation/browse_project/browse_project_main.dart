@@ -5,6 +5,7 @@ import 'package:boilerplate/presentation/browse_project/store/project_store.dart
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/saved_project/saved_project.dart';
 import 'package:boilerplate/presentation/search_project_screen/search_project_input.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
@@ -35,7 +36,8 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
     return SafeArea(
         child: Scaffold(
             appBar: AppBar(
-              title: Text("Browse Project"),
+              title: Text(AppLocalizations.of(context)
+                  .translate('browse_project_text')),
             ),
             resizeToAvoidBottomInset: false,
             body: Container(
@@ -111,8 +113,9 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
                   ),
                   Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: const Text(
-                        "Search",
+                      child: Text(
+                        AppLocalizations.of(context)
+                            .translate('search_project_text'),
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -179,7 +182,9 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
             )),
             onRefresh: _pullRefresh)
         : Center(
-            child: Text("No project found"),
+            child: Text(
+                AppLocalizations.of(context).translate('no_project_found_text'),
+                style: TextStyle(fontSize: 16, color: Colors.grey)),
           );
   }
 }
