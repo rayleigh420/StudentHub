@@ -149,8 +149,9 @@ class _MessageDetailState extends State<MessageDetail> {
       }
       log("NORMAL_EVENT");
       dynamic msg = data['notification']['message'];
-      dynamic interview = data['notification']['interview'];
-      dynamic meetingRoom = data['notification']['meetingRoom'];
+      dynamic interview = data['notification']['message']['interview'];
+      dynamic meetingRoom =
+          data['notification']['message']['interview']['meetingRoom'];
       dynamic sender = data['notification']['sender'];
       dynamic receiver = data['notification']['receiver'];
 

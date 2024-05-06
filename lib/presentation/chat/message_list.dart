@@ -134,8 +134,9 @@ class _MessageListState extends State<MessageList> {
               fullname: noti['notification']['sender']['fullname']),
           interview: null);
       if (noti['notification']['message']['messageFlag'] == 1) {
-        dynamic interview = data['notification']['interview'];
-        dynamic meetingRoom = data['notification']['meetingRoom'];
+        dynamic interview = data['notification']['message']['interview'];
+        dynamic meetingRoom =
+            data['notification']['message']['interview']['meetingRoom'];
         Interview interviewData = Interview.fromJson({
           "id": interview['id'],
           "title": interview['title'],
