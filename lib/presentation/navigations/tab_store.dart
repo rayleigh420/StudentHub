@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:mobx/mobx.dart';
 
 part 'tab_store.g.dart';
@@ -11,5 +13,6 @@ abstract class _TabStore with Store {
   @action
   void setTabIndex(int index) {
     selectedIndex = index;
+    log("đã chuyển index: $index");
   }
 }

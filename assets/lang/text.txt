@@ -1,0 +1,1 @@
+AppLocalizations.of(context).translate('verify_email_text')

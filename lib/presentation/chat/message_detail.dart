@@ -9,10 +9,13 @@ import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 
 import 'package:boilerplate/domain/entity/message/message_user.dart';
+import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
+import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 
 // import 'package:boilerplate/presentation/chat/message_list.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -40,13 +43,15 @@ class _MessageDetailState extends State<MessageDetail> {
   final TextEditingController _messagecontroller = new TextEditingController();
   final ScrollController _controller = new ScrollController();
   final SharedPreferenceHelper _sharePref = getIt<SharedPreferenceHelper>();
-
+  final ThemeStore _themeStore = getIt<ThemeStore>();
   final MessageStore _messageStore = getIt<MessageStore>();
   late MessageUser me = MessageUser(id: -1, fullname: "");
   late MessageUser other = MessageUser(id: -1, fullname: "");
   List<Message> messages = [];
   String token = '';
+  int index = -1;
   late Socket socket;
+  final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
 
   @override
   void initState() {
@@ -60,6 +65,7 @@ class _MessageDetailState extends State<MessageDetail> {
     socket.disconnect();
     socket.dispose();
     super.dispose();
+    _currentMessageStore.clearMessageListItem();
     // print("dispose detail message");
   }
 
@@ -121,11 +127,33 @@ class _MessageDetailState extends State<MessageDetail> {
 
     socket.on("RECEIVE_INTERVIEW", (data) {
       log("RECEIVE_INTERVIEW");
+      if (data['notification'] == null) {
+        log("CANCEL_INTERVIEW");
+        final projectId = data['projectId'];
+        final receiverId = data['receiverId'];
+        final senderId = data['senderId'];
+        final messageId = data['messageId'];
+        int index = _messageStore.getIndex(
+          projectId,
+          receiverId,
+          senderId,
+        );
+        setState(() {
+          messages.forEach((element) {
+            if (element.id == messageId) {
+              element.interview!.disableFlag = 1;
+            }
+          });
+        });
+        return;
+      }
+      log("NORMAL_EVENT");
       dynamic msg = data['notification']['message'];
       dynamic interview = data['notification']['interview'];
       dynamic meetingRoom = data['notification']['meetingRoom'];
       dynamic sender = data['notification']['sender'];
       dynamic receiver = data['notification']['receiver'];
+
       Interview interviewData = Interview.fromJson({
         "id": interview['id'],
         "title": interview['title'],
@@ -158,10 +186,28 @@ class _MessageDetailState extends State<MessageDetail> {
 
       message.interview = interviewData;
       log(message.toJson().toString());
-      setState(() {
-        messages.add(message);
-      });
+      if (data['notification']['content'] == 'Interview updated') {
+        final interviewId = interview['id'];
+        final newTitle = interview['title'];
+        final newStartTime = interview['startTime'];
+        final newEndTime = interview['endTime'];
+        Interview currentInterview =
+            _messageStore.getInterview(this.index, interviewId);
+        currentInterview.title = newTitle;
+        currentInterview.startTime = newStartTime;
+        currentInterview.endTime = newEndTime;
+
+        setState(() {
+          messages.add(message);
+          messages.removeLast();
+        });
+      } else {
+        setState(() {
+          messages.add(message);
+        });
+      }
     });
+
     socket.connect();
     // _messageStore.receiveMessage(msg);
   }
@@ -177,27 +223,29 @@ class _MessageDetailState extends State<MessageDetail> {
         widget.receiverId.toString() +
         " " +
         widget.senderId.toString());
-    int index = _messageStore.getIndex(
-        widget.projectId, widget.receiverId, widget.senderId);
-    List<Message> m = _messageStore.messages![widget.index].messages.messages;
-    log("index tu widget message_detail" + widget.index.toString());
+    if (widget.index == null) {
+      this.index = _messageStore.getIndex(
+          widget.projectId, widget.receiverId, widget.senderId);
+    } else {
+      this.index = widget.index;
+    }
+    List<Message> m = _messageStore.messages[this.index].messages.messages;
+    log("index tu widget message_detail" + this.index.toString());
     setState(() {
       messages = m;
     });
 
     if (id ==
-        _messageStore.messages![widget.index].messages.messages[0].sender.id) {
+        _messageStore.messages[this.index].messages.messages[0].sender.id) {
       setState(() {
-        me = _messageStore.messages![widget.index].messages.messages[0].sender;
+        me = _messageStore.messages[this.index].messages.messages[0].sender;
         other =
-            _messageStore.messages![widget.index].messages.messages[0].receiver;
+            _messageStore.messages[this.index].messages.messages[0].receiver;
       });
     } else {
       setState(() {
-        me =
-            _messageStore.messages![widget.index].messages.messages[0].receiver;
-        other =
-            _messageStore.messages![widget.index].messages.messages[0].sender;
+        me = _messageStore.messages[this.index].messages.messages[0].receiver;
+        other = _messageStore.messages[this.index].messages.messages[0].sender;
       });
     }
     _connectSocket();
@@ -241,16 +289,48 @@ class _MessageDetailState extends State<MessageDetail> {
 
     log(msg.toString());
     socket.emit("SCHEDULE_INTERVIEW", msg);
-    // {
-    //   "title": "Meeting",
-    //   "startTime": DateTime.now().toString(),
-    //   "endTime": DateTime.now().toString(),
-    //   "projectId": widget.projectId,
-    //   "senderId": me.id,
-    //   "receiverId": other.id,
-    //   "meeting_room_code": "abcde",
-    //   "meeting_room_id": "abcdf"
-    // }
+  }
+
+  void updateSchedule(dynamic dataInterview) {
+    dynamic msg = {
+      "interviewId": dataInterview['id'],
+      "title": dataInterview['title'],
+      "startTime": dataInterview['startTime'],
+      "endTime": dataInterview['endTime'],
+      "projectId": widget.projectId,
+      "senderId": me.id,
+      "receiverId": other.id,
+      "updateAction": true
+    };
+    log("data update nè " + msg.toString());
+    log(msg.toString());
+
+    Interview currentInterview =
+        _messageStore.getInterview(this.index, dataInterview['id']);
+    log("current interview " + currentInterview.toJson().toString());
+    currentInterview.title = dataInterview['title'];
+    currentInterview.startTime = DateTime.parse(dataInterview['startTime']);
+    currentInterview.endTime = DateTime.parse(dataInterview['endTime']);
+
+    // _messageStore.updateInterview(widget.index, currentInterview);
+    setState(() {
+      messages = _messageStore.messages[this.index].messages.messages;
+    });
+    this.socket.emit("UPDATE_INTERVIEW", msg);
+  }
+
+  void deleteSchedule(int projectId) {
+    dynamic msg = {
+      "interviewId": projectId,
+      "projectId": widget.projectId,
+      "senderId": me.id,
+      "receiverId": other.id,
+      "deleteAction": true
+    };
+    setState(() {
+      messages = _messageStore.messages[this.index].messages.messages;
+    });
+    this.socket.emit("UPDATE_INTERVIEW", msg);
   }
 
   void scrollToBottom() {
@@ -272,15 +352,6 @@ class _MessageDetailState extends State<MessageDetail> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // GestureDetector(
-              //   onTap: () {
-              //     Navigator.pop(context);
-              //   },
-              //   child: Padding(
-              //     padding: EdgeInsets.only(left: 10),
-              //     child: Icon(Icons.arrow_back_ios),
-              //   ),
-              // ),
               Container(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: CircleAvatar(
@@ -316,20 +387,24 @@ class _MessageDetailState extends State<MessageDetail> {
                                   newSchedule: (data) {
                                     newSchedule(data);
                                   },
+                                  isUpdate: false,
                                 );
                               },
                             );
                             // Navigator.pop(context);
                           },
-                          child: Text("Schedule a meeting"),
+                          child: Text(AppLocalizations.of(context)
+                              .translate('schedule_a_meeting_text')),
                         ),
                       ],
                       cancelButton: CupertinoActionSheetAction(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child:
-                            Text("Cancel", style: TextStyle(color: Colors.red)),
+                        child: Text(
+                            AppLocalizations.of(context)
+                                .translate('cancel_text'),
+                            style: TextStyle(color: Colors.red)),
                       ),
                     );
                   });
@@ -352,7 +427,7 @@ class _MessageDetailState extends State<MessageDetail> {
                     // mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildChatDivider(context, "6/6/2024"),
+                      // buildChatDivider(context, "6/6/2024"),
                       buildChat(),
                       const SizedBox(height: 70),
                     ],
@@ -399,10 +474,10 @@ class _MessageDetailState extends State<MessageDetail> {
                           return buildMessageSchedule(
                               context,
                               _messageStore
-                                  .messages![i].messages.messages[index],
+                                  .messages[i].messages.messages[index],
                               "assets/images/student.png");
                       } else {
-                        if (_messageStore.messages![i].messages.messages[index]
+                        if (_messageStore.messages[i].messages.messages[index]
                                 .interview ==
                             null) {
                           return buildMessageTo(
@@ -412,7 +487,7 @@ class _MessageDetailState extends State<MessageDetail> {
                         }
                         return buildMessageScheduleTo(
                             context,
-                            _messageStore.messages![i].messages.messages[index],
+                            _messageStore.messages[i].messages.messages[index],
                             "assets/images/student.png");
                       }
                     },
@@ -433,14 +508,6 @@ class _MessageDetailState extends State<MessageDetail> {
           decoration: BoxDecoration(
             color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(8),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.grey.withOpacity(0.5),
-            //     spreadRadius: 2,
-            //     blurRadius: 2,
-            //     offset: Offset(0, 2), // changes position of shadow
-            //   ),
-            // ],
           ),
           child: Text(
             message.content,
@@ -459,7 +526,7 @@ class _MessageDetailState extends State<MessageDetail> {
               margin: EdgeInsets.all(10),
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Color(0xffF0F0F0),
+                color: _themeStore.darkMode ? Colors.black : Color(0xffF0F0F0),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -486,15 +553,25 @@ class _MessageDetailState extends State<MessageDetail> {
 
   Widget buildMessageScheduleTo(
       BuildContext context, Message message, String avatarUrl) {
-    return Container(
-        alignment: Alignment.centerRight,
-        // width: DeviceUtils.getScaledWidth(context, 0.5),
-        padding: EdgeInsets.all(10),
-        child: ScheduleItemChat(
-          interview: message.interview!,
-          isCancelled: false,
-          type: 0,
-        ));
+    return GestureDetector(
+      onTap: () {
+        log(message.id.toString());
+      },
+      child: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.all(10),
+          child: ScheduleItemChat(
+            interview: message.interview!,
+            isCancelled: false,
+            type: 1,
+            updateSchedule: (data) {
+              updateSchedule(data);
+            },
+            deleteSchedule: (data) {
+              deleteSchedule(data);
+            },
+          )),
+    );
   }
 
   Widget buildChatDivider(BuildContext context, String date) {
@@ -612,7 +689,8 @@ class _MessageDetailState extends State<MessageDetail> {
                 //   FocusScope.of(context).unfocus();
                 // },
                 decoration: InputDecoration(
-                    hintText: "Write message...",
+                    hintText: AppLocalizations.of(context)
+                        .translate('input_message_hint_text'),
                     hintStyle: TextStyle(color: Colors.black54),
                     border: InputBorder.none),
               ),

@@ -5,6 +5,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
 import 'package:boilerplate/presentation/browse_project/store/project_company_store.dart';
 import 'package:boilerplate/presentation/project/company/project_post_1.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -21,8 +22,9 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // _projectCompanyStore.getCompanyProjects();
-    // if (!_projectCompanyStore.loading) {}
+    if (!_projectCompanyStore.loading) {
+      _projectCompanyStore.getCompanyProjects();
+    }
   }
 
   @override
@@ -46,9 +48,10 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                              Text(
                                   style: TextStyle(fontWeight: FontWeight.w600),
-                                  "Your Projects"),
+                                  AppLocalizations.of(context)
+                                      .translate('your_projects_text')),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
@@ -61,9 +64,10 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
                                                 ProjectPost1(),
                                             maintainState: false));
                                   },
-                                  child: const Text(
+                                  child: Text(
                                       style: TextStyle(fontSize: 16),
-                                      "Post a job")),
+                                      AppLocalizations.of(context)
+                                          .translate('post_a_job_text'))),
                             ],
                           ),
 

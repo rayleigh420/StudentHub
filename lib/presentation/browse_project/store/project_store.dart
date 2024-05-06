@@ -50,4 +50,10 @@ abstract class _ProjectStore with Store {
     errorStore.errorMessage = "";
     getProjects();
   }
+
+  @action
+  clearStoreData() {
+    projects = null;
+    success = false;
+  }
 }

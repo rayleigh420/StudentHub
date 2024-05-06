@@ -17,6 +17,7 @@ class Endpoints {
   static const String logIn = baseUrl + "/api/auth/sign-in";
   static const String signUp = baseUrl + "/api/auth/sign-up";
   static const String logOut = baseUrl + "/api/auth/logout";
+  static const String changePassword = baseUrl + "/api/user/changePassword";
 
   // profile endpoints
   static const String createProfileCompany = baseUrl + "/api/profile/company";

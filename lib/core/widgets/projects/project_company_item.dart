@@ -11,6 +11,7 @@ import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/companyReview/hire_offer.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -76,7 +77,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        "${dateDiff(DateTime.now(), widget.project.createdAt!).toString()} day ago",
+                        "${dateDiff(DateTime.now(), widget.project.createdAt!).toString()} ${AppLocalizations.of(context).translate('days_ago_text')}",
                         style: TextStyle(fontSize: 13),
                       )
                     ],
@@ -94,11 +95,13 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "Students are looking for",
+                    AppLocalizations.of(context)
+                        .translate('student_looking_for_text'),
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    "Everyone",
+                    AppLocalizations.of(context)
+                        .translate('every_student_text'),
                     style: TextStyle(fontSize: 14),
                   )
                   // if (widget.project.criteria.isNotEmpty)
@@ -119,7 +122,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                     children: [
                       Text(widget.project.countProposals.toString()),
                       Text(
-                        "Proposals",
+                        AppLocalizations.of(context).translate('proposal_text'),
                         style: TextStyle(fontWeight: FontWeight.w600),
                       )
                     ],
@@ -129,7 +132,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                     children: [
                       Text(widget.project.countMessages.toString()),
                       Text(
-                        "Messages",
+                        AppLocalizations.of(context).translate('message_text'),
                         style: TextStyle(fontWeight: FontWeight.w600),
                       )
                     ],
@@ -139,7 +142,7 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                     children: [
                       Text(widget.project.countHired.toString()),
                       Text(
-                        "Hired",
+                        AppLocalizations.of(context).translate('hired_text'),
                         style: TextStyle(fontWeight: FontWeight.w600),
                       )
                     ],
@@ -160,7 +163,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
               children: <Widget>[
                 ListTile(
                   leading: Icon(Icons.assignment),
-                  title: Text('View Proposals'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('view_proposal_text')),
                   onTap: () => {
                     Navigator.of(context, rootNavigator: false).push(
                         MaterialPageRoute(
@@ -171,7 +175,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ),
                 ListTile(
                   leading: Icon(Icons.message),
-                  title: Text('View messages'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('view_message_text')),
                   onTap: () => {
                     // _messageStore.newMessageListItem(
                     //     _profileStore.profile!.id, 1, widget.project)
@@ -179,7 +184,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ),
                 ListTile(
                   leading: Icon(Icons.person),
-                  title: Text('View hired'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('view_hired_text')),
                   onTap: () => {
                     Navigator.of(context, rootNavigator: false)
                         .push(MaterialPageRoute(
@@ -192,7 +198,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ),
                 ListTile(
                   leading: Icon(Icons.post_add),
-                  title: Text('View Job posting'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('view_job_posting_text')),
                   onTap: () => {
                     Navigator.of(context, rootNavigator: false)
                         .push(MaterialPageRoute(
@@ -205,7 +212,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ),
                 ListTile(
                   leading: Icon(Icons.edit),
-                  title: Text('Edit posting'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('edit_posting_text')),
                   onTap: () {
                     showModalBottomSheet(
                       isDismissible: true,
@@ -224,7 +232,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ),
                 ListTile(
                   leading: Icon(Icons.delete),
-                  title: Text('Remove posting'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('remove_posting_text')),
                   // onTap: () => {
                   //   deleteProjectsUseCase.call(
                   //       params: widget.project.projectId!)
@@ -238,7 +247,8 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                 ),
                 ListTile(
                   leading: Icon(Icons.close),
-                  title: Text('Close posting'),
+                  title: Text(AppLocalizations.of(context)
+                      .translate('archive_posting_text')),
                   // onTap: () =>
                   //     {updateProjectsUseCase.call(params: widget.project)},
                   onTap: () {

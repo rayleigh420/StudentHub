@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/time/getDurationFromDateTime.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,15 @@ import 'package:intl/intl.dart';
 
 class ScheduleMeetingModal extends StatefulWidget {
   final void Function(dynamic)? newSchedule;
-  const ScheduleMeetingModal({super.key, required this.newSchedule});
+  final void Function(dynamic)? updateSchedule;
+  final bool isUpdate;
+  final Interview? interview;
+  const ScheduleMeetingModal(
+      {super.key,
+      this.newSchedule,
+      this.updateSchedule,
+      this.interview,
+      required this.isUpdate});
 
   @override
   State<ScheduleMeetingModal> createState() => _ScheduleMeetingModalState();
@@ -28,6 +38,11 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
   void initState() {
     super.initState();
     fcNode.requestFocus();
+    _titleController.text = widget.interview?.title ?? "";
+    selectedStartDate = widget.interview?.startTime ?? DateTime.now();
+    selectedStartTime = widget.interview?.startTime ?? DateTime.now();
+    selectedEndDate = widget.interview?.endTime ?? DateTime.now();
+    selectedEndTime = widget.interview?.endTime ?? DateTime.now();
   }
 
   @override
@@ -57,11 +72,12 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text("Schedule a video call interview "),
+                    Text(AppLocalizations.of(context)
+                        .translate('schedule_video_call_text')),
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text("Title"),
+                    Text(AppLocalizations.of(context).translate('title_text')),
                     const SizedBox(
                       height: 16,
                     ),
@@ -69,7 +85,8 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                       controller: _titleController,
                       focusNode: fcNode,
                       decoration: InputDecoration(
-                        hintText: "Enter title",
+                        hintText: AppLocalizations.of(context)
+                            .translate('enter_title_hint_text'),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
@@ -104,7 +121,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Start Date"),
+              Text(AppLocalizations.of(context).translate('start_date_text')),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -247,7 +264,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("End Date"),
+              Text(AppLocalizations.of(context).translate('end_date_text')),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -403,7 +420,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
                 Navigator.of(context).pop();
               },
               child: Text(
-                "Cancel",
+                AppLocalizations.of(context).translate('cancel_text'),
                 style: TextStyle(
                   color: Colors.red,
                 ),
@@ -414,7 +431,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
               Navigator.of(context).pop();
             },
             child: Text(
-              "Save",
+              AppLocalizations.of(context).translate('save_text'),
               style: TextStyle(
                 color: Colors.blueAccent,
               ),
@@ -437,7 +454,9 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pop();
+            },
             child: Container(
               alignment: Alignment.center,
               height: DeviceUtils.getScaledHeight(context, 0.034),
@@ -458,17 +477,29 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
           ),
           GestureDetector(
             onTap: () {
-              dynamic data = {
-                "title": _titleController.text,
-                "content": _titleController.text,
-                "startTime": selectedStartTime.toIso8601String().toString(),
-                "endTime": selectedEndTime.toIso8601String().toString(),
-          
-              };
-              log("data từ schedule meet modal: "+data.toString());
-              widget.newSchedule!(data);
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              if (!widget.isUpdate!) {
+                dynamic data = {
+                  "title": _titleController.text,
+                  "content": _titleController.text,
+                  "startTime": selectedStartTime.toIso8601String().toString(),
+                  "endTime": selectedEndTime.toIso8601String().toString(),
+                };
+                log("data từ schedule meet modal: " + data.toString());
+                widget.newSchedule!(data);
+                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+              } else {
+                dynamic data = {
+                  "id": widget.interview!.id,
+                  "title": _titleController.text,
+                  "startTime": selectedStartTime.toIso8601String().toString(),
+                  "endTime": selectedEndTime.toIso8601String().toString(),
+                };
+                log("data từ schedule meet modal update: " + data.toString());
+                widget.updateSchedule!(data);
+                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+              }
             },
             child: Container(
               alignment: Alignment.center,
@@ -481,7 +512,7 @@ class _ScheduleMeetingModalState extends State<ScheduleMeetingModal> {
               ),
               width: DeviceUtils.getScaledWidth(context, 0.4),
               child: Text(
-                "Send Invite",
+                widget.isUpdate ? AppLocalizations.of(context).translate('update_text') : AppLocalizations.of(context).translate('new_invite_text'),
                 textAlign: TextAlign.center,
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.black),

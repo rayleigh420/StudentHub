@@ -9,6 +9,13 @@ part of 'message_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$MessageStore on _MessageStore, Store {
+  Computed<List<InterviewItem>>? _$interviewsComputed;
+
+  @override
+  List<InterviewItem> get interviews => (_$interviewsComputed ??=
+          Computed<List<InterviewItem>>(() => super.interviews,
+              name: '_MessageStore.interviews'))
+      .value;
   Computed<bool>? _$loadingComputed;
 
   @override
@@ -93,13 +100,13 @@ mixin _$MessageStore on _MessageStore, Store {
       Atom(name: '_MessageStore.messageList', context: context);
 
   @override
-  ObservableList<MessageListItem> get messageList {
+  ObservableList<Observable<MessageListItem>> get messageList {
     _$messageListAtom.reportRead();
     return super.messageList;
   }
 
   @override
-  set messageList(ObservableList<MessageListItem> value) {
+  set messageList(ObservableList<Observable<MessageListItem>> value) {
     _$messageListAtom.reportWrite(value, super.messageList, () {
       super.messageList = value;
     });
@@ -176,6 +183,17 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
+  int getIndexMessageList(int projectId, int receiverId, int senderId) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.getIndexMessageList');
+    try {
+      return super.getIndexMessageList(projectId, receiverId, senderId);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   int newMessageListItem(MessageUser sender, MessageUser receiver,
       Project project, Message? message) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
@@ -193,6 +211,50 @@ mixin _$MessageStore on _MessageStore, Store {
         name: '_MessageStore.addNewMessageToIndex');
     try {
       return super.addNewMessageToIndex(index, message);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateMessageListTitle(int index, String title) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.updateMessageListTitle');
+    try {
+      return super.updateMessageListTitle(index, title);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  Interview getInterview(int index, int interviewId) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.getInterview');
+    try {
+      return super.getInterview(index, interviewId);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateInterview(int index, Interview interview) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.updateInterview');
+    try {
+      return super.updateInterview(index, interview);
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic updateInterviewCancelled(int index, int messageId) {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.updateInterviewCancelled');
+    try {
+      return super.updateInterviewCancelled(index, messageId);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }
@@ -221,6 +283,17 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
+  dynamic clearStoreData() {
+    final _$actionInfo = _$_MessageStoreActionController.startAction(
+        name: '_MessageStore.clearStoreData');
+    try {
+      return super.clearStoreData();
+    } finally {
+      _$_MessageStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 fetchMessageFuture: ${fetchMessageFuture},
@@ -231,6 +304,7 @@ messageList: ${messageList},
 success: ${success},
 doneReloading: ${doneReloading},
 successMessages: ${successMessages},
+interviews: ${interviews},
 loading: ${loading},
 loadingMessageList: ${loadingMessageList}
     ''';
