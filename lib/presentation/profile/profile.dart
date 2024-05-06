@@ -171,7 +171,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ]),
               AccountItem(
                 icon: Icons.password,
-                title: 'Change Password',
+                title: AppLocalizations.of(context)
+                    .translate('change_password_text'),
                 onTap: () {
                   Navigator.of(context, rootNavigator: false).push(
                       MaterialPageRoute(
