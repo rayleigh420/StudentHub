@@ -124,7 +124,7 @@ class _ProposalItemsState extends State<ProposalItems> {
                                       widget.itemProposal!.coverLetter!,
                                       1));
                             }
-                            int index = _messageStore.newMessageListItem(
+                            int index = _messageStore.newMessageListItem2(
                                 MessageUser(
                                     id: _profileStore.profile!.id,
                                     fullname: _profileStore.profile!.fullname),

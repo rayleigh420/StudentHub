@@ -28,8 +28,12 @@ import 'package:boilerplate/domain/usecase/favorite/add_favorite_by_student_id.d
 import 'package:boilerplate/domain/usecase/favorite/get_favorite_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/get_language_by_student_id.dart';
 import 'package:boilerplate/domain/usecase/language/udpate_language_by_student_id.dart';
+import 'package:boilerplate/domain/usecase/message/cancel_schedule_message.dart';
 import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart';
 import 'package:boilerplate/domain/usecase/message/get_project_message.dart';
+import 'package:boilerplate/domain/usecase/message/new_message_usecase.dart';
+import 'package:boilerplate/domain/usecase/message/new_schedule_usecase.dart';
+import 'package:boilerplate/domain/usecase/message/update_schedule_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/find_post_by_id_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
@@ -196,5 +200,18 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<GetProjectMessageUseCase>(
         GetProjectMessageUseCase(getIt<MessageRepository>()));
+    getIt.registerSingleton<NewMessageUseCase>(
+      NewMessageUseCase(getIt<MessageRepository>()),
+    );
+
+    getIt.registerSingleton<NewScheduleUseCase>(
+      NewScheduleUseCase(getIt<MessageRepository>()),
+    );
+    getIt.registerSingleton<UpdateScheduleUseCase>(
+      UpdateScheduleUseCase(getIt<MessageRepository>()),
+    );
+    getIt.registerSingleton<CancelScheduleUseCase>(
+      CancelScheduleUseCase(getIt<MessageRepository>()),
+    );
   }
 }

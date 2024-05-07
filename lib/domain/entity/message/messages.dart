@@ -1,7 +1,8 @@
 import 'package:boilerplate/domain/entity/message/message.dart';
+import 'package:mobx/mobx.dart';
 
 class Messages {
-  List<Message> messages;
+  ObservableList<Message> messages;
   int projectId;
   int receiverId;
   int senderId;
@@ -13,8 +14,8 @@ class Messages {
 
   factory Messages.fromJson(Map<String, dynamic> map) {
     return Messages(
-      messages:
-          List<Message>.from(map['messages'].map((x) => Message.fromJson(x))),
+      messages: ObservableList.of(
+          map['messages'].map<Message>((x) => Message.fromJson(x))),
       projectId: map['projectId'],
       receiverId: map['receiverId'],
       senderId: map['senderId'],

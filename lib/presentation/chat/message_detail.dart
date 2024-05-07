@@ -9,6 +9,13 @@ import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/domain/entity/message/message.dart';
 
 import 'package:boilerplate/domain/entity/message/message_user.dart';
+import 'package:boilerplate/domain/entity/notification/message_noti.dart';
+import 'package:boilerplate/domain/entity/notification/notification.dart';
+import 'package:boilerplate/domain/entity/project_2/project.dart';
+import 'package:boilerplate/domain/usecase/message/cancel_schedule_message.dart';
+import 'package:boilerplate/domain/usecase/message/new_message_usecase.dart';
+import 'package:boilerplate/domain/usecase/message/new_schedule_usecase.dart';
+import 'package:boilerplate/domain/usecase/message/update_schedule_usecase.dart';
 import 'package:boilerplate/presentation/chat/store/current_message_store.dart';
 import 'package:boilerplate/presentation/chat/store/message_store.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
@@ -19,6 +26,7 @@ import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -28,12 +36,13 @@ class MessageDetail extends StatefulWidget {
   final int senderId;
   final dynamic index;
 
-  const MessageDetail(
-      {super.key,
-      required this.projectId,
-      required this.receiverId,
-      required this.senderId,
-      this.index});
+  MessageDetail({
+    super.key,
+    required this.projectId,
+    required this.receiverId,
+    required this.senderId,
+    this.index,
+  });
 
   @override
   State<MessageDetail> createState() => _MessageDetailState();
@@ -50,9 +59,15 @@ class _MessageDetailState extends State<MessageDetail> {
   List<Message> messages = [];
   String token = '';
   int index = -1;
+  final NewMessageUseCase _newMessageUseCase = getIt<NewMessageUseCase>();
+  final NewScheduleUseCase _newScheduleUseCase = getIt<NewScheduleUseCase>();
+  final UpdateScheduleUseCase _updateScheduleUseCase =
+      getIt<UpdateScheduleUseCase>();
+  final CancelScheduleUseCase _cancelScheduleUseCase =
+      getIt<CancelScheduleUseCase>();
   late Socket socket;
   final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
-
+  int count = 0;
   @override
   void initState() {
     super.initState();
@@ -71,7 +86,7 @@ class _MessageDetailState extends State<MessageDetail> {
 
   _connectSocket() {
     // socket = new SocketClient(widget.projectId);
-    final finalurl = Endpoints.baseUrl + '?project_id=$widget.projectId';
+    final finalurl = Endpoints.baseUrl;
     log("Connecting to $finalurl");
     socket = IO.io(
         Endpoints.baseUrl,
@@ -86,11 +101,10 @@ class _MessageDetailState extends State<MessageDetail> {
     socket.io.options?['extraHeaders'] = {
       'Authorization': 'Bearer ${token}',
     };
-    socket.io.options?['query'] = {'project_id': widget.projectId};
 
     socket.onConnect((data) {
       print('Connected');
-      log("Connected to $finalurl");
+      log("Connected to user id ${other.id}");
     });
 
     socket.onDisconnect((data) => {
@@ -99,113 +113,258 @@ class _MessageDetailState extends State<MessageDetail> {
     socket.onConnectError((data) => print('$data'));
     socket.onError((data) => print(data));
     socket.on("ERROR", (data) => print(data));
-    socket.on("RECEIVE_MESSAGE", (data) {
-      log("RECEIVE_MESSAGE");
-      print(data);
-      dynamic msg = data['notification']['message'];
-      msg['projectId'] = widget.projectId;
-      Message message = Message.fromJson({
-        "id": msg['id'],
-        "content": msg['content'],
-        "sender": {
-          "id": msg['senderId'],
-          "fullname": data['notification']['sender']['fullname']
-        },
-        "receiver": {
-          "id": msg['receiverId'],
-          "fullname": data['notification']['receiver']['fullname']
-        },
-        "messageFlag": msg['messageFlag'],
-        "createdAt": DateTime.now().toString(),
-        "interview": null
+    // socket.on("RECEIVE_MESSAGE", (data) {
+    //   log("RECEIVE_MESSAGE");
+    //   print(data);
+    //   dynamic msg = data['notification']['message'];
+    //   msg['projectId'] = widget.projectId;
+    //   Message message = Message.fromJson({
+    //     "id": msg['id'],
+    //     "content": msg['content'],
+    //     "sender": {
+    //       "id": msg['senderId'],
+    //       "fullname": data['notification']['sender']['fullname']
+    //     },
+    //     "receiver": {
+    //       "id": msg['receiverId'],
+    //       "fullname": data['notification']['receiver']['fullname']
+    //     },
+    //     "messageFlag": msg['messageFlag'],
+    //     "createdAt": DateTime.now().toString(),
+    //     "interview": null
+    //   });
+    //   setState(() {
+    //     messages.add(message);
+    //   });
+    // });
+
+    // socket.on("RECEIVE_INTERVIEW", (data) {
+    //   log("RECEIVE_INTERVIEW");
+    //   if (data['notification'] == null) {
+    //     log("CANCEL_INTERVIEW");
+    //     final projectId = data['projectId'];
+    //     final receiverId = data['receiverId'];
+    //     final senderId = data['senderId'];
+    //     final messageId = data['messageId'];
+    //     int index = _messageStore.getIndex(
+    //       projectId,
+    //       receiverId,
+    //       senderId,
+    //     );
+    //     setState(() {
+    //       messages.forEach((element) {
+    //         if (element.id == messageId) {
+    //           element.interview!.disableFlag = 1;
+    //         }
+    //       });
+    //     });
+    //     return;
+    //   }
+    //   log("NORMAL_EVENT");
+    //   dynamic msg = data['notification']['message'];
+    //   dynamic interview = data['notification']['message']['interview'];
+    //   dynamic meetingRoom =
+    //       data['notification']['message']['interview']['meetingRoom'];
+    //   dynamic sender = data['notification']['sender'];
+    //   dynamic receiver = data['notification']['receiver'];
+
+    //   Interview interviewData = Interview.fromJson({
+    //     "id": interview['id'],
+    //     "title": interview['title'],
+    //     "createdAt": interview['createdAt'],
+    //     "updatedAt": interview['updatedAt'],
+    //     "deletedAt": interview['deletedAt'],
+    //     "startTime": interview['startTime'],
+    //     "endTime": interview['endTime'],
+    //     "disableFlag": interview['disableFlag'],
+    //     "meetingRoomId": interview['meetingRoomId'],
+    //   });
+    //   MeetingRoom meetingRoomData = MeetingRoom.fromJson({
+    //     "id": meetingRoom['id'],
+    //     "createdAt": meetingRoom['createdAt'],
+    //     "updatedAt": meetingRoom['updatedAt'],
+    //     "deletedAt": meetingRoom['deletedAt'],
+    //     "meeting_room_code": meetingRoom['meeting_room_code'],
+    //     "meeting_room_id": meetingRoom['meeting_room_id'],
+    //     "expired_at": meetingRoom['expired_at'],
+    //   });
+    //   interviewData.meetingRoom = meetingRoomData;
+    //   Message message = Message.fromJson({
+    //     "id": msg['id'],
+    //     "content": msg['content'],
+    //     "sender": {"id": msg['senderId'], "fullname": sender['fullname']},
+    //     "receiver": {"id": msg['receiverId'], "fullname": receiver['fullname']},
+    //     "messageFlag": msg['messageFlag'],
+    //     "createdAt": msg['createdAt'],
+    //   });
+
+    //   message.interview = interviewData;
+    //   log(message.toJson().toString());
+    //   if (data['notification']['content'] == 'Interview updated') {
+    //     final interviewId = interview['id'];
+    //     final newTitle = interview['title'];
+    //     final newStartTime = interview['startTime'];
+    //     final newEndTime = interview['endTime'];
+    //     Interview currentInterview =
+    //         _messageStore.getInterview(this.index, interviewId);
+    //     currentInterview.title = newTitle;
+    //     currentInterview.startTime = newStartTime;
+    //     currentInterview.endTime = newEndTime;
+
+    //     setState(() {
+    //       messages.add(message);
+    //       messages.removeLast();
+    //     });
+    //   } else {
+    //     setState(() {
+    //       messages.add(message);
+    //     });
+    //   }
+    // });
+
+    socket.on("NOTI_${other.id}", (data) {
+      setState(() {
+        count = count + 1;
       });
 
-      setState(() {
-        messages.add(message);
-      });
+      dynamic noti = data;
+
+      log("index ban đầu: $index");
+      Message newMessage = Message(
+          id: noti['notification']['message']['id'],
+          content: noti['notification']['message']['content'],
+          createdAt:
+              DateTime.parse(noti['notification']['message']['createdAt']),
+          messageFlag: noti['notification']['message']['messageFlag'],
+          receiver: MessageUser(
+              id: noti['notification']['receiver']['id'],
+              fullname: noti['notification']['receiver']['fullname']),
+          sender: MessageUser(
+              id: noti['notification']['sender']['id'],
+              fullname: noti['notification']['sender']['fullname']),
+          interview: null);
+      if (noti['notification']['message']['messageFlag'] == 1) {
+        dynamic interview = data['notification']['message']['interview'];
+        dynamic meetingRoom =
+            data['notification']['message']['interview']['meetingRoom'];
+        Interview interviewData = Interview.fromJson({
+          "id": interview['id'],
+          "title": interview['title'],
+          "createdAt": interview['createdAt'],
+          "updatedAt": interview['updatedAt'],
+          "deletedAt": interview['deletedAt'],
+          "startTime": interview['startTime'],
+          "endTime": interview['endTime'],
+          "disableFlag": interview['disableFlag'],
+          "meetingRoomId": interview['meetingRoomId'],
+        });
+        MeetingRoom meetingRoomData = MeetingRoom.fromJson({
+          "id": meetingRoom['id'],
+          "createdAt": meetingRoom['createdAt'],
+          "updatedAt": meetingRoom['updatedAt'],
+          "deletedAt": meetingRoom['deletedAt'],
+          "meeting_room_code": meetingRoom['meeting_room_code'],
+          "meeting_room_id": meetingRoom['meeting_room_id'],
+          "expired_at": meetingRoom['expired_at'],
+        });
+        interviewData.meetingRoom = meetingRoomData;
+        newMessage.interview = interviewData;
+      }
+      int index2 = _messageStore.getIndexMessageList(
+          noti['notification']['message']['projectId'],
+          noti['notification']['receiver']['id'],
+          noti['notification']['sender']['id']);
+
+      if (noti['notification']['content'] == "Interview updated") {
+        _messageStore.updateInterview2(index, {
+          "interviewId": data['notification']['message']['interview']['id'],
+          "title": data['notification']['message']['interview']['title'],
+          "startTime": data['notification']['message']['interview']
+              ['startTime'],
+          "endTime": data['notification']['message']['interview']['endTime'],
+        });
+      } else if (noti['notification']['content'] == "Interview cancelled") {
+        _messageStore.updateInterviewCancelled2(
+            index, noti['notification']['message']['interview']['id']);
+      } else {
+        _messageStore.addNewMessageToIndex2(index, newMessage);
+        _messageStore.updateMessageListTitle(index2,
+            "${noti['notification']['sender']['fullname']}: ${noti['notification']['message']['content']}");
+
+        //notification
+      }
     });
 
-    socket.on("RECEIVE_INTERVIEW", (data) {
-      log("RECEIVE_INTERVIEW");
-      if (data['notification'] == null) {
-        log("CANCEL_INTERVIEW");
-        final projectId = data['projectId'];
-        final receiverId = data['receiverId'];
-        final senderId = data['senderId'];
-        final messageId = data['messageId'];
-        int index = _messageStore.getIndex(
-          projectId,
-          receiverId,
-          senderId,
-        );
-        setState(() {
-          messages.forEach((element) {
-            if (element.id == messageId) {
-              element.interview!.disableFlag = 1;
-            }
-          });
+    socket.on("NOTI_${me.id}", (data) {
+      setState(() {
+        count = count + 1;
+      });
+
+      dynamic noti = data;
+
+      log("index ban đầu: $index");
+      Message newMessage = Message(
+          id: noti['notification']['message']['id'],
+          content: noti['notification']['message']['content'],
+          createdAt:
+              DateTime.parse(noti['notification']['message']['createdAt']),
+          messageFlag: noti['notification']['message']['messageFlag'],
+          receiver: MessageUser(
+              id: noti['notification']['receiver']['id'],
+              fullname: noti['notification']['receiver']['fullname']),
+          sender: MessageUser(
+              id: noti['notification']['sender']['id'],
+              fullname: noti['notification']['sender']['fullname']),
+          interview: null);
+      if (noti['notification']['message']['messageFlag'] == 1) {
+        dynamic interview = data['notification']['message']['interview'];
+        dynamic meetingRoom =
+            data['notification']['message']['interview']['meetingRoom'];
+        Interview interviewData = Interview.fromJson({
+          "id": interview['id'],
+          "title": interview['title'],
+          "createdAt": interview['createdAt'],
+          "updatedAt": interview['updatedAt'],
+          "deletedAt": interview['deletedAt'],
+          "startTime": interview['startTime'],
+          "endTime": interview['endTime'],
+          "disableFlag": interview['disableFlag'],
+          "meetingRoomId": interview['meetingRoomId'],
         });
-        return;
+        MeetingRoom meetingRoomData = MeetingRoom.fromJson({
+          "id": meetingRoom['id'],
+          "createdAt": meetingRoom['createdAt'],
+          "updatedAt": meetingRoom['updatedAt'],
+          "deletedAt": meetingRoom['deletedAt'],
+          "meeting_room_code": meetingRoom['meeting_room_code'],
+          "meeting_room_id": meetingRoom['meeting_room_id'],
+          "expired_at": meetingRoom['expired_at'],
+        });
+        interviewData.meetingRoom = meetingRoomData;
+        newMessage.interview = interviewData;
       }
-      log("NORMAL_EVENT");
-      dynamic msg = data['notification']['message'];
-      dynamic interview = data['notification']['message']['interview'];
-      dynamic meetingRoom =
-          data['notification']['message']['interview']['meetingRoom'];
-      dynamic sender = data['notification']['sender'];
-      dynamic receiver = data['notification']['receiver'];
+      int index2 = _messageStore.getIndexMessageList(
+          noti['notification']['message']['projectId'],
+          noti['notification']['receiver']['id'],
+          noti['notification']['sender']['id']);
 
-      Interview interviewData = Interview.fromJson({
-        "id": interview['id'],
-        "title": interview['title'],
-        "createdAt": interview['createdAt'],
-        "updatedAt": interview['updatedAt'],
-        "deletedAt": interview['deletedAt'],
-        "startTime": interview['startTime'],
-        "endTime": interview['endTime'],
-        "disableFlag": interview['disableFlag'],
-        "meetingRoomId": interview['meetingRoomId'],
-      });
-      MeetingRoom meetingRoomData = MeetingRoom.fromJson({
-        "id": meetingRoom['id'],
-        "createdAt": meetingRoom['createdAt'],
-        "updatedAt": meetingRoom['updatedAt'],
-        "deletedAt": meetingRoom['deletedAt'],
-        "meeting_room_code": meetingRoom['meeting_room_code'],
-        "meeting_room_id": meetingRoom['meeting_room_id'],
-        "expired_at": meetingRoom['expired_at'],
-      });
-      interviewData.meetingRoom = meetingRoomData;
-      Message message = Message.fromJson({
-        "id": msg['id'],
-        "content": msg['content'],
-        "sender": {"id": msg['senderId'], "fullname": sender['fullname']},
-        "receiver": {"id": msg['receiverId'], "fullname": receiver['fullname']},
-        "messageFlag": msg['messageFlag'],
-        "createdAt": msg['createdAt'],
-      });
-
-      message.interview = interviewData;
-      log(message.toJson().toString());
-      if (data['notification']['content'] == 'Interview updated') {
-        final interviewId = interview['id'];
-        final newTitle = interview['title'];
-        final newStartTime = interview['startTime'];
-        final newEndTime = interview['endTime'];
-        Interview currentInterview =
-            _messageStore.getInterview(this.index, interviewId);
-        currentInterview.title = newTitle;
-        currentInterview.startTime = newStartTime;
-        currentInterview.endTime = newEndTime;
-
-        setState(() {
-          messages.add(message);
-          messages.removeLast();
+      if (noti['notification']['content'] == "Interview updated") {
+        _messageStore.updateInterview2(index, {
+          "interviewId": data['notification']['message']['interview']['id'],
+          "title": data['notification']['message']['interview']['title'],
+          "startTime": data['notification']['message']['interview']
+              ['startTime'],
+          "endTime": data['notification']['message']['interview']['endTime'],
         });
+      } else if (noti['notification']['content'] == "Interview cancelled") {
+        _messageStore.updateInterviewCancelled2(
+            index, noti['notification']['message']['interview']['id']);
       } else {
-        setState(() {
-          messages.add(message);
-        });
+        _messageStore.addNewMessageToIndex2(index, newMessage);
+        _messageStore.updateMessageListTitle(index2,
+            "${noti['notification']['sender']['fullname']}: ${noti['notification']['message']['content']}");
+
+        //notification
       }
     });
 
@@ -225,28 +384,27 @@ class _MessageDetailState extends State<MessageDetail> {
         " " +
         widget.senderId.toString());
     if (widget.index == null) {
-      this.index = _messageStore.getIndex(
+      this.index = _messageStore.getIndex2(
           widget.projectId, widget.receiverId, widget.senderId);
     } else {
       this.index = widget.index;
     }
-    List<Message> m = _messageStore.messages[this.index].messages.messages;
+    _currentMessageStore.setIndex(this.index);
+    // List<Message> m = _messageStore.messages2[this.index].;
     log("index tu widget message_detail" + this.index.toString());
-    setState(() {
-      messages = m;
-    });
+    // setState(() {
+    //   messages = m;
+    // });
 
-    if (id ==
-        _messageStore.messages[this.index].messages.messages[0].sender.id) {
+    if (id == _messageStore.messages2[this.index].messages[0].sender.id) {
       setState(() {
-        me = _messageStore.messages[this.index].messages.messages[0].sender;
-        other =
-            _messageStore.messages[this.index].messages.messages[0].receiver;
+        me = _messageStore.messages2[this.index].messages[0].sender;
+        other = _messageStore.messages2[this.index].messages[0].receiver;
       });
     } else {
       setState(() {
-        me = _messageStore.messages[this.index].messages.messages[0].receiver;
-        other = _messageStore.messages[this.index].messages.messages[0].sender;
+        me = _messageStore.messages2[this.index].messages[0].receiver;
+        other = _messageStore.messages2[this.index].messages[0].sender;
       });
     }
     _connectSocket();
@@ -272,6 +430,27 @@ class _MessageDetailState extends State<MessageDetail> {
     });
   }
 
+  void newMessageApi(String content) {
+    Message newMessage = Message(
+      id: -1,
+      content: content,
+      sender: me,
+      receiver: other,
+      createdAt: DateTime.now(),
+      interview: null,
+      messageFlag: 0,
+    );
+    //callapi
+    _newMessageUseCase(
+        params: MessageParams(message: {
+      "content": newMessage.content,
+      "senderId": newMessage.sender.id,
+      "receiverId": newMessage.receiver.id,
+      "projectId": widget.projectId,
+      "messageFlag": 0
+    }));
+  }
+
   void newSchedule(dynamic dataInterview) {
     dynamic msg = {
       "title": dataInterview['title'],
@@ -292,54 +471,90 @@ class _MessageDetailState extends State<MessageDetail> {
     socket.emit("SCHEDULE_INTERVIEW", msg);
   }
 
-  void updateSchedule(dynamic dataInterview) {
+  void newScheduleApi(dynamic dataInterview) {
     dynamic msg = {
-      "interviewId": dataInterview['id'],
       "title": dataInterview['title'],
+      "content": "Schedule a meeting",
       "startTime": dataInterview['startTime'],
       "endTime": dataInterview['endTime'],
       "projectId": widget.projectId,
       "senderId": me.id,
       "receiverId": other.id,
-      "updateAction": true
+      "meeting_room_code":
+          "${other.id}_${me.id}_${DateTime.now().toIso8601String()}",
+      "meeting_room_id":
+          "${me.id}_${other.id}_${DateTime.now().toIso8601String()}"
     };
-    log("data update nè " + msg.toString());
-    log(msg.toString());
-
-    Interview currentInterview =
-        _messageStore.getInterview(this.index, dataInterview['id']);
-    log("current interview " + currentInterview.toJson().toString());
-    currentInterview.title = dataInterview['title'];
-    currentInterview.startTime = DateTime.parse(dataInterview['startTime']);
-    currentInterview.endTime = DateTime.parse(dataInterview['endTime']);
-
-    // _messageStore.updateInterview(widget.index, currentInterview);
-    setState(() {
-      messages = _messageStore.messages[this.index].messages.messages;
-    });
-    this.socket.emit("UPDATE_INTERVIEW", msg);
+    //callapi
+    _newScheduleUseCase.call(params: NewScheduleParams(message: msg));
+    log("data nè " + msg.toString());
   }
 
-  void deleteSchedule(int projectId) {
+  // void updateSchedule(dynamic dataInterview) {
+  //   dynamic msg = {
+  //     "interviewId": dataInterview['id'],
+  //     "title": dataInterview['title'],
+  //     "startTime": dataInterview['startTime'],
+  //     "endTime": dataInterview['endTime'],
+  //     "projectId": widget.projectId,
+  //     "senderId": me.id,
+  //     "receiverId": other.id,
+  //     "updateAction": true
+  //   };
+  //   log("data update nè " + msg.toString());
+  //   log(msg.toString());
+
+  //   Interview currentInterview =
+  //       _messageStore.getInterview(this.index, dataInterview['id']);
+  //   log("current interview " + currentInterview.toJson().toString());
+  //   currentInterview.title = dataInterview['title'];
+  //   currentInterview.startTime = DateTime.parse(dataInterview['startTime']);
+  //   currentInterview.endTime = DateTime.parse(dataInterview['endTime']);
+
+  //   // _messageStore.updateInterview(widget.index, currentInterview);
+  //   setState(() {
+  //     messages = _messageStore.messages[this.index].messages.messages;
+  //   });
+  //   this.socket.emit("UPDATE_INTERVIEW", msg);
+  // }
+
+  void updateScheduleApi(dynamic dataInterview) {
     dynamic msg = {
-      "interviewId": projectId,
-      "projectId": widget.projectId,
-      "senderId": me.id,
-      "receiverId": other.id,
-      "deleteAction": true
+      "title": dataInterview['title'],
+      "startTime": dataInterview['startTime'],
+      "endTime": dataInterview['endTime'],
     };
-    setState(() {
-      messages = _messageStore.messages[this.index].messages.messages;
-    });
-    this.socket.emit("UPDATE_INTERVIEW", msg);
+    //callapi
+    _updateScheduleUseCase.call(
+        params: UpdatecheduleParams(
+            interviewId: dataInterview['id'], message: msg));
+    log("data update nè " + msg.toString());
   }
 
-  void scrollToBottom() {
-    _controller.animateTo(
-      _controller.position.minScrollExtent,
-      duration: Duration(seconds: 1),
-      curve: Curves.ease,
-    );
+  // void deleteSchedule(int projectId) {
+  //   dynamic msg = {
+  //     "interviewId": projectId,
+  //     "projectId": widget.projectId,
+  //     "senderId": me.id,
+  //     "receiverId": other.id,
+  //     "deleteAction": true
+  //   };
+  //   setState(() {
+  //     messages = _messageStore.messages[this.index].messages.messages;
+  //   });
+  //   this.socket.emit("UPDATE_INTERVIEW", msg);
+  // }
+
+  void deleteScheduleApi(int interviewId) {
+    // dynamic msg = {
+    //   "interviewId": interviewId,
+    //   "projectId": widget.projectId,
+    //   "senderId": me.id,
+    //   "receiverId": other.id,
+    //   "deleteAction": true
+    // };
+    _cancelScheduleUseCase.call(
+        params: CancelScheduleParams(interviewId: interviewId));
   }
 
   @override
@@ -361,7 +576,15 @@ class _MessageDetailState extends State<MessageDetail> {
                   backgroundImage: AssetImage('assets/images/student.png'),
                 ),
               ),
-              Text(other.fullname)
+              Text(other.fullname),
+              const SizedBox(
+                width: 10,
+              ),
+              SizedBox(
+                child: Text(count.toString()),
+                height: 0,
+                width: 0,
+              )
             ],
           ),
         ),
@@ -386,7 +609,7 @@ class _MessageDetailState extends State<MessageDetail> {
                               builder: (context) {
                                 return ScheduleMeetingModal(
                                   newSchedule: (data) {
-                                    newSchedule(data);
+                                    newScheduleApi(data);
                                   },
                                   isUpdate: false,
                                 );
@@ -444,7 +667,7 @@ class _MessageDetailState extends State<MessageDetail> {
   }
 
   Widget buildChat() {
-    int i = _messageStore.getIndex(
+    int i = _messageStore.getIndex2(
         widget.projectId, widget.receiverId, widget.senderId);
 
     return _messageStore.loading
@@ -458,37 +681,31 @@ class _MessageDetailState extends State<MessageDetail> {
                         ScrollViewKeyboardDismissBehavior.onDrag,
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount:
-                        _messageStore.messages![i].messages.messages.length,
+                    itemCount: _messageStore.messages2[i].messages.length,
                     itemBuilder: (context, index) {
-                      if (_messageStore.messages![i].messages.messages[index]
-                              .sender.id !=
+                      if (_messageStore
+                              .messages2[i].messages[index].sender.id !=
                           me.id) {
-                        if (_messageStore.messages![i].messages.messages[index]
-                                .interview ==
+                        if (_messageStore
+                                .messages2[i].messages[index].interview ==
                             null) {
-                          return buildMessageFrom(
-                              context,
-                              _messageStore
-                                  .messages![i].messages.messages[index]);
+                          return buildMessageFrom(context,
+                              _messageStore.messages2[i].messages[index]);
                         } else
                           return buildMessageSchedule(
                               context,
-                              _messageStore
-                                  .messages[i].messages.messages[index],
+                              _messageStore.messages2[i].messages[index],
                               "assets/images/student.png");
                       } else {
-                        if (_messageStore.messages[i].messages.messages[index]
-                                .interview ==
+                        if (_messageStore
+                                .messages2[i].messages[index].interview ==
                             null) {
-                          return buildMessageTo(
-                              context,
-                              _messageStore
-                                  .messages![i].messages.messages[index]);
+                          return buildMessageTo(context,
+                              _messageStore.messages2[i].messages[index]);
                         }
                         return buildMessageScheduleTo(
                             context,
-                            _messageStore.messages[i].messages.messages[index],
+                            _messageStore.messages2[i].messages[index],
                             "assets/images/student.png");
                       }
                     },
@@ -566,10 +783,10 @@ class _MessageDetailState extends State<MessageDetail> {
             isCancelled: false,
             type: 1,
             updateSchedule: (data) {
-              updateSchedule(data);
+              updateScheduleApi(data);
             },
             deleteSchedule: (data) {
-              deleteSchedule(data);
+              deleteScheduleApi(data);
             },
           )),
     );
@@ -701,7 +918,8 @@ class _MessageDetailState extends State<MessageDetail> {
             ),
             FloatingActionButton(
               onPressed: () {
-                newMessage(_messagecontroller.text);
+                // newMessage(_messagecontroller.text);
+                newMessageApi(_messagecontroller.text);
                 _messagecontroller.clear();
               },
               child: Icon(

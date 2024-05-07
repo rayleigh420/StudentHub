@@ -9,12 +9,12 @@ part of 'message_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$MessageStore on _MessageStore, Store {
-  Computed<List<InterviewItem>>? _$interviewsComputed;
+  Computed<List<InterviewItem>>? _$interviews2Computed;
 
   @override
-  List<InterviewItem> get interviews => (_$interviewsComputed ??=
-          Computed<List<InterviewItem>>(() => super.interviews,
-              name: '_MessageStore.interviews'))
+  List<InterviewItem> get interviews2 => (_$interviews2Computed ??=
+          Computed<List<InterviewItem>>(() => super.interviews2,
+              name: '_MessageStore.interviews2'))
       .value;
   Computed<bool>? _$loadingComputed;
 
@@ -80,22 +80,6 @@ mixin _$MessageStore on _MessageStore, Store {
     });
   }
 
-  late final _$messagesAtom =
-      Atom(name: '_MessageStore.messages', context: context);
-
-  @override
-  ObservableList<ObservableMessages> get messages {
-    _$messagesAtom.reportRead();
-    return super.messages;
-  }
-
-  @override
-  set messages(ObservableList<ObservableMessages> value) {
-    _$messagesAtom.reportWrite(value, super.messages, () {
-      super.messages = value;
-    });
-  }
-
   late final _$messageListAtom =
       Atom(name: '_MessageStore.messageList', context: context);
 
@@ -109,6 +93,22 @@ mixin _$MessageStore on _MessageStore, Store {
   set messageList(ObservableList<Observable<MessageListItem>> value) {
     _$messageListAtom.reportWrite(value, super.messageList, () {
       super.messageList = value;
+    });
+  }
+
+  late final _$messages2Atom =
+      Atom(name: '_MessageStore.messages2', context: context);
+
+  @override
+  ObservableList<Messages> get messages2 {
+    _$messages2Atom.reportRead();
+    return super.messages2;
+  }
+
+  @override
+  set messages2(ObservableList<Messages> value) {
+    _$messages2Atom.reportWrite(value, super.messages2, () {
+      super.messages2 = value;
     });
   }
 
@@ -172,11 +172,11 @@ mixin _$MessageStore on _MessageStore, Store {
       ActionController(name: '_MessageStore', context: context);
 
   @override
-  int getIndex(int projectId, int receiverId, int senderId) {
+  int getIndex2(int projectId, int receiverId, int senderId) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
-        name: '_MessageStore.getIndex');
+        name: '_MessageStore.getIndex2');
     try {
-      return super.getIndex(projectId, receiverId, senderId);
+      return super.getIndex2(projectId, receiverId, senderId);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }
@@ -194,23 +194,23 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
-  int newMessageListItem(MessageUser sender, MessageUser receiver,
+  int newMessageListItem2(MessageUser sender, MessageUser receiver,
       Project project, Message? message) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
-        name: '_MessageStore.newMessageListItem');
+        name: '_MessageStore.newMessageListItem2');
     try {
-      return super.newMessageListItem(sender, receiver, project, message);
+      return super.newMessageListItem2(sender, receiver, project, message);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void addNewMessageToIndex(int index, Message message) {
+  void addNewMessageToIndex2(int index, Message message) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
-        name: '_MessageStore.addNewMessageToIndex');
+        name: '_MessageStore.addNewMessageToIndex2');
     try {
-      return super.addNewMessageToIndex(index, message);
+      return super.addNewMessageToIndex2(index, message);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }
@@ -239,33 +239,22 @@ mixin _$MessageStore on _MessageStore, Store {
   }
 
   @override
-  dynamic updateInterview(int index, Interview interview) {
+  dynamic updateInterview2(int index, dynamic interviewData) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
-        name: '_MessageStore.updateInterview');
+        name: '_MessageStore.updateInterview2');
     try {
-      return super.updateInterview(index, interview);
+      return super.updateInterview2(index, interviewData);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  dynamic updateInterviewCancelled(int index, int messageId) {
+  dynamic updateInterviewCancelled2(int index, int interviewId) {
     final _$actionInfo = _$_MessageStoreActionController.startAction(
-        name: '_MessageStore.updateInterviewCancelled');
+        name: '_MessageStore.updateInterviewCancelled2');
     try {
-      return super.updateInterviewCancelled(index, messageId);
-    } finally {
-      _$_MessageStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic receiveMessage(dynamic data) {
-    final _$actionInfo = _$_MessageStoreActionController.startAction(
-        name: '_MessageStore.receiveMessage');
-    try {
-      return super.receiveMessage(data);
+      return super.updateInterviewCancelled2(index, interviewId);
     } finally {
       _$_MessageStoreActionController.endAction(_$actionInfo);
     }
@@ -299,12 +288,12 @@ mixin _$MessageStore on _MessageStore, Store {
 fetchMessageFuture: ${fetchMessageFuture},
 fetchMessageListFuture: ${fetchMessageListFuture},
 completedMessageLists: ${completedMessageLists},
-messages: ${messages},
 messageList: ${messageList},
+messages2: ${messages2},
 success: ${success},
 doneReloading: ${doneReloading},
 successMessages: ${successMessages},
-interviews: ${interviews},
+interviews2: ${interviews2},
 loading: ${loading},
 loadingMessageList: ${loadingMessageList}
     ''';

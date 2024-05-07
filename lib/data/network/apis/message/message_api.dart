@@ -34,4 +34,44 @@ class MessageApi {
       throw e;
     }
   }
+
+  Future<void> newMessage(dynamic message) {
+    try {
+      return _dioClient.dio
+          .post(Endpoints.baseUrl + '/api/message/sendMessage', data: message);
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<void> newSchedule(dynamic message){
+    try {
+      return _dioClient.dio
+          .post(Endpoints.baseUrl + '/api/interview', data: message);
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<void> updateSchedule(int interviewId, dynamic message){
+    try {
+      return _dioClient.dio
+          .patch(Endpoints.baseUrl + '/api/interview/$interviewId', data: message);
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future<void> cancelSchedule(int interviewId){
+    try {
+      return _dioClient.dio
+          .patch(Endpoints.baseUrl + '/api/interview/$interviewId/disable');
+    } catch (e) {
+      print(e.toString());
+      throw e;
+    }
+  }
 }

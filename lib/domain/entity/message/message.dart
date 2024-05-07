@@ -1,5 +1,6 @@
 import 'package:boilerplate/domain/entity/message/interview.dart';
 import 'package:boilerplate/domain/entity/message/message_user.dart';
+import 'package:mobx/mobx.dart';
 
 class Message {
   final int id;

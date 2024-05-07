@@ -14,11 +14,13 @@ class MessageProjectItem extends StatefulWidget {
   final MessageListItem messageListItem;
   final int index;
   final int index2;
-  const MessageProjectItem(
-      {super.key,
-      required this.messageListItem,
-      required this.index,
-      required this.index2});
+
+  MessageProjectItem({
+    super.key,
+    required this.messageListItem,
+    required this.index,
+    required this.index2,
+  });
   @override
   State<MessageProjectItem> createState() => _MessageProjectItemState();
 }

@@ -25,6 +25,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -44,6 +45,7 @@ class _MessageListState extends State<MessageList> {
   final NotificationStore _notificationStore = getIt<NotificationStore>();
   final CurrentMessageStore _currentMessageStore = getIt<CurrentMessageStore>();
   late List<Socket> _socketClientList = [];
+  int count = 0;
   // late int myId = -1;+
 
   @override
@@ -86,25 +88,6 @@ class _MessageListState extends State<MessageList> {
     socket.onError((data) => print(data));
 
     socket.on("NOTI_${_profileStore.profile!.id}", (data) {
-      if (data['notification'] == null) {
-        final projectId = data['projectId'];
-        final receiverId = data['receiverId'];
-        final senderId = data['senderId'];
-        final messageId = data['messageId'];
-        int index = _messageStore.getIndex(
-          projectId,
-          receiverId,
-          senderId,
-        );
-        log("index update cancel: $index");
-        if (index != -1) {
-          return;
-        }
-        if (_currentMessageStore.index != index) {
-          _messageStore.updateInterviewCancelled(index, messageId);
-        }
-        return;
-      }
       dynamic noti = data;
       Noti notification = Noti(
           id: noti['notification']['id'],
@@ -114,98 +97,108 @@ class _MessageListState extends State<MessageList> {
           notifyFlag: noti['notification']['notifyFlag'],
           typeNotifyFlag: noti['notification']['typeNotifyFlag'],
           messageNoti: MessageNoti.fromJson(noti['notification']['message']));
-      int index = _messageStore.getIndex(
+
+      int index = _messageStore.getIndex2(
           noti['notification']['message']['projectId'],
           noti['notification']['receiver']['id'],
           noti['notification']['sender']['id']);
 
       log("index ban đầu: $index");
-      Message newMessage = Message(
-          id: noti['notification']['message']['id'],
-          content: noti['notification']['message']['content'],
-          createdAt:
-              DateTime.parse(noti['notification']['message']['createdAt']),
-          messageFlag: noti['notification']['message']['messageFlag'],
-          receiver: MessageUser(
-              id: noti['notification']['receiver']['id'],
-              fullname: noti['notification']['receiver']['fullname']),
-          sender: MessageUser(
-              id: noti['notification']['sender']['id'],
-              fullname: noti['notification']['sender']['fullname']),
-          interview: null);
-      if (noti['notification']['message']['messageFlag'] == 1) {
-        dynamic interview = data['notification']['message']['interview'];
-        dynamic meetingRoom =
-            data['notification']['message']['interview']['meetingRoom'];
-        Interview interviewData = Interview.fromJson({
-          "id": interview['id'],
-          "title": interview['title'],
-          "createdAt": interview['createdAt'],
-          "updatedAt": interview['updatedAt'],
-          "deletedAt": interview['deletedAt'],
-          "startTime": interview['startTime'],
-          "endTime": interview['endTime'],
-          "disableFlag": interview['disableFlag'],
-          "meetingRoomId": interview['meetingRoomId'],
+
+      if (_currentMessageStore.index == index) {
+        log("index hiện tại: ${_currentMessageStore.index}");
+      } else {
+        setState(() {
+          count = count + 1;
         });
-        MeetingRoom meetingRoomData = MeetingRoom.fromJson({
-          "id": meetingRoom['id'],
-          "createdAt": meetingRoom['createdAt'],
-          "updatedAt": meetingRoom['updatedAt'],
-          "deletedAt": meetingRoom['deletedAt'],
-          "meeting_room_code": meetingRoom['meeting_room_code'],
-          "meeting_room_id": meetingRoom['meeting_room_id'],
-          "expired_at": meetingRoom['expired_at'],
-        });
-        interviewData.meetingRoom = meetingRoomData;
-        newMessage.interview = interviewData;
-      }
-      if (index == -1) {
-        //handle new item
-        int newIndex = _messageStore.newMessageListItem(
-            MessageUser(
-                id: noti['notification']['sender']['id'],
-                fullname: noti['notification']['sender']['fullname']),
-            MessageUser(
+        Message newMessage = Message(
+            id: noti['notification']['message']['id'],
+            content: noti['notification']['message']['content'],
+            createdAt:
+                DateTime.parse(noti['notification']['message']['createdAt']),
+            messageFlag: noti['notification']['message']['messageFlag'],
+            receiver: MessageUser(
                 id: noti['notification']['receiver']['id'],
                 fullname: noti['notification']['receiver']['fullname']),
-            Project(
-                id: noti['notification']['message']['projectId'],
-                title:
-                    "Project id ${noti['notification']['message']['projectId']}"),
-            newMessage);
-        log("index thêm message: $newIndex");
-      } else {
-        //handle
-        int index2 = _messageStore.getIndexMessageList(
-            noti['notification']['message']['projectId'],
-            noti['notification']['receiver']['id'],
-            noti['notification']['sender']['id']);
-
-        if (_currentMessageStore.index != index) {
-          //handle update ui if not in current chat
-          if (noti['notification']['content'] == "Interview updated") {
-            _messageStore.updateInterview(index, newMessage.interview!);
-          } else {
-            _messageStore.addNewMessageToIndex(index, newMessage);
-            _messageStore.updateMessageListTitle(index2,
-                "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
-
-            //notification
-            if (noti['notification']['senderId'] != _profileStore.profile!.id) {
-              _notificationStore.addNotification(notification);
-              NotificationService().showNotification(
-                  title: notification.title,
-                  body: notification.content,
-                  payload:
-                      "${noti['notification']['message']['projectId']}_${noti['notification']['receiver']['id']}_${noti['notification']['sender']['id']}");
-            }
-            log(notification.toJson().toString());
-          }
-        } else {
-          _messageStore.updateMessageListTitle(index2,
-              "${noti['notification']['sender']['fullname']}: ${noti['notification']['sender']['fullname']}");
+            sender: MessageUser(
+                id: noti['notification']['sender']['id'],
+                fullname: noti['notification']['sender']['fullname']),
+            interview: null);
+        if (noti['notification']['message']['messageFlag'] == 1) {
+          dynamic interview = data['notification']['message']['interview'];
+          dynamic meetingRoom =
+              data['notification']['message']['interview']['meetingRoom'];
+          Interview interviewData = Interview.fromJson({
+            "id": interview['id'],
+            "title": interview['title'],
+            "createdAt": interview['createdAt'],
+            "updatedAt": interview['updatedAt'],
+            "deletedAt": interview['deletedAt'],
+            "startTime": interview['startTime'],
+            "endTime": interview['endTime'],
+            "disableFlag": interview['disableFlag'],
+            "meetingRoomId": interview['meetingRoomId'],
+          });
+          MeetingRoom meetingRoomData = MeetingRoom.fromJson({
+            "id": meetingRoom['id'],
+            "createdAt": meetingRoom['createdAt'],
+            "updatedAt": meetingRoom['updatedAt'],
+            "deletedAt": meetingRoom['deletedAt'],
+            "meeting_room_code": meetingRoom['meeting_room_code'],
+            "meeting_room_id": meetingRoom['meeting_room_id'],
+            "expired_at": meetingRoom['expired_at'],
+          });
+          interviewData.meetingRoom = meetingRoomData;
+          newMessage.interview = interviewData;
         }
+        if (index == -1) {
+          //handle new item
+          int newIndex = _messageStore.newMessageListItem2(
+              MessageUser(
+                  id: noti['notification']['sender']['id'],
+                  fullname: noti['notification']['sender']['fullname']),
+              MessageUser(
+                  id: noti['notification']['receiver']['id'],
+                  fullname: noti['notification']['receiver']['fullname']),
+              Project(
+                  id: noti['notification']['message']['projectId'],
+                  title:
+                      "Project id ${noti['notification']['message']['projectId']}"),
+              newMessage);
+          log("index thêm message: $newIndex");
+        } else {
+          int index2 = _messageStore.getIndexMessageList(
+              noti['notification']['message']['projectId'],
+              noti['notification']['receiver']['id'],
+              noti['notification']['sender']['id']);
+
+          if (noti['notification']['content'] == "Interview updated") {
+            _messageStore.updateInterview2(index, {
+              "interviewId": data['notification']['message']['interview']['id'],
+              "title": data['notification']['message']['interview']['title'],
+              "startTime": data['notification']['message']['interview']
+                  ['startTime'],
+              "endTime": data['notification']['message']['interview']
+                  ['endTime'],
+            });
+          } else if (noti['notification']['content'] == "Interview cancelled") {
+            _messageStore.updateInterviewCancelled2(
+                index, data['notification']['message']['interview']['id']);
+          } else {
+            _messageStore.addNewMessageToIndex2(index, newMessage);
+            _messageStore.updateMessageListTitle(index2,
+                "${noti['notification']['sender']['fullname']}: ${noti['notification']['message']['content']}");
+          }
+        }
+        if (noti['notification']['senderId'] != _profileStore.profile!.id) {
+          _notificationStore.addNotification(notification);
+          NotificationService().showNotification(
+              title: notification.title,
+              body: notification.content,
+              payload:
+                  "${noti['notification']['message']['projectId']}_${noti['notification']['receiver']['id']}_${noti['notification']['sender']['id']}");
+        }
+        log(notification.toJson().toString());
       }
     });
 
@@ -316,7 +309,7 @@ class _MessageListState extends State<MessageList> {
                 itemCount: _messageStore.messageList.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final newIndex = _messageStore.getIndex(
+                  final newIndex = _messageStore.getIndex2(
                     _messageStore.messageList[index].value.project.id!,
                     _messageStore.messageList[index].value.receiver.id,
                     _messageStore.messageList[index].value.sender.id,
@@ -339,7 +332,7 @@ class _MessageListState extends State<MessageList> {
   }
 
   Widget buildInterviewTab() {
-    final filteredInterviews = _messageStore.interviews
+    final filteredInterviews = _messageStore.interviews2
         .where((interview) => interview.interview.disableFlag == 0)
         .toList();
     filteredInterviews
@@ -365,7 +358,7 @@ class _MessageListState extends State<MessageList> {
                           interview.interview.disableFlag == 1 ? true : false,
                       type: 1,
                       onTap: (p0) {
-                        final index = _messageStore.getIndex(
+                        final index = _messageStore.getIndex2(
                           interview.projectId,
                           interview.receiverId,
                           interview.senderId,

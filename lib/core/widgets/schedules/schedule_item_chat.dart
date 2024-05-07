@@ -48,7 +48,10 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
     return GestureDetector(
       onTap: () {
         log("tapped");
-        widget.onTap!(null);
+        log("widget type: ${widget.interview.id}");
+        if (widget.onTap != null) {
+          widget.onTap!(null);
+        }
       },
       onLongPress: () {
         if (widget.type == 1 && widget.interview.disableFlag != 1) {
@@ -161,7 +164,7 @@ class _ScheduleItemChatState extends State<ScheduleItemChat> {
             SizedBox(
               height: 10,
             ),
-          Text(
+            Text(
               "${AppLocalizations.of(context).translate('end_time_text')}: " +
                   formatDateTime(widget.interview.endTime),
               style: TextStyle(
