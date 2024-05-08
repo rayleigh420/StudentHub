@@ -77,13 +77,33 @@ class NotificationService {
             MyApp.navigatorKey.currentState!.overlay!.context;
 
         List<String> payloadSplits = details.payload!.split("_");
-        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-            builder: (context) => MessageDetail(
-                  projectId: int.parse(payloadSplits[0]),
-                  receiverId: int.parse(payloadSplits[1]),
-                  senderId: int.parse(payloadSplits[2]),
-                ),
-            maintainState: true));
+        if (payloadSplits[0] == "MESSAGE") {
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+              builder: (context) => MessageDetail(
+                    projectId: int.parse(payloadSplits[1]),
+                    receiverId: int.parse(payloadSplits[2]),
+                    senderId: int.parse(payloadSplits[3]),
+                  ),
+              maintainState: true));
+        } else if (payloadSplits[0] == "OFFER") {
+          MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
+              builder: (context) => AppBottomNavigationBar(
+                    selectedIndex: 2,
+                  ),
+              maintainState: true));
+        } else if (payloadSplits[0] == "SUBMITTED") {
+          MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
+              builder: (context) => AppBottomNavigationBar(
+                    selectedIndex: 2,
+                  ),
+              maintainState: true));
+        } else {
+          MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
+              builder: (context) => AppBottomNavigationBar(
+                    selectedIndex: 3,
+                  ),
+              maintainState: true));
+        }
         // MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
         //     builder: (context) => AppBottomNavigationBar(
         //           selectedIndex: 1,

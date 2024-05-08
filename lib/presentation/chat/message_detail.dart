@@ -226,8 +226,12 @@ class _MessageDetailState extends State<MessageDetail> {
       setState(() {
         count = count + 1;
       });
-
       dynamic noti = data;
+      if (noti['notification']['typeNotifyFlag'] == "0") {
+        return;
+      } else if (noti['notification']['typeNotifyFlag'] == "2") {
+        return;
+      }
 
       log("index ban đầu: $index");
       Message newMessage = Message(
@@ -301,7 +305,11 @@ class _MessageDetailState extends State<MessageDetail> {
       });
 
       dynamic noti = data;
-
+      if (noti['notification']['typeNotifyFlag'] == "0") {
+        return;
+      } else if (noti['notification']['typeNotifyFlag'] == "2") {
+        return;
+      }
       log("index ban đầu: $index");
       Message newMessage = Message(
           id: noti['notification']['message']['id'],

@@ -89,6 +89,41 @@ class _MessageListState extends State<MessageList> {
 
     socket.on("NOTI_${_profileStore.profile!.id}", (data) {
       dynamic noti = data;
+      if (noti['notification']['typeNotifyFlag'] == "0") {
+        Noti notification = Noti(
+            id: noti['notification']['id'],
+            title: noti['notification']['title'],
+            content: noti['notification']['content'],
+            createdAt: DateTime.parse(noti['notification']['createdAt']),
+            notifyFlag: noti['notification']['notifyFlag'],
+            typeNotifyFlag: noti['notification']['typeNotifyFlag'],
+            messageNoti: MessageNoti.fromJson(noti['notification']['message']));
+
+        _notificationStore.addNotification(notification);
+
+        NotificationService().showNotification(
+            title: notification.title,
+            body: notification.content,
+            payload: "OFFER");
+        return;
+      } else if (noti['notification']['typeNotifyFlag'] == "2") {
+        Noti notification = Noti(
+            id: noti['notification']['id'],
+            title: noti['notification']['title'],
+            content: noti['notification']['content'],
+            createdAt: DateTime.parse(noti['notification']['createdAt']),
+            notifyFlag: noti['notification']['notifyFlag'],
+            typeNotifyFlag: noti['notification']['typeNotifyFlag'],
+            messageNoti: MessageNoti.fromJson(noti['notification']['message']));
+
+        _notificationStore.addNotification(notification);
+
+        NotificationService().showNotification(
+            title: notification.title,
+            body: notification.content,
+            payload: "SUBMITTED");
+        return;
+      }
       Noti notification = Noti(
           id: noti['notification']['id'],
           title: noti['notification']['title'],
@@ -196,7 +231,7 @@ class _MessageListState extends State<MessageList> {
               title: notification.title,
               body: notification.content,
               payload:
-                  "${noti['notification']['message']['projectId']}_${noti['notification']['receiver']['id']}_${noti['notification']['sender']['id']}");
+                  "MESSAGE_${noti['notification']['message']['projectId']}_${noti['notification']['receiver']['id']}_${noti['notification']['sender']['id']}");
         }
         log(notification.toJson().toString());
       }
