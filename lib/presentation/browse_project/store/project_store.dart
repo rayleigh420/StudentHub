@@ -19,6 +19,9 @@ abstract class _ProjectStore with Store {
       ObservableFuture.value(null);
 
   @observable
+  bool doneReloading = false;
+
+  @observable
   ObservableFuture<ProjectList?> fetchProjectsFuture =
       ObservableFuture<ProjectList?>(emptyProjectsResponse);
 
@@ -38,6 +41,7 @@ abstract class _ProjectStore with Store {
     future.then((projectList) {
       this.projects = projectList;
       success = true;
+      doneReloading = true;
     }).catchError((error) {
       errorStore.errorMessage = error.toString();
     });
@@ -46,7 +50,8 @@ abstract class _ProjectStore with Store {
   @action
   refreshProjects() {
     projects = null;
-    success = false;
+    // success = false;
+    doneReloading = false;
     errorStore.errorMessage = "";
     getProjects();
   }
@@ -55,5 +60,6 @@ abstract class _ProjectStore with Store {
   clearStoreData() {
     projects = null;
     success = false;
+    doneReloading = false;
   }
 }

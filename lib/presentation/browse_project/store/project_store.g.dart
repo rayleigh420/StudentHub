@@ -16,6 +16,22 @@ mixin _$ProjectStore on _ProjectStore, Store {
           Computed<bool>(() => super.loading, name: '_ProjectStore.loading'))
       .value;
 
+  late final _$doneReloadingAtom =
+      Atom(name: '_ProjectStore.doneReloading', context: context);
+
+  @override
+  bool get doneReloading {
+    _$doneReloadingAtom.reportRead();
+    return super.doneReloading;
+  }
+
+  @override
+  set doneReloading(bool value) {
+    _$doneReloadingAtom.reportWrite(value, super.doneReloading, () {
+      super.doneReloading = value;
+    });
+  }
+
   late final _$fetchProjectsFutureAtom =
       Atom(name: '_ProjectStore.fetchProjectsFuture', context: context);
 
@@ -100,6 +116,7 @@ mixin _$ProjectStore on _ProjectStore, Store {
   @override
   String toString() {
     return '''
+doneReloading: ${doneReloading},
 fetchProjectsFuture: ${fetchProjectsFuture},
 projects: ${projects},
 success: ${success},

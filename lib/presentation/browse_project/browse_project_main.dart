@@ -44,40 +44,46 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
                 child: Column(
               children: [
                 buildSearchBar(context),
+                const SizedBox(
+                  height: 16,
+                ),
                 Expanded(
-                  // height: DeviceUtils.getScaledHeight(context, 0.7),
-                  child: CustomScrollView(
-                    shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 16,
-                            ),
-
-                            // ProjectItem(projDat: projDat),
-                            // ProjectItem(projDat: projDat),
-                            // ProjectItem(projDat: projDat),
-                            // ProjectItem(projDat: projDat),
-                            // ProjectItem(projDat: projDat),
-                            // Text("hi"),
-                            buildProjectContent(context),
-                            const SizedBox(
-                              height: 16,
-                            ),
-
-                            const SizedBox(
-                              height: 16,
-                            )
-                            // buildProjectItem()
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                  child: buildProjectContent(context),
                 )
+                // Expanded(
+                //   // height: DeviceUtils.getScaledHeight(context, 0.7),
+                //   child: CustomScrollView(
+                //     shrinkWrap: true,
+                //     physics: BouncingScrollPhysics(),
+                //     slivers: [
+                //       SliverToBoxAdapter(
+                //         child: Column(
+                //           children: [
+                //             const SizedBox(
+                //               height: 16,
+                //             ),
+
+                //             // ProjectItem(projDat: projDat),
+                //             // ProjectItem(projDat: projDat),
+                //             // ProjectItem(projDat: projDat),
+                //             // ProjectItem(projDat: projDat),
+                //             // ProjectItem(projDat: projDat),
+                //             // Text("hi"),
+                //             buildProjectContent(context),
+                //             const SizedBox(
+                //               height: 16,
+                //             ),
+
+                //             const SizedBox(
+                //               height: 16,
+                //             )
+                //             // buildProjectItem()
+                //           ],
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // )
               ],
             ))));
   }
@@ -155,31 +161,38 @@ class _BrowseProjectScreenState extends State<BrowseProjectScreen> {
 
   Widget buildProjectContent(BuildContext context) {
     return Observer(builder: (context) {
-      return _projectStore.loading
-          ? Center(
-              child: CupertinoActivityIndicator(),
-            )
-          : buildListProjects(context);
+      if (_projectStore.doneReloading == false) {
+        return Center(
+          child: CupertinoActivityIndicator(),
+        );
+      } else {
+        return buildListProjects(context);
+      }
     });
   }
 
   Future<void> _pullRefresh() async {
-    _projectStore.getProjects();
+    _projectStore.refreshProjects();
   }
 
   Widget buildListProjects(BuildContext context) {
     return _projectStore.projects != null
         ? RefreshIndicator(
             child: SingleChildScrollView(
-                child: ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _projectStore.projects!.projects!.length,
-              itemBuilder: (context, index) {
-                return ProjectItem(
-                    projDat: _projectStore.projects!.projects![index]);
-              },
-            )),
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: _projectStore.projects!.projects!.length,
+                      itemBuilder: (context, index) {
+                        return ProjectItem(
+                            projDat: _projectStore.projects!.projects![index]);
+                      },
+                    )
+                  ],
+                )),
             onRefresh: _pullRefresh)
         : Center(
             child: Text(
