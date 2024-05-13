@@ -40,6 +40,13 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
   @override
   void initState() {
     super.initState();
+    if (widget.student.educations!.length == 0) {
+      log("no educations");
+    } else {
+      widget.student.educations!.forEach((element) {
+        log(element.schoolName!);
+      });
+    }
   }
 
   @override
@@ -341,9 +348,11 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
 
   Widget buildExperience(BuildContext context) {
     Widget a = Container();
-    if (widget.student.educations!.length != 0) {
+    if (widget.student.experiences!.length != 0) {
       a = Wrap(crossAxisAlignment: WrapCrossAlignment.start, children: [
         ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: widget.student.experiences!.length,
             itemBuilder: (context, index) {
               return Container(
@@ -378,7 +387,7 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Education: ",
+            "Experiences: ",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(
@@ -398,6 +407,8 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
     if (widget.student.educations!.length != 0) {
       a = Wrap(crossAxisAlignment: WrapCrossAlignment.start, children: [
         ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             itemCount: widget.student.educations!.length,
             itemBuilder: (context, index) {
               return Container(
@@ -432,7 +443,7 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Experience: ",
+            "Education: ",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(
