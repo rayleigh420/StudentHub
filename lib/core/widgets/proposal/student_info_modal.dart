@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:boilerplate/core/data/network/dio/dio_client.dart';
+import 'package:boilerplate/core/widgets/proposal/pdf_view_page.dart';
+import 'package:boilerplate/data/network/apis/pdf_api/pdf_api.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/profile/student.dart';
@@ -36,22 +38,39 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
   final UpdateProposalUseCase _updateProposalUseCase =
       getIt<UpdateProposalUseCase>();
   final DioClient _dioClient = getIt<DioClient>();
+  String resumeUrl = "";
+  String transcriptUrl = "";
 
   @override
   void initState() {
     super.initState();
-    if (widget.student.educations!.length == 0) {
-      log("no educations");
-    } else {
-      widget.student.educations!.forEach((element) {
-        log(element.schoolName!);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _getTranscriptAndResume();
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> _getTranscriptAndResume() async {
+    final responseResume = await _dioClient.dio.get(
+        Endpoints.baseUrl + '/api/profile/student/${widget.studentId}/resume');
+    final responseTranscript = await _dioClient.dio.get(Endpoints.baseUrl +
+        '/api/profile/student/${widget.studentId}/transcript');
+    if (responseResume.statusCode == 200) {
+      setState(() {
+        resumeUrl = responseResume.data['result'];
+        log("resumeUrl: " + resumeUrl);
+      });
+    }
+    if (responseTranscript.statusCode == 200) {
+      setState(() {
+        transcriptUrl = responseTranscript.data['result'];
+        log("transcriptUrl: " + transcriptUrl);
+      });
+    }
   }
 
   @override
@@ -88,10 +107,10 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
                   const SizedBox(
                     height: 20,
                   ),
-                  // buildStudentLookingFor(context),
-                  // const SizedBox(
-                  //   height: 20,
-                  // ),
+                  buildStudentLookingFor(context),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   buildSkillRequired(context),
                   const SizedBox(
                     height: 20,
@@ -179,59 +198,100 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 20, bottom: 10),
-            child: const Text("Top 3 reasons to join us"),
+            child: const Text("Resume & Transcript"),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.circle,
-                size: 10,
-                color: Colors.blueAccent,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Flexible(child: Text("Very competitive remuneration package"))
-            ],
+          Container(
+            child: Builder(
+              builder: (context) {
+                if (resumeUrl == "") {
+                  return Container(
+                    child: Text("This student has not uploaded resume yet."),
+                  );
+                } else {
+                  return GestureDetector(
+                    onTap: () async {
+                      if (resumeUrl != "") {
+                        // final file = await PDFApi.loadNetwork(resumeUrl);
+                        // Navigator.of(context, rootNavigator: true).push(
+                        //     MaterialPageRoute(
+                        //         builder: (context) => PdfViewerPage(file: file),
+                        //         maintainState: true));
+                        PDFApi.loadNetwork(resumeUrl).then((file) =>
+                            Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PdfViewerPage(file: file),
+                                    maintainState: true)));
+                      }
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          size: 10,
+                          color: Colors.blueAccent,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                            child: Text("Tap here to view resume",
+                                overflow: TextOverflow.ellipsis))
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.circle,
-                size: 10,
-                color: Colors.blueAccent,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Flexible(
-                  child:
-                      Text("Build products for millions of users in Australia"))
-            ],
+          Container(
+            child: Builder(
+              builder: (context) {
+                if (transcriptUrl == "") {
+                  return Container(
+                    child:
+                        Text("This student has not uploaded transcript yet."),
+                  );
+                } else {
+                  return GestureDetector(
+                    onTap: () {
+                      if (transcriptUrl != "") {
+                        // final file = await PDFApi.loadNetwork(transcriptUrl);
+                        PDFApi.loadNetwork(transcriptUrl).then((file) =>
+                            Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PdfViewerPage(file: file),
+                                    maintainState: true)));
+                      }
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.circle,
+                          size: 10,
+                          color: Colors.blueAccent,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Flexible(
+                            child: Text("Tap here to view transcript",
+                                overflow: TextOverflow.ellipsis))
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
           ),
           const SizedBox(
             height: 10,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.circle,
-                size: 10,
-                color: Colors.blueAccent,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Flexible(
-                child: Text("Hybrid and flexible working environment"),
-              )
-            ],
           ),
           const SizedBox(
             height: 10,
@@ -243,54 +303,6 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
       ),
     );
   }
-
-  // Widget buildScope(BuildContext context) {
-  //   return Container(
-  //     child: Row(
-  //       // mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Icon(
-  //           Icons.timer,
-  //           color: Colors.grey,
-  //         ),
-  //         const SizedBox(
-  //           width: 10,
-  //         ),
-  //         // Text(
-  //         //   "${widget.project.projectScopeFlag == 0 ? "One to three months" : "Three to six months"}",
-  //         // ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget buildStudentNumber(BuildContext context) {
-  //   String studentStr;
-  //   if (widget.project.numberOfStudents == 1) {
-  //     studentStr = "1 - 1 student";
-  //   } else if (widget.project.numberOfStudents == null) {
-  //     studentStr = "0 student";
-  //   } else {
-  //     studentStr = "1 - ${widget.project.numberOfStudents} students";
-  //   }
-  //   return Container(
-  //     child: Row(
-  //       // mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Icon(
-  //           Icons.supervised_user_circle_outlined,
-  //           color: Colors.grey,
-  //         ),
-  //         const SizedBox(
-  //           width: 10,
-  //         ),
-  //         Text(studentStr),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget buildSkillRequired(BuildContext context) {
     Widget a = Container();
