@@ -248,6 +248,24 @@ class _ProjectItemCompanyState extends State<ProjectItemCompany> {
                     Project newProject = widget.project;
                     newProject.typeFlag = 1;
                     _projectCompanyStore.updateCompanyProjects(newProject);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Success'),
+                          content:
+                              Text('Project has been successfully updated.'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('OK'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                 ),
               ],
