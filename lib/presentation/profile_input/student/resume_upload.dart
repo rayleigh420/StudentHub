@@ -453,13 +453,13 @@ if (result != null) {
             ElevatedButton(
               onPressed: () {
                  handleButton();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => AppBottomNavigationBar(
-                            // isStudent: true,
-                            selectedIndex: 1,
-                          )),
-                );
+                Navigator.of(context, rootNavigator: true)
+                            .pushReplacement(MaterialPageRoute(
+                                builder: (context) => AppBottomNavigationBar(
+                                      selectedIndex: 1,
+                                    ),
+                                maintainState: true));
+                
 
               },
               child: Text(

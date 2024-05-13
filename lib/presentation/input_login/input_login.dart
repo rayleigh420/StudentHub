@@ -5,6 +5,8 @@ import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
 import 'package:boilerplate/presentation/signup/identity_signup/identity_signup.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/strings/email_validate.dart';
@@ -149,20 +151,24 @@ class _InputLoginState extends State<InputLogin> {
                       if (currentStudentId == null &&
                           currentCompanyId == null) {
                         if (roles![0] == 0) {
-                          Navigator.of(context)
-                              .pushReplacementNamed('/student_profile_input_1');
+                         Navigator.of(context, rootNavigator: true)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ProfileInput1(),
+                                  maintainState: true));
                         } else if (roles![0] == 1) {
                           print("company");
-                          Navigator.of(context)
-                              .pushReplacementNamed('/company_profile_input_1');
+                          Navigator.of(context, rootNavigator: true)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ProfileCompanyInput(),
+                                  maintainState: true));
                         }
                       } else {
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                          return AppBottomNavigationBar(
-                            selectedIndex: 1,
-                          );
-                        }));
+                       Navigator.of(context, rootNavigator: true)
+                            .push(MaterialPageRoute(
+                                builder: (context) => AppBottomNavigationBar(
+                                      selectedIndex: 1,
+                                    ),
+                                maintainState: false));
                       }
                     }
 
