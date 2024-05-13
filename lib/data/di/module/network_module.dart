@@ -11,9 +11,11 @@ import 'package:boilerplate/data/network/apis/message/message_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
 import 'package:boilerplate/data/network/apis/proposal/proposal_api.dart';
+import 'package:boilerplate/data/network/apis/resume/resume_api.dart';
 import 'package:boilerplate/data/network/apis/skillSet/skill_set_api.dart';
 import 'package:boilerplate/data/network/apis/project/project_api.dart';
 import 'package:boilerplate/data/network/apis/techStacks/tech_stack_api.dart';
+import 'package:boilerplate/data/network/apis/transcript/transcript_api.dart';
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/network/interceptors/error_interceptor.dart';
 import 'package:boilerplate/data/network/rest_client.dart';
@@ -82,6 +84,10 @@ mixin NetworkModule {
     getIt.registerSingleton<FavoriteApi>(FavoriteApi(getIt<DioClient>()));
 
     getIt.registerSingleton<ProposalApi>(ProposalApi(getIt<DioClient>()));
+    
+    getIt.registerSingleton<ResumeApi>(ResumeApi(getIt<DioClient>()));
+
+    getIt.registerSingleton<TranscriptApi>(TranscriptApi(getIt<DioClient>()));
 
     getIt.registerSingleton<MessageApi>(MessageApi(getIt<DioClient>()));
   }

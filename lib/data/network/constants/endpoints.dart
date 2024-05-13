@@ -61,4 +61,12 @@ class Endpoints {
   static const String createProposal = baseUrl + "/api/proposal";
   static const String updateProposal = baseUrl + "/api/proposal";
   static const String getProposalStudent = baseUrl + "/api/proposal/student";
+  
+  // Resume endpoints
+  static const String postResume = baseUrl + "/api/profile/student";
+  static const String getResume = baseUrl + "/api/profile/student";
+
+  //Transcript endpoints
+  static const String postTranscript = baseUrl + "/api/profile/student";
+  static const String getTranscript = baseUrl + "/api/profile/student";
 }
