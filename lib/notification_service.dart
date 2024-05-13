@@ -84,25 +84,25 @@ class NotificationService {
                     receiverId: int.parse(payloadSplits[2]),
                     senderId: int.parse(payloadSplits[3]),
                   ),
-              maintainState: true));
+              maintainState: false));
         } else if (payloadSplits[0] == "OFFER") {
           MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
               builder: (context) => AppBottomNavigationBar(
                     selectedIndex: 2,
                   ),
-              maintainState: true));
+              maintainState: false));
         } else if (payloadSplits[0] == "SUBMITTED") {
           MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
               builder: (context) => AppBottomNavigationBar(
                     selectedIndex: 2,
                   ),
-              maintainState: true));
+              maintainState: false));
         } else {
           MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
               builder: (context) => AppBottomNavigationBar(
                     selectedIndex: 3,
                   ),
-              maintainState: true));
+              maintainState: false));
         }
         // MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
         //     builder: (context) => AppBottomNavigationBar(
