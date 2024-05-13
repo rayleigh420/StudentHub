@@ -27,7 +27,7 @@ class ProjectApi {
       if (proposalsLessThan != null)
         queryParams['proposalsLessThan'] = proposalsLessThan;
       queryParams['page'] = 1;
-      queryParams['perPage'] = 500;
+      queryParams['perPage'] = 1000;
       final res = await _dioClient.dio.get(Endpoints.getProjects,
           options: Options(
             headers: {
@@ -40,6 +40,7 @@ class ProjectApi {
     } catch (e) {
       log("error in get projects api");
       log(e.toString());
+      return ProjectList(projects: []);
       throw new Exception(e.toString());
     }
   }

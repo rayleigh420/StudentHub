@@ -108,7 +108,9 @@ class _ProjectModalState extends State<ProjectModal> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.project.companyName!,
+                widget.project.companyName != null
+                    ? widget.project.companyName!
+                    : "Company",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(

@@ -79,7 +79,7 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
                     SizedBox(height: 20),
                     Text(
                         AppLocalizations.of(context)
-                            .translate('student_needed_text'),
+                            .translate('input_student_needed_text'),
                         style: TextStyle()),
                     SizedBox(height: 10),
                     Container(
