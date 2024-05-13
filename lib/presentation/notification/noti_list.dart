@@ -105,7 +105,7 @@ class _NotiListState extends State<NotiList> {
             builder: (context) => AppBottomNavigationBar(
                   selectedIndex: 1,
                 ),
-            maintainState: true));
+            maintainState: false));
       },
       child: Container(
           margin: EdgeInsets.only(top: 20),

@@ -257,6 +257,10 @@
 //             )));
 //   }
 // }
+import 'package:boilerplate/domain/usecase/resume/get_resume.dart';
+import 'package:boilerplate/domain/usecase/resume/post_resume.dart';
+import 'package:boilerplate/domain/usecase/transcript/get_transcript.dart';
+import 'package:boilerplate/domain/usecase/transcript/post_transcript.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -274,7 +278,11 @@ class ResumeUpload extends StatefulWidget {
 
 class _ResumeUploadState extends State<ResumeUpload> {
   final ThemeStore _themeStore = getIt<ThemeStore>();
-  List<PlatformFile>? _cvPaths;
+  final PostResumeUseCase _postResumeUseCase = getIt<PostResumeUseCase>();
+  final PostTranscriptUseCase _postTranscriptUseCase = getIt<PostTranscriptUseCase>();
+  final GetResumeUseCase  _getResumeUseCase = getIt<GetResumeUseCase>();
+  final GetTranscriptUseCase _getTranscriptUseCase = getIt<GetTranscriptUseCase>();
+  PlatformFile? _cvPaths;
   List<PlatformFile>? _transcriptPaths;
   String? _cvFileName;
   String? _transcriptFileName;
@@ -284,9 +292,24 @@ class _ResumeUploadState extends State<ResumeUpload> {
   @override
   void initState() {
     super.initState();
-    _cvFileName = 'Choose CV file to upload';
-    _transcriptFileName = 'Choose Transcript file to upload';
+    _getFiles();
+    // _cvFileName = 'Choose CV file to upload';
+    // _transcriptFileName = 'Choose Transcript file to upload';
   }
+  Future<void> _getFiles() async {
+    try {
+      final cv = await _getResumeUseCase.call(params: null);
+      final transcript = await _getTranscriptUseCase.call(params: null);
+      setState(() {
+      _cvFileName = cv??'Choose CV file to upload';
+      _transcriptFileName = transcript??'Choose Transcript file to upload';
+    });
+    } catch (e) {
+      print("Error getting files: $e");
+    }
+    
+  }
+      
 
   Future<void> _pickCvFile() async {
     setState(() {
@@ -294,11 +317,29 @@ class _ResumeUploadState extends State<ResumeUpload> {
     });
 
     try {
-      _cvPaths = (await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf', 'doc', 'docx'],
-      ))
-          ?.files;
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+if (result != null) {
+  print("result:file");
+  print(result.files.first.path);
+   _cvPaths = result.files.first;
+
+  print(_cvPaths!.name);
+  print(_cvPaths!.bytes);
+  print(_cvPaths!.size);
+  print(_cvPaths!.extension);
+  print(_cvPaths!.path);
+  print(_cvPaths!.path);
+} else {
+  // User canceled the picker
+}
+      print("result:file");
+      
+     
+
+      print("cvPaths");
+      print(_cvPaths?.path);
+        
     } catch (e) {
       print("Error picking CV file: $e");
     }
@@ -308,7 +349,7 @@ class _ResumeUploadState extends State<ResumeUpload> {
     setState(() {
       _cvIsLoading = false;
       _cvFileName =
-          _cvPaths != null ? _cvPaths!.first.name : 'Choose CV file to upload';
+          _cvPaths != null ? _cvPaths!.name : 'Choose CV file to upload';
     });
   }
 
@@ -336,6 +377,39 @@ class _ResumeUploadState extends State<ResumeUpload> {
           : 'Choose Transcript file to upload';
     });
   }
+  Future<bool> handleButton() async{
+    if(_cvPaths != null && _transcriptPaths != null){
+      final cvPath = _cvPaths!.path;
+      final cvFileName = _cvPaths!.name;
+      final transcriptPath = _transcriptPaths!.first.path;
+      final transcriptFileName = _transcriptPaths!.first.name;
+      print("CV file path: $cvPath");
+      print("CV file name: $cvFileName");
+      print("Transcript file path: $transcriptPath");
+      print("Transcript file name: $transcriptFileName");
+      try{
+        final cvRes = await _postResumeUseCase.call(
+          params: PostResumeParams(
+            filePath: cvPath!,
+            fileName: cvFileName,
+          ),
+         
+        );
+        final transcriptRes = await _postTranscriptUseCase.call(
+          params: PostTranscriptParams(
+            filePath: transcriptPath!,
+            fileName: transcriptFileName,
+          ),
+        );  
+        return true;
+      } catch(e){
+        print("Error uploading file: $e");
+        return false;
+        }
+      }
+      return false;
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -378,13 +452,15 @@ class _ResumeUploadState extends State<ResumeUpload> {
             SizedBox(height: 120),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => AppBottomNavigationBar(
-                            // isStudent: true,
-                            selectedIndex: 1,
-                          )),
-                );
+                 handleButton();
+                Navigator.of(context, rootNavigator: true)
+                            .pushReplacement(MaterialPageRoute(
+                                builder: (context) => AppBottomNavigationBar(
+                                      selectedIndex: 1,
+                                    ),
+                                maintainState: true));
+                
+
               },
               child: Text(
                 'Continue',

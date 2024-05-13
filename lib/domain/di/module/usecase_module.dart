@@ -10,9 +10,11 @@ import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 import 'package:boilerplate/domain/repository/proposal/proposal_repository.dart';
+import 'package:boilerplate/domain/repository/resume/resume_repository.dart';
 import 'package:boilerplate/domain/repository/skillSet/skill_set_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_repository.dart';
 import 'package:boilerplate/domain/repository/project/project_repository.dart';
+import 'package:boilerplate/domain/repository/transcript/transcript_repository.dart';
 import 'package:boilerplate/domain/repository/user/user_repository.dart';
 import 'package:boilerplate/domain/usecase/auth/change_password_usecase.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
@@ -50,12 +52,16 @@ import 'package:boilerplate/domain/usecase/proposal/create_proposal.dart';
 import 'package:boilerplate/domain/usecase/proposal/get_proposal_student.dart';
 import 'package:boilerplate/domain/usecase/proposal/get_proposal_usecase.dart';
 import 'package:boilerplate/domain/usecase/proposal/update_proposal.dart';
+import 'package:boilerplate/domain/usecase/resume/get_resume.dart';
+import 'package:boilerplate/domain/usecase/resume/post_resume.dart';
 import 'package:boilerplate/domain/usecase/skillSet/get_skill_set.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 
 import 'package:boilerplate/domain/usecase/project/get_company_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/get_projects_usecase.dart';
 import 'package:boilerplate/domain/usecase/project/post_company_projects_usecase.dart';
+import 'package:boilerplate/domain/usecase/transcript/get_transcript.dart';
+import 'package:boilerplate/domain/usecase/transcript/post_transcript.dart';
 import 'package:boilerplate/domain/usecase/user/is_logged_in_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/login_usecase.dart';
 import 'package:boilerplate/domain/usecase/user/save_login_in_status_usecase.dart';
@@ -194,6 +200,20 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<GetProposalsStudentUseCase>(
       GetProposalsStudentUseCase(getIt<ProposalRepository>()),
+    );
+    //Resume:--------------------------------------------------------------------
+    getIt.registerSingleton<PostResumeUseCase>(
+      PostResumeUseCase(getIt<ResumeRepository>()),
+    );
+    getIt.registerSingleton<GetResumeUseCase>(
+      GetResumeUseCase(getIt<ResumeRepository>()),
+    );
+    //Transcript:--------------------------------------------------------------------
+    getIt.registerSingleton<PostTranscriptUseCase>(
+      PostTranscriptUseCase(getIt<TranscriptRepository>()),
+    );
+    getIt.registerSingleton<GetTranscriptUseCase>(
+      GetTranscriptUseCase(getIt<TranscriptRepository>()),
     );
     getIt.registerSingleton<GetAllMessageUseCase>(
       GetAllMessageUseCase(getIt<MessageRepository>()),
