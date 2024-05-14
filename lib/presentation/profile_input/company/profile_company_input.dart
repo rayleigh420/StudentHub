@@ -1,7 +1,10 @@
+import 'package:boilerplate/domain/entity/profile/profile.dart';
+import 'package:boilerplate/domain/entity/project/project.dart';
 import 'package:boilerplate/domain/usecase/profile/create_profile_company_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_company.dart';
 import 'package:boilerplate/domain/usecase/profile/profile_test_uc.dart';
+import 'package:boilerplate/domain/usecase/profile/update_profile_company_usecase.dart';
 import 'package:boilerplate/presentation/welcome/welcome_company.dart';
 import 'package:flutter/material.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
@@ -21,6 +24,9 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
   final CreateProfileCompanyUC _createProfileCompanyUC =
       getIt<CreateProfileCompanyUC>();
   final GetProfileUseCase _getProfileUseCase = getIt<GetProfileUseCase>();
+  final UpdateProfileCompanyUC _updateProfileCompanyUC =
+      getIt<UpdateProfileCompanyUC>();
+  Profile? profile ;
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -61,6 +67,7 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
   @override
   void initState() {
     super.initState();
+    getProfile();
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6C6C6C);
   }
 
@@ -72,8 +79,36 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                 .firstWhere((element) => element["value"] == true)["size"],
             website: _companyWebsiteController.text,
             description: _companyDescriptionController.text));
-    _getProfileUseCase.call(params: null);
+    //_getProfileUseCase.call(params: null);
   }
+  void getProfile() async{
+    profile= await _getProfileUseCase.call(params: null);
+    _companyNameController.text=profile!.company!.companyName??"";
+    _companyWebsiteController.text=profile!.company!.website??"";
+    _companyDescriptionController.text=profile!.company!.description??"";
+    print("Size company: ${profile!.company!.size}");
+    if(profile!.company!.size <5){
+      setState(() {
+        checkListItems[profile!.company!.size]["value"]=true;
+    selected =
+        "${checkListItems[profile!.company!.size]["id"]}, ${checkListItems[profile!.company!.size]["title"]}, ${checkListItems[profile!.company!.size]["value"]}";
+      });
+     
+
+    }
+
+    
+  }
+  void handleUpdateProfile() async{
+    _updateProfileCompanyUC.call(
+        params: UpdateProfileCompanyParams(
+            companyName: _companyNameController.text,
+            size: checkListItems
+                .firstWhere((element) => element["value"] == true)["size"],
+            website: _companyWebsiteController.text,
+            description: _companyDescriptionController.text));
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +187,7 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                       height: 10,
                     ),
                     TextField(
+                      
                       controller: _companyNameController,
                       onTapOutside: (event) => FocusScope.of(context).unfocus(),
                       maxLines: 1,
@@ -280,11 +316,15 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
-                            handleCreateProfile();
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) {
-                              return const WelcomeCompany();
-                            }));
+                            if(profile==null){
+                              handleCreateProfile();
+                              }else{
+                                handleUpdateProfile();
+                              }
+                            Navigator.of(context, rootNavigator: true)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => WelcomeCompany(),
+                                  maintainState: true));
                           },
                           child: const Text(
                               style: TextStyle(fontSize: 16), "Continue")),
