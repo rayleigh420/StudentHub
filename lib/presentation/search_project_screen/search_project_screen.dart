@@ -65,9 +65,21 @@ class _SearchProjectScreenState extends State<SearchProjectScreen> {
                             const SizedBox(
                               height: 16,
                             ),
-                            ...projects
-                                .map((e) => ProjectItem(projDat: e))
-                                .toList(),
+                            if (projects.isEmpty)
+                              Center(
+                                child: Text(
+                                  AppLocalizations.of(context)
+                                      .translate('no_project_text'),
+                                  // style: TextStyle(
+                                  //     color: _themeStore.darkMode
+                                  //         ? Colors.white
+                                  //         : Colors.black),
+                                ),
+                              )
+                            else
+                              ...projects
+                                  .map((e) => ProjectItem(projDat: e))
+                                  .toList(),
                             // ProjectItem(projDat: projDat),
                             // ProjectItem(projDat: projDat),
                             // ProjectItem(projDat: projDat),

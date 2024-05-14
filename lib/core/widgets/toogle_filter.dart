@@ -1,3 +1,4 @@
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class FilterButtons extends StatefulWidget {
@@ -13,7 +14,7 @@ class _FilterButtonsState extends State<FilterButtons> {
     return ToggleButtonGroup(
       children: <Widget>[
         ToggleButton(
-          text: 'All Projects',
+          text: AppLocalizations.of(context).translate('all_projects_text'),
           isSelected: _selectedIndex == 0,
           onPressed: () {
             setState(() {
@@ -22,7 +23,7 @@ class _FilterButtonsState extends State<FilterButtons> {
           },
         ),
         ToggleButton(
-          text: 'Working',
+          text: AppLocalizations.of(context).translate('working_text'),
           isSelected: _selectedIndex == 1,
           onPressed: () {
             setState(() {
@@ -31,7 +32,7 @@ class _FilterButtonsState extends State<FilterButtons> {
           },
         ),
         ToggleButton(
-          text: 'Archived',
+          text: AppLocalizations.of(context).translate('archived_text'),
           isSelected: _selectedIndex == 2,
           onPressed: () {
             setState(() {

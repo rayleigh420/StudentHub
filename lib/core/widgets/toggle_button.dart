@@ -145,6 +145,7 @@
 //     );
 //   }
 // }
+import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class ToggleButtonsCompany extends StatelessWidget {
@@ -158,21 +159,21 @@ class ToggleButtonsCompany extends StatelessWidget {
     return ToggleButtonGroup(
       children: <Widget>[
         ToggleButton(
-          text: 'All Projects',
+          text: AppLocalizations.of(context).translate('all_projects_text'),
           isSelected: selected == 0,
           onPressed: () {
             setSelected(0);
           },
         ),
         ToggleButton(
-          text: 'Working',
+          text: AppLocalizations.of(context).translate('working_text'),
           isSelected: selected == 1,
           onPressed: () {
             setSelected(1);
           },
         ),
         ToggleButton(
-          text: 'Archived',
+          text: AppLocalizations.of(context).translate('archived_text'),
           isSelected: selected == 2,
           onPressed: () {
             setSelected(2);
@@ -187,7 +188,8 @@ class ToggleButtonsCompanyDetail extends StatelessWidget {
   final int selected;
   final Function(int) setSelected;
 
-  ToggleButtonsCompanyDetail({required this.selected, required this.setSelected});
+  ToggleButtonsCompanyDetail(
+      {required this.selected, required this.setSelected});
 
   @override
   Widget build(BuildContext context) {
