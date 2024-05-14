@@ -26,7 +26,7 @@ class _ProfileCompanyUpdateState extends State<ProfileCompanyUpdate> {
   final GetProfileUseCase _getProfileUseCase = getIt<GetProfileUseCase>();
   final UpdateProfileCompanyUC _updateProfileCompanyUC =
       getIt<UpdateProfileCompanyUC>();
-  Profile? profile ;
+  Profile? profile;
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -70,29 +70,27 @@ class _ProfileCompanyUpdateState extends State<ProfileCompanyUpdate> {
     getProfile();
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6C6C6C);
   }
-  void getProfile() async{
-    profile= await _getProfileUseCase.call(params: null);
-    if(profile==null){
+
+  void getProfile() async {
+    profile = await _getProfileUseCase.call(params: null);
+    if (profile == null) {
       return;
     }
-    _companyNameController.text=profile!.company!.companyName??"";
+    _companyNameController.text = profile!.company!.companyName ?? "";
     print("Company name: ${profile!.company!.companyName}");
-    _companyWebsiteController.text=profile!.company!.website??"";
-    _companyDescriptionController.text=profile!.company!.description??"";
+    _companyWebsiteController.text = profile!.company!.website ?? "";
+    _companyDescriptionController.text = profile!.company!.description ?? "";
     print("Size company: ${profile!.company!.size}");
-    if(profile !=null){
+    if (profile != null) {
       setState(() {
-        checkListItems[profile!.company!.size]["value"]=true;
-    selected =
-        "${checkListItems[profile!.company!.size]["id"]}, ${checkListItems[profile!.company!.size]["title"]}, ${checkListItems[profile!.company!.size]["value"]}";
+        checkListItems[profile!.company!.size]["value"] = true;
+        selected =
+            "${checkListItems[profile!.company!.size]["id"]}, ${checkListItems[profile!.company!.size]["title"]}, ${checkListItems[profile!.company!.size]["value"]}";
       });
-     
-
     }
-
-    
   }
-  void handleUpdateProfile() async{
+
+  void handleUpdateProfile() async {
     _updateProfileCompanyUC.call(
         params: UpdateProfileCompanyParams(
             companyName: _companyNameController.text,
@@ -101,7 +99,6 @@ class _ProfileCompanyUpdateState extends State<ProfileCompanyUpdate> {
             website: _companyWebsiteController.text,
             description: _companyDescriptionController.text));
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +177,6 @@ class _ProfileCompanyUpdateState extends State<ProfileCompanyUpdate> {
                       height: 10,
                     ),
                     TextField(
-                      
                       controller: _companyNameController,
                       onTapOutside: (event) => FocusScope.of(context).unfocus(),
                       maxLines: 1,
@@ -301,7 +297,6 @@ class _ProfileCompanyUpdateState extends State<ProfileCompanyUpdate> {
                     SizedBox(
                       height: 60,
                     ),
-
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(left: 170, bottom: 20),
@@ -310,13 +305,22 @@ class _ProfileCompanyUpdateState extends State<ProfileCompanyUpdate> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
-
-                              handleUpdateProfile();
-
-                            Navigator.of(context, rootNavigator: true)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => WelcomeCompany(),
-                                  maintainState: true));
+                            handleUpdateProfile();
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text('Success'),
+                                      content: Text('Update profile success!'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    ));
+                            Navigator.of(context).pop();
                           },
                           child: const Text(
                               style: TextStyle(fontSize: 16), "Continue")),
