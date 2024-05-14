@@ -185,23 +185,17 @@ class _ProfileInput1State extends State<ProfileInput1> {
   }
 
   @override
-  Widget build(BuildContext context) {
+ Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        padding: const EdgeInsets.fromLTRB(20.0, 0, 20, 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: DeviceUtils.getScaledHeight(context, 0.8),
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+            appBar: AppBar(
+              title: const Text("Student Hub"),
+            ),
+            body: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 17.0),
 
                     Text(
                       'Welcome to Student Hub',
@@ -209,69 +203,18 @@ class _ProfileInput1State extends State<ProfileInput1> {
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    // const SizedBox(height: 20.0),
-                    // Text(
-                    //   'Tell us about your self and you will be on your way connect with real-world project',
-                    //   textAlign: TextAlign.center,
-                    //   style:
-                    //       TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                    // ),
-                    // const SizedBox(height: 20.0),
-                    // // const SizedBox(height: 17.0),
-                    // Text(
-                    //   'Tech Stack:',
-                    //   textAlign: TextAlign.start,
-                    //   style: TextStyle(
-                    //     fontSize: 16,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 10.0),
-                    // DropdownMenu<String>(
-                    //   onSelected: (value) {
-                    //     setState(() {
-                    //       techStacksValue = value!;
-                    //     });
-                    //   },
-                    //   width: MediaQuery.of(context).size.width * 0.9,
-                    //   initialSelection: techStacks!.first,
-                    //   dropdownMenuEntries: techStacks
-                    //       .map<DropdownMenuEntry<String>>(
-                    //           (String value) => DropdownMenuEntry<String>(
-                    //                 value: value,
-                    //                 label: value,
-                    //               ))
-                    //       .toList(),
-                    // ),
-                    // const SizedBox(height: 20.0),
-                    // Text(
-                    //   'Skill Set:',
-                    //   textAlign: TextAlign.start,
-                    //   style: TextStyle(
-                    //     fontSize: 16,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 10.0),
-                    // buildSkillsetSection(context),
-                    // const SizedBox(height: 30),
-                    // buildLanguage(context),
-                    // const SizedBox(height: 30),
-                    // buildEducation(context),
-                    // const SizedBox(height: 30),
-                    // buildEducation(context),
-                    // const SizedBox(height: 30),
-                    // buildEducation(context),
+                      )),
+                      const SizedBox(height: 20.0),
 
-                    const SizedBox(height: 20.0),
-                    Text(
+                      Text(
                       'Tell us about your self and you will be on your way connect with real-world project',
                       textAlign: TextAlign.center,
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                     ),
+
+    
+                  
                     const SizedBox(height: 20.0),
                     // const SizedBox(height: 17.0),
                     Text(
@@ -282,6 +225,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     const SizedBox(height: 10.0),
                     DropdownMenu<int>(
                       onSelected: (int? value) {
@@ -300,7 +244,8 @@ class _ProfileInput1State extends State<ProfileInput1> {
                           .toList(),
                     ),
                     const SizedBox(height: 20.0),
-                    Text(
+
+                     Text(
                       'Skill Set:',
                       textAlign: TextAlign.start,
                       style: TextStyle(
@@ -308,22 +253,42 @@ class _ProfileInput1State extends State<ProfileInput1> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     const SizedBox(height: 10.0),
                     buildSkillsetSection(context),
                     const SizedBox(height: 30),
                     buildLanguage(context),
                     const SizedBox(height: 30),
                     buildEducation(context),
+                    const SizedBox(height: 200),
+                    buildNext(context),
+                
+          //           ElevatedButton(
+          //             onPressed: () {
+          //             createProfileStudent();
+          //             log("push");
+          //             Navigator.of(context)
+          //             .pushReplacement(MaterialPageRoute(builder: (context) {
+          //       return const ProfileInput2();
+          //     }));
+          //   },
+          //   child: Text("Next",
+          //       style: TextStyle(
+          //           color: _themeStore.darkMode ? Colors.black : Colors.white)),
+          //   style: ButtonStyle(
+          //     backgroundColor: MaterialStateProperty.all<Color>(borderColor),
+          //     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          //         RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(0),
+          //             side: BorderSide(color: borderColor))),
+          //     padding: MaterialStateProperty.all(
+          //       EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+          //     ),
+          //   ),
+          // ),
+     
                   ],
-                ),
-              ),
-            ),
-            const Spacer(),
-            buildNext(context),
-          ],
-        ),
-      ),
-    ));
+                ))));
   }
 
   void addSkillSet() {
@@ -772,7 +737,7 @@ class _ProfileInput1State extends State<ProfileInput1> {
   }
 
   Widget buildNext(BuildContext context) {
-    return Expanded(
+    return SizedBox(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,

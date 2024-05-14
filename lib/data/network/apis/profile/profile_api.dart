@@ -6,6 +6,7 @@ import 'package:boilerplate/core/data/network/dio/interceptors/auth_interceptor.
 import 'package:boilerplate/data/network/constants/endpoints.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/profile/company.dart';
 import 'package:boilerplate/domain/entity/profile/profile.dart';
 import 'package:dio/dio.dart';
 
@@ -82,4 +83,31 @@ class ProfileApi {
       // throw new Exception(e.toString());
     }
   }
+  Future <Company> updateProfileCompany(String companyName, int size,
+      String website, String description,int id, String token) async {
+    try {
+      // final token = await getIt<SharedPreferenceHelper>().authToken;
+      final authToken = "Bearer ${token}";
+
+      log(token.toString());
+      final res = await _dioClient.dio.put(Endpoints.updateProfileCompany+ "/${id}",
+          data: {
+            'companyName': companyName,
+            'size': size,
+            'website': website,
+            'description': description,
+          },
+          options: Options(
+            headers: {
+              'Authorization': authToken,
+            },
+          ));
+      log("cout<<updateProfileCompany response");
+      log(res.data.toString());
+      return Company.fromJson(res.data["result"]);
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
+
 }

@@ -1,5 +1,6 @@
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/domain/entity/profile/company.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
 
 class ProfileCompanyRepositoryImpl extends ProfileCompanyRepository {
@@ -22,6 +23,29 @@ class ProfileCompanyRepositoryImpl extends ProfileCompanyRepository {
         size,
         website,
         description,
+        token!,
+      );
+      return res;
+    } catch (e) {
+      throw new Exception(e.toString());
+    }
+  }
+  Future<Company> updateProfileCompany(
+    String companyName,
+    int size,
+    String website,
+    String description,
+  ) async {
+    try {
+      final token = await _sharedPrefsHelper.authToken;
+      final id = await _sharedPrefsHelper.currentCompanyId;
+
+      final res = await _profileApi.updateProfileCompany(
+        companyName,
+        size,
+        website,
+        description,
+        id!,
         token!,
       );
       return res;

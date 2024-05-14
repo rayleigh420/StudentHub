@@ -10,23 +10,23 @@ import 'package:flutter/material.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
 import 'package:boilerplate/di/service_locator.dart';
 
-class ProfileCompanyInput extends StatefulWidget {
-  const ProfileCompanyInput({super.key});
+class ProfileCompanyUpdate extends StatefulWidget {
+  const ProfileCompanyUpdate({super.key});
 
   @override
-  State<ProfileCompanyInput> createState() => _ProfileCompanyInputState();
+  State<ProfileCompanyUpdate> createState() => _ProfileCompanyUpdateState();
 }
 
-class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
+class _ProfileCompanyUpdateState extends State<ProfileCompanyUpdate> {
   final _companyNameController = TextEditingController();
   final _companyWebsiteController = TextEditingController();
   final _companyDescriptionController = TextEditingController();
   final CreateProfileCompanyUC _createProfileCompanyUC =
       getIt<CreateProfileCompanyUC>();
-
+  final GetProfileUseCase _getProfileUseCase = getIt<GetProfileUseCase>();
   final UpdateProfileCompanyUC _updateProfileCompanyUC =
       getIt<UpdateProfileCompanyUC>();
-  Profile? profile ;
+  Profile? profile;
   Color textColor = Color(0xFF6C6C6C);
   Color textFieldColor = Color(0xFF6C6C6C);
   final ThemeStore _themeStore = getIt<ThemeStore>();
@@ -67,21 +67,38 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
   @override
   void initState() {
     super.initState();
+    getProfile();
     textColor = _themeStore.darkMode ? Colors.white : Color(0xFF6C6C6C);
   }
 
-  void handleCreateProfile() async{
-    _createProfileCompanyUC.call(
-        params: CreateProfileCompanyParams(
+  void getProfile() async {
+    profile = await _getProfileUseCase.call(params: null);
+    if (profile == null) {
+      return;
+    }
+    _companyNameController.text = profile!.company!.companyName ?? "";
+    print("Company name: ${profile!.company!.companyName}");
+    _companyWebsiteController.text = profile!.company!.website ?? "";
+    _companyDescriptionController.text = profile!.company!.description ?? "";
+    print("Size company: ${profile!.company!.size}");
+    if (profile != null) {
+      setState(() {
+        checkListItems[profile!.company!.size]["value"] = true;
+        selected =
+            "${checkListItems[profile!.company!.size]["id"]}, ${checkListItems[profile!.company!.size]["title"]}, ${checkListItems[profile!.company!.size]["value"]}";
+      });
+    }
+  }
+
+  void handleUpdateProfile() async {
+    _updateProfileCompanyUC.call(
+        params: UpdateProfileCompanyParams(
             companyName: _companyNameController.text,
             size: checkListItems
                 .firstWhere((element) => element["value"] == true)["size"],
             website: _companyWebsiteController.text,
             description: _companyDescriptionController.text));
-    //_getProfileUseCase.call(params: null);
   }
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +177,6 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                       height: 10,
                     ),
                     TextField(
-                      
                       controller: _companyNameController,
                       onTapOutside: (event) => FocusScope.of(context).unfocus(),
                       maxLines: 1,
@@ -281,7 +297,6 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                     SizedBox(
                       height: 60,
                     ),
-
                     Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(left: 170, bottom: 20),
@@ -290,13 +305,22 @@ class _ProfileCompanyInputState extends State<ProfileCompanyInput> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5))),
                           onPressed: () {
-
-                              handleCreateProfile();
-
-                            Navigator.of(context, rootNavigator: true)
-                              .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => WelcomeCompany(),
-                                  maintainState: true));
+                            handleUpdateProfile();
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text('Success'),
+                                      content: Text('Update profile success!'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    ));
+                            Navigator.of(context).pop();
                           },
                           child: const Text(
                               style: TextStyle(fontSize: 16), "Continue")),

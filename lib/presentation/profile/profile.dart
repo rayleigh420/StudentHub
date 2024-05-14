@@ -11,6 +11,7 @@ import 'package:boilerplate/presentation/input_login/input_login.dart';
 import 'package:boilerplate/presentation/navigations/tab_store.dart';
 import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
+import 'package:boilerplate/presentation/profile_input/company/profile_company_update.dart';
 import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
 import 'package:boilerplate/presentation/user/change_password.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
@@ -97,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (_profileStore.profile!.roles[0] == 1) {
                     Navigator.of(context, rootNavigator: false).push(
                         MaterialPageRoute(
-                            builder: (context) => ProfileCompanyInput(),
+                            builder: (context) => ProfileCompanyUpdate(),
                             maintainState: false));
                   } else {
                     Navigator.of(context, rootNavigator: false).push(
