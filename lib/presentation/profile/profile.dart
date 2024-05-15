@@ -13,6 +13,7 @@ import 'package:boilerplate/presentation/profile_input/company/profile_company_i
 import 'package:boilerplate/presentation/profile/store/profile_store.dart';
 import 'package:boilerplate/presentation/profile_input/company/profile_company_update.dart';
 import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
+import 'package:boilerplate/presentation/profile_input/student/profile_student_update.dart';
 import 'package:boilerplate/presentation/user/change_password.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   } else {
                     Navigator.of(context, rootNavigator: false).push(
                         MaterialPageRoute(
-                            builder: (context) => ProfileInput1(),
+                            builder: (context) => ProfileStudentUpdate(),
                             maintainState: false));
                   }
 
