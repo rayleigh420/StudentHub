@@ -270,6 +270,7 @@ class _MessageListState extends State<MessageList> {
         } else {
           return DefaultTabController(
             length: 2, // Số lượng tab là 2: Chat và Interview
+
             child: Column(
               children: [
                 Container(
@@ -334,36 +335,49 @@ class _MessageListState extends State<MessageList> {
   Widget buildChatTab() {
     _messageStore.messageList
         .sort((a, b) => b.value.createdAt.compareTo(a.value.createdAt));
+
     return RefreshIndicator(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: _messageStore.messageList.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final newIndex = _messageStore.getIndex2(
-                    _messageStore.messageList[index].value.project.id!,
-                    _messageStore.messageList[index].value.receiver.id,
-                    _messageStore.messageList[index].value.sender.id,
-                  );
-                  final newIndex2 = _messageStore.getIndexMessageList(
-                      _messageStore.messageList[index].value.project.id!,
-                      _messageStore.messageList[index].value.receiver.id,
-                      _messageStore.messageList[index].value.sender.id);
-                  return MessageProjectItem(
-                    messageListItem: _messageStore.messageList![index].value,
-                    index: newIndex,
-                    index2: newIndex2,
-                  );
-                },
-              ),
-            ],
-          ),
+      onRefresh: _pullRefresh,
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            _messageStore.messageList.isNotEmpty
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _messageStore.messageList.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final newIndex = _messageStore.getIndex2(
+                        _messageStore.messageList[index].value.project.id!,
+                        _messageStore.messageList[index].value.receiver.id,
+                        _messageStore.messageList[index].value.sender.id,
+                      );
+                      final newIndex2 = _messageStore.getIndexMessageList(
+                          _messageStore.messageList[index].value.project.id!,
+                          _messageStore.messageList[index].value.receiver.id,
+                          _messageStore.messageList[index].value.sender.id);
+                      return MessageProjectItem(
+                        messageListItem:
+                            _messageStore.messageList![index].value,
+                        index: newIndex,
+                        index2: newIndex2,
+                      );
+                    },
+                  )
+                : Container(
+                    alignment: Alignment.topCenter,
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    padding: EdgeInsets.all(20.0),
+                    child: Text(
+                      'No messages available. Pull to refresh.',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                  ),
+          ],
         ),
-        onRefresh: _pullRefresh);
+      ),
+    );
   }
 
   Widget buildInterviewTab() {
@@ -378,41 +392,52 @@ class _MessageListState extends State<MessageList> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: filteredInterviews.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final interview = filteredInterviews[index];
+              filteredInterviews.isEmpty
+                  ? Container(
+                      alignment: Alignment.topCenter,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      padding: EdgeInsets.all(20.0),
+                      child: Text(
+                        'No interviews available. Pull to refresh.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filteredInterviews.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final interview = filteredInterviews[index];
 
-                  return Container(
-                    padding: EdgeInsets.all(10),
-                    child: ScheduleItemChat(
-                      interview: interview.interview,
-                      isCancelled:
-                          interview.interview.disableFlag == 1 ? true : false,
-                      type: 1,
-                      onTap: (p0) {
-                        final index = _messageStore.getIndex2(
-                          interview.projectId,
-                          interview.receiverId,
-                          interview.senderId,
+                        return Container(
+                          padding: EdgeInsets.all(10),
+                          child: ScheduleItemChat(
+                            interview: interview.interview,
+                            isCancelled: interview.interview.disableFlag == 1
+                                ? true
+                                : false,
+                            type: 1,
+                            onTap: (p0) {
+                              final index = _messageStore.getIndex2(
+                                interview.projectId,
+                                interview.receiverId,
+                                interview.senderId,
+                              );
+                              log("hey index: $index");
+                              Navigator.of(context, rootNavigator: true)
+                                  .push(MaterialPageRoute(
+                                      builder: (context) => MessageDetail(
+                                            projectId: interview.projectId,
+                                            receiverId: interview.receiverId,
+                                            senderId: interview.senderId,
+                                            index: index,
+                                          ),
+                                      maintainState: false));
+                            },
+                          ),
                         );
-                        log("hey index: $index");
-                        Navigator.of(context, rootNavigator: true)
-                            .push(MaterialPageRoute(
-                                builder: (context) => MessageDetail(
-                                      projectId: interview.projectId,
-                                      receiverId: interview.receiverId,
-                                      senderId: interview.senderId,
-                                      index: index,
-                                    ),
-                                maintainState: false));
                       },
                     ),
-                  );
-                },
-              ),
             ],
           ),
         ),

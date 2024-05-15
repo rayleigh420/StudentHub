@@ -71,6 +71,12 @@ class _MessageDetailState extends State<MessageDetail> {
   @override
   void initState() {
     super.initState();
+    log("receiver + sender: " +
+        widget.receiverId.toString() +
+        " " +
+        widget.senderId.toString() +
+        " " +
+        widget.projectId.toString());
     _loadId();
     // _loadId();
   }
@@ -403,18 +409,27 @@ class _MessageDetailState extends State<MessageDetail> {
     // setState(() {
     //   messages = m;
     // });
-
-    if (id == _messageStore.messages2[this.index].messages[0].sender.id) {
+    if (_messageStore.messages2[this.index].messages.isEmpty) {
+      final otherId =
+          widget.receiverId == id ? widget.senderId : widget.receiverId;
       setState(() {
-        me = _messageStore.messages2[this.index].messages[0].sender;
-        other = _messageStore.messages2[this.index].messages[0].receiver;
+        me = MessageUser(id: id!, fullname: "User id $id");
+        other = MessageUser(id: otherId, fullname: "User id $otherId");
       });
     } else {
-      setState(() {
-        me = _messageStore.messages2[this.index].messages[0].receiver;
-        other = _messageStore.messages2[this.index].messages[0].sender;
-      });
+      if (id == _messageStore.messages2[this.index].messages[0].sender.id) {
+        setState(() {
+          me = _messageStore.messages2[this.index].messages[0].sender;
+          other = _messageStore.messages2[this.index].messages[0].receiver;
+        });
+      } else {
+        setState(() {
+          me = _messageStore.messages2[this.index].messages[0].receiver;
+          other = _messageStore.messages2[this.index].messages[0].sender;
+        });
+      }
     }
+
     _connectSocket();
   }
 
@@ -498,34 +513,6 @@ class _MessageDetailState extends State<MessageDetail> {
     log("data nè " + msg.toString());
   }
 
-  // void updateSchedule(dynamic dataInterview) {
-  //   dynamic msg = {
-  //     "interviewId": dataInterview['id'],
-  //     "title": dataInterview['title'],
-  //     "startTime": dataInterview['startTime'],
-  //     "endTime": dataInterview['endTime'],
-  //     "projectId": widget.projectId,
-  //     "senderId": me.id,
-  //     "receiverId": other.id,
-  //     "updateAction": true
-  //   };
-  //   log("data update nè " + msg.toString());
-  //   log(msg.toString());
-
-  //   Interview currentInterview =
-  //       _messageStore.getInterview(this.index, dataInterview['id']);
-  //   log("current interview " + currentInterview.toJson().toString());
-  //   currentInterview.title = dataInterview['title'];
-  //   currentInterview.startTime = DateTime.parse(dataInterview['startTime']);
-  //   currentInterview.endTime = DateTime.parse(dataInterview['endTime']);
-
-  //   // _messageStore.updateInterview(widget.index, currentInterview);
-  //   setState(() {
-  //     messages = _messageStore.messages[this.index].messages.messages;
-  //   });
-  //   this.socket.emit("UPDATE_INTERVIEW", msg);
-  // }
-
   void updateScheduleApi(dynamic dataInterview) {
     dynamic msg = {
       "title": dataInterview['title'],
@@ -538,20 +525,6 @@ class _MessageDetailState extends State<MessageDetail> {
             interviewId: dataInterview['id'], message: msg));
     log("data update nè " + msg.toString());
   }
-
-  // void deleteSchedule(int projectId) {
-  //   dynamic msg = {
-  //     "interviewId": projectId,
-  //     "projectId": widget.projectId,
-  //     "senderId": me.id,
-  //     "receiverId": other.id,
-  //     "deleteAction": true
-  //   };
-  //   setState(() {
-  //     messages = _messageStore.messages[this.index].messages.messages;
-  //   });
-  //   this.socket.emit("UPDATE_INTERVIEW", msg);
-  // }
 
   void deleteScheduleApi(int interviewId) {
     // dynamic msg = {

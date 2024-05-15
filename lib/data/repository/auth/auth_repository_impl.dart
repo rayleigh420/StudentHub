@@ -17,9 +17,9 @@ class AuthRepositoryImpl extends AuthRepository {
       final token = await _authApi.logIn(email, password);
       final jwt = JWT.decode(token);
       final id = jwt.payload['id'];
-      _sharedPrefsHelper.saveAuthToken(token);
-      _sharedPrefsHelper.saveIsLoggedIn(true);
-      _sharedPrefsHelper.saveDefaultId(id);
+      await _sharedPrefsHelper.saveAuthToken(token);
+      await _sharedPrefsHelper.saveIsLoggedIn(true);
+      await _sharedPrefsHelper.saveDefaultId(id);
       return token;
     } catch (e) {
       throw new Exception(e.toString());
@@ -77,12 +77,12 @@ class AuthRepositoryImpl extends AuthRepository {
   Future<void> logOut() async {
     try {
       await _authApi.logOut();
-      _sharedPrefsHelper.removeAuthToken();
-      _sharedPrefsHelper.removeCurrentCompanyId();
-      _sharedPrefsHelper.removeCurrentStudentId();
-      _sharedPrefsHelper.removeRolesUser();
-      _sharedPrefsHelper.saveIsLoggedIn(false);
-      _sharedPrefsHelper.removeDefaultId();
+      await _sharedPrefsHelper.removeAuthToken();
+      await _sharedPrefsHelper.removeCurrentCompanyId();
+      await _sharedPrefsHelper.removeCurrentStudentId();
+      await _sharedPrefsHelper.removeRolesUser();
+      await _sharedPrefsHelper.saveIsLoggedIn(false);
+      await _sharedPrefsHelper.removeDefaultId();
     } catch (e) {
       throw new Exception(e.toString());
     }

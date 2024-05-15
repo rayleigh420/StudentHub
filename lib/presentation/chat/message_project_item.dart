@@ -57,7 +57,7 @@ class _MessageProjectItemState extends State<MessageProjectItem> {
                               senderId: widget.messageListItem.sender.id,
                               index: widget.index,
                             ),
-                        maintainState: false));
+                        maintainState: true));
               },
               child: Container(
                   padding: EdgeInsets.all(10),

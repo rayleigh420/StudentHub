@@ -87,21 +87,6 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
                           // ProjectItem(),
                           // ListProjectCompany(),
                           buildProjectsContent(selectedIndex!),
-                          // Container(
-                          //   margin: EdgeInsets.only(
-                          //       top: DeviceUtils.getScaledHeight(context, 0.35)),
-                          //   child: Center(
-                          //       child: Column(
-                          //     children: [
-                          //       const Text(
-                          //           style: TextStyle(fontWeight: FontWeight.w500),
-                          //           "Welcome Duy!"),
-                          //       const Text(
-                          //           style: TextStyle(fontWeight: FontWeight.w500),
-                          //           "You have no jobs!"),
-                          //     ],
-                          //   )),
-                          // ),
                         ],
                       )),
                 ))));
@@ -124,29 +109,42 @@ class _DashboardCompanyScreenState extends State<DashboardCompanyScreen> {
     //     : _projectCompanyStore.companyProjects!.projects!
     //         .where((item) => item.typeFlag == 1)
     //         .toList();
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: selectedIndex == 0
-          ? _projectCompanyStore.companyProjects!.projects!.length
-          : _projectCompanyStore.companyProjects!.projects!
-              .where((item) => item.typeFlag == 1)
-              .toList()
-              .length,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        if (selectedIndex == 0) {
-          return ProjectItemCompany(
-            project: _projectCompanyStore.companyProjects!.projects![index],
-          );
-        } else {
-          if (_projectCompanyStore.companyProjects!.projects![index].typeFlag ==
-              1) {
+    if (_projectCompanyStore.companyProjects!.projects!.isEmpty) {
+      return Container(
+        alignment: Alignment.topCenter,
+        height: MediaQuery.of(context).size.height * 1,
+        padding: EdgeInsets.all(20.0),
+        child: Text(
+          AppLocalizations.of(context).translate('no_project_text'),
+          style: TextStyle(fontSize: 16),
+        ),
+      );
+    } else {
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: selectedIndex == 0
+            ? _projectCompanyStore.companyProjects!.projects!.length
+            : _projectCompanyStore.companyProjects!.projects!
+                .where((item) => item.typeFlag == 1)
+                .toList()
+                .length,
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          if (selectedIndex == 0) {
             return ProjectItemCompany(
               project: _projectCompanyStore.companyProjects!.projects![index],
             );
+          } else {
+            if (_projectCompanyStore
+                    .companyProjects!.projects![index].typeFlag ==
+                1) {
+              return ProjectItemCompany(
+                project: _projectCompanyStore.companyProjects!.projects![index],
+              );
+            }
           }
-        }
-      },
-    );
+        },
+      );
+    }
   }
 }

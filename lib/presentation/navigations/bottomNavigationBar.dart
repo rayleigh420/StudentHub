@@ -194,14 +194,15 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
           ProfileScreen()
         ];
       });
-      if (_messageStore.success == false) {
-        _messageStore.getMessages();
-      }
+
       if (_profileStore.loading == false) {
         _profileStore.getProfile();
       }
       if (_projectStore.loading == false) {
         _projectStore.getProjects();
+      }
+      if (_messageStore.success == false) {
+        _messageStore.getMessages();
       }
       if (roleString == 1) {
         if (_projectCompanyStore.loading == false) {

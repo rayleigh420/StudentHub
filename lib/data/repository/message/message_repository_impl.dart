@@ -25,13 +25,8 @@ class MessageRepositoryImpl extends MessageRepository {
   @override
   Future<List<Message>> getProjectMessages(
       int projectId, int receiverId) async {
-    try {
-      final res = await _messageApi.getProjectMessages(projectId, receiverId);
-      return res;
-    } catch (e) {
-      log("error fetching messages");
-      throw e;
-    }
+    final res = await _messageApi.getProjectMessages(projectId, receiverId);
+    return res;
   }
 
   @override
