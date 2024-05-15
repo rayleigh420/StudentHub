@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:boilerplate/core/widgets/project_item.dart';
 import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/entity/project_2/project.dart';
@@ -28,6 +30,7 @@ class _SavedProjectState extends State<SavedProject> {
   }
 
   void getFavoriteProjectByStudentId() async {
+    log("getFavoriteProjectByStudentId");
     final projects = await _getFavoriteByStudentIdUseCase.call(params: null);
     setState(() {
       this.projects = projects.projects!;

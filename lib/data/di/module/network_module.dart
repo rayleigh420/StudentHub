@@ -8,6 +8,7 @@ import 'package:boilerplate/data/network/apis/experiences/experience_api.dart';
 import 'package:boilerplate/data/network/apis/favorite/favorite_api.dart';
 import 'package:boilerplate/data/network/apis/languages/language_api.dart';
 import 'package:boilerplate/data/network/apis/message/message_api.dart';
+import 'package:boilerplate/data/network/apis/noti/noti_api.dart';
 import 'package:boilerplate/data/network/apis/pdf_api/pdf_api.dart';
 import 'package:boilerplate/data/network/apis/posts/post_api.dart';
 import 'package:boilerplate/data/network/apis/profile/profile_api.dart';
@@ -92,5 +93,7 @@ mixin NetworkModule {
     getIt.registerSingleton<MessageApi>(MessageApi(getIt<DioClient>()));
 
     getIt.registerSingleton<PDFApi>(PDFApi());
+
+    getIt.registerSingleton<NotiApi>(NotiApi(getIt<DioClient>()));
   }
 }

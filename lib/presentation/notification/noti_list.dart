@@ -28,7 +28,7 @@ class _NotiListState extends State<NotiList> {
     super.didChangeDependencies();
 
     // check to see if already called api
-    if (!_notificationStore.success) {
+    if (_notificationStore.success == false) {
       _notificationStore.getNotifications();
     }
   }
@@ -63,7 +63,8 @@ class _NotiListState extends State<NotiList> {
                   child: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
                     child: Container(
-                      height: DeviceUtils.getScaledHeight(context, 1),
+                      margin: EdgeInsets.only(
+                          bottom: DeviceUtils.getScaledHeight(context, 0.5)),
                       padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
                       child: Column(
                         children: [
@@ -84,15 +85,33 @@ class _NotiListState extends State<NotiList> {
   Widget buildListNoti() {
     return Observer(
       builder: (context) {
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: _notificationStore.notifications.length,
-          itemBuilder: (_, index) {
-            return buildNotiItem(
-                context, _notificationStore.notifications[index]);
-          },
-        );
+        if (_notificationStore.doneRefresh == false) {
+          return Center(
+            child: Text("Refreshing..."),
+          );
+        } else {
+          if (_notificationStore.notifications.isEmpty) {
+            return Container(
+              alignment: Alignment.topCenter,
+              height: MediaQuery.of(context).size.height * 1,
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                'No notification yet',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            );
+          } else {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: _notificationStore.notifications.length,
+              itemBuilder: (_, index) {
+                return buildNotiItem(
+                    context, _notificationStore.notifications[index]);
+              },
+            );
+          }
+        }
       },
     );
   }
@@ -101,11 +120,15 @@ class _NotiListState extends State<NotiList> {
     return GestureDetector(
       onTap: () {
         log("dd");
-        Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-            builder: (context) => AppBottomNavigationBar(
-                  selectedIndex: 1,
-                ),
-            maintainState: false));
+        if (noti.typeNotifyFlag == "3") {
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
+              builder: (context) => AppBottomNavigationBar(
+                    selectedIndex: 1,
+                  ),
+              maintainState: false));
+        } else {
+          log("cannot navigate to this page");
+        }
       },
       child: Container(
           margin: EdgeInsets.only(top: 20),

@@ -374,6 +374,9 @@ class _MessageListState extends State<MessageList> {
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                   ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5,
+            )
           ],
         ),
       ),

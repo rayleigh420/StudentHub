@@ -118,7 +118,8 @@ class _DashboardStudentScreenState extends State<DashboardStudentScreen> {
                     } else {
                       return Container(
                           padding: EdgeInsets.fromLTRB(18, 10, 20, 0),
-                          // height: DeviceUtils.getScaledHeight(context, 1),
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height * 0.5),
                           child: Column(
                             children: [
                               Row(

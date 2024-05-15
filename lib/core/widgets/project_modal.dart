@@ -330,6 +330,21 @@ class _ProjectModalState extends State<ProjectModal> {
               } else if (widget.offer != null) {
                 _updateProposalUseCase.call(
                     params: UpdateProposalParam(widget.offer!, "Join", 3));
+                Navigator.of(context, rootNavigator: true).pop();
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text("You have joined this project"),
+                          content: Text("You have joined this project"),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop();
+                                },
+                                child: Text("OK"))
+                          ],
+                        ));
                 // Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
                 //   builder: (context) => SubmitProject(projectId: widget.project.id!),
                 //   maintainState: true

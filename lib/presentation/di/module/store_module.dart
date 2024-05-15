@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:boilerplate/core/data/network/dio/dio_client.dart';
 import 'package:boilerplate/core/stores/error/error_store.dart';
 import 'package:boilerplate/core/stores/form/form_store.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
@@ -7,6 +8,7 @@ import 'package:boilerplate/domain/repository/project/project_repository.dart';
 import 'package:boilerplate/domain/repository/setting/setting_repository.dart';
 import 'package:boilerplate/domain/usecase/message/get_all_message_usecase.dart';
 import 'package:boilerplate/domain/usecase/message/get_project_message.dart';
+import 'package:boilerplate/domain/usecase/noti/get_noti_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/domain/usecase/project/delete_company_project_usecase.dart';
@@ -101,8 +103,8 @@ mixin StoreModule {
 
     getIt.registerSingleton(TabStore());
 
-    getIt.registerSingleton(NotificationStore(
-        getIt<SharedPreferenceHelper>(), getIt<ErrorStore>()));
+    getIt.registerSingleton(NotificationStore(getIt<SharedPreferenceHelper>(),
+        getIt<ErrorStore>(), getIt<DioClient>(), getIt<GetNotiUseCase>()));
 
     getIt.registerSingleton(
       CurrentMessageStore(

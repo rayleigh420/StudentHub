@@ -309,9 +309,9 @@ abstract class _MessageStore with Store {
       final List<Message> emptyMessage = [];
       // final ObservableList<Observable<Message>> empty_observe_list_msg =
       //     ObservableList();
-      // if (message != null) {
-      //   empty_observe_list_msg.add(Observable<Message>(message));
-      // }
+      if (message != null) {
+        emptyMessage.add(message);
+      }
       messages2.add(Messages(
           messages: ObservableList.of(emptyMessage),
           projectId: project.id!,

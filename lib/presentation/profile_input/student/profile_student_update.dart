@@ -216,6 +216,7 @@ class _ProfileStudentUpdateState extends State<ProfileStudentUpdate> {
               title: const Text("Student Hub"),
             ),
             body: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

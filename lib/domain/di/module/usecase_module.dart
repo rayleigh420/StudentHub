@@ -6,6 +6,7 @@ import 'package:boilerplate/domain/repository/experiences/experience_repository.
 import 'package:boilerplate/domain/repository/favorite/favorite_repository.dart';
 import 'package:boilerplate/domain/repository/languages/language_repository.dart';
 import 'package:boilerplate/domain/repository/message/message_repository.dart';
+import 'package:boilerplate/domain/repository/noti/noti_repository.dart';
 import 'package:boilerplate/domain/repository/post/post_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_student_repository.dart';
 import 'package:boilerplate/domain/repository/profile/profile_company_repository.dart';
@@ -36,6 +37,7 @@ import 'package:boilerplate/domain/usecase/message/get_project_message.dart';
 import 'package:boilerplate/domain/usecase/message/new_message_usecase.dart';
 import 'package:boilerplate/domain/usecase/message/new_schedule_usecase.dart';
 import 'package:boilerplate/domain/usecase/message/update_schedule_usecase.dart';
+import 'package:boilerplate/domain/usecase/noti/get_noti_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/delete_post_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/find_post_by_id_usecase.dart';
 import 'package:boilerplate/domain/usecase/post/get_post_usecase.dart';
@@ -173,7 +175,6 @@ mixin UseCaseModule {
     getIt.registerSingleton<UpdateProfileCompanyUC>(
       UpdateProfileCompanyUC(getIt<ProfileCompanyRepository>()),
     );
-    
 
     // Project:----------------------------------------------------------------------
     getIt.registerSingleton<GetCompanyProjectsUseCase>(
@@ -238,6 +239,9 @@ mixin UseCaseModule {
     );
     getIt.registerSingleton<CancelScheduleUseCase>(
       CancelScheduleUseCase(getIt<MessageRepository>()),
+    );
+    getIt.registerSingleton<GetNotiUseCase>(
+      GetNotiUseCase(getIt<NotiRepository>()),
     );
   }
 }

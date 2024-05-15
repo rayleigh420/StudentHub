@@ -27,7 +27,7 @@ class ProjectApi {
       if (proposalsLessThan != null)
         queryParams['proposalsLessThan'] = proposalsLessThan;
       queryParams['page'] = 1;
-      queryParams['perPage'] = 1000;
+      queryParams['perPage'] = 20000;
       final res = await _dioClient.dio.get(Endpoints.getProjects,
           options: Options(
             headers: {
