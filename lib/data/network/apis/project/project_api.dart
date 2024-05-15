@@ -45,6 +45,40 @@ class ProjectApi {
     }
   }
 
+  Future<ProjectList> searchProjects(String token,
+      {String? title,
+      int? projectScopeFlag,
+      int? numberOfStudents,
+      int? proposalsLessThan,
+      int? page,
+      int? perPage}) async {
+    final authToken = "Bearer ${token}";
+    final Map<String, dynamic> queryParams = {};
+    if (title != null) queryParams['title'] = title;
+    if (projectScopeFlag != null)
+      queryParams['projectScopeFlag'] = projectScopeFlag;
+    if (numberOfStudents != null)
+      queryParams['numberOfStudents'] = numberOfStudents;
+    if (proposalsLessThan != null)
+      queryParams['proposalsLessThan'] = proposalsLessThan;
+    if (page != null) queryParams['page'] = page;
+    if (perPage != null) queryParams['perPage'] = perPage;
+
+    final res = await _dioClient.dio.get(Endpoints.getProjects,
+        options: Options(
+          headers: {
+            'Authorization': authToken,
+          },
+        ),
+        queryParameters: queryParams);
+    if (res.statusCode != 200) {
+      return ProjectList(projects: []);
+    } else {
+      log(res.data["result"].runtimeType.toString());
+      return ProjectList.fromJson(res.data["result"]);
+    }
+  }
+
   Future<ProjectList> getProjectsCompany(int companyId) async {
     try {
       // final token = await getIt<SharedPreferenceHelper>().authToken;

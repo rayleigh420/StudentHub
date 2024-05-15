@@ -9,8 +9,18 @@ import 'package:flutter/material.dart';
 class FilterSearchProjectModal extends StatefulWidget {
   final Function searchProject;
   final String searchQuery;
+  final Function setFilter;
+  final int? choosenTime;
+  final int? studentNeeded;
+  final int? proposalsLessThan;
   const FilterSearchProjectModal(
-      {super.key, required this.searchProject, required this.searchQuery});
+      {super.key,
+      required this.searchProject,
+      required this.searchQuery,
+      required this.setFilter,
+      this.choosenTime,
+      this.studentNeeded,
+      this.proposalsLessThan});
 
   @override
   State<FilterSearchProjectModal> createState() =>
@@ -24,6 +34,17 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
   final studentNeededController = TextEditingController();
   final proposalLessThanController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    choosenTime = widget.choosenTime ?? 0;
+    studentNeededController.text =
+        widget.studentNeeded == null ? "" : widget.studentNeeded.toString();
+    proposalLessThanController.text = widget.proposalsLessThan == null
+        ? ""
+        : widget.proposalsLessThan.toString();
+  }
+
   SearchProjectsUseCase _searchProjectsUseCase = getIt<SearchProjectsUseCase>();
 
   void filterSubmit() async {
@@ -33,8 +54,47 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
       title: widget.searchQuery,
       projectScopeFlag: choosenTime,
       numberOfStudents: int.parse(studentNeededController.text),
+      page: 1,
+      perPage: 10,
     ));
+    bool _isLastPage = false;
+    if (result.projects != null && result.projects!.isNotEmpty) {
+      if (result.projects!.length < 10) {
+        _isLastPage = true;
+      }
+    }
     widget.searchProject(result);
+    int? proposalLessThan = proposalLessThanController.text.isEmpty
+        ? null
+        : int.parse(proposalLessThanController.text);
+    int? studentNeeded = studentNeededController.text.isEmpty
+        ? null
+        : int.parse(studentNeededController.text);
+    widget.setFilter(
+        choosenTime, studentNeeded, proposalLessThan, 1, _isLastPage);
+    // widget.setFilter(choosenTime, int.parse(studentNeededController.text),
+    //     int.parse(proposalLessThanController.text), 1, _isLastPage);
+    Navigator.of(context).pop();
+  }
+
+  void clearFilter() async {
+    final result = await _searchProjectsUseCase.call(
+        params: SearchProjectParams(
+      title: widget.searchQuery,
+      projectScopeFlag: null,
+      numberOfStudents: null,
+      page: 1,
+      perPage: 10,
+    ));
+
+    bool _isLastPage = false;
+    if (result.projects != null && result.projects!.isNotEmpty) {
+      if (result.projects!.length < 10) {
+        _isLastPage = true;
+      }
+    }
+    widget.searchProject(result);
+    widget.setFilter(null, null, null, 1, _isLastPage);
     Navigator.of(context).pop();
   }
 
@@ -244,23 +304,27 @@ class _FilterSearchProjectModalState extends State<FilterSearchProjectModal> {
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            height: DeviceUtils.getScaledHeight(context, 0.034),
-            decoration: BoxDecoration(
-              // color: Colors.blueAccent,
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey),
-            ),
-            width: DeviceUtils.getScaledWidth(context, 0.4),
-            child: Text(
-              AppLocalizations.of(context).translate('save_text'),
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-            ),
-          ),
+          GestureDetector(
+              onTap: () {
+                clearFilter();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                height: DeviceUtils.getScaledHeight(context, 0.034),
+                decoration: BoxDecoration(
+                  // color: Colors.blueAccent,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey),
+                ),
+                width: DeviceUtils.getScaledWidth(context, 0.4),
+                child: Text(
+                  AppLocalizations.of(context).translate('clear_text'),
+                  textAlign: TextAlign.center,
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                ),
+              )),
         ],
       ),
     );

@@ -93,22 +93,23 @@ class ProjectRepositoryImpl extends ProjectRepository {
   }
 
   @override
-  Future<ProjectList> searchProject(String? title, int? projectScopeFlag,
-      int? numberOfStudents, int? proposalsLessThan) async {
-    try {
-      final token = await _sharedPreferenceHelper.authToken;
-      log("token");
-      ProjectList list = await _projectApi.getProjects(token!,
-          title: title,
-          projectScopeFlag: projectScopeFlag,
-          numberOfStudents: numberOfStudents,
-          proposalsLessThan: proposalsLessThan);
-      log(list.toString());
-      return list;
-    } catch (e) {
-      log("error");
-      log(e.toString());
-      throw new Exception(e.toString());
-    }
+  Future<ProjectList> searchProject(
+      String? title,
+      int? projectScopeFlag,
+      int? numberOfStudents,
+      int? proposalsLessThan,
+      int? page,
+      int? perPage) async {
+    final token = await _sharedPreferenceHelper.authToken;
+    log("token");
+    ProjectList list = await _projectApi.searchProjects(token!,
+        title: title,
+        projectScopeFlag: projectScopeFlag,
+        numberOfStudents: numberOfStudents,
+        proposalsLessThan: proposalsLessThan,
+        page: page,
+        perPage: perPage);
+    log(list.toString());
+    return list;
   }
 }

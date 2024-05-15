@@ -7,12 +7,16 @@ class SearchProjectParams {
   final int? projectScopeFlag;
   final int? numberOfStudents;
   final int? proposalsLessThan;
+  final int? page;
+  final int? perPage;
 
   SearchProjectParams(
       {this.title,
       this.projectScopeFlag,
       this.numberOfStudents,
-      this.proposalsLessThan});
+      this.proposalsLessThan,
+      this.page,
+      this.perPage});
 }
 
 class SearchProjectsUseCase extends UseCase<ProjectList, SearchProjectParams> {
@@ -26,6 +30,8 @@ class SearchProjectsUseCase extends UseCase<ProjectList, SearchProjectParams> {
         params.title,
         params.projectScopeFlag,
         params.numberOfStudents,
-        params.proposalsLessThan);
+        params.proposalsLessThan,
+        params.page,
+        params.perPage);
   }
 }

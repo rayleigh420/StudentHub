@@ -9,5 +9,5 @@ abstract class ProjectRepository {
   Future<bool> deleteProject(int id);
   Future<Project> updateProject(Project project);
   Future<ProjectList> searchProject(String? title, int? projectScopeFlag,
-      int? numberOfStudents, int? proposalsLessThan);
+      int? numberOfStudents, int? proposalsLessThan, int? page, int? perPage);
 }
