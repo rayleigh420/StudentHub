@@ -4,6 +4,7 @@ import 'package:boilerplate/di/service_locator.dart';
 import 'package:boilerplate/domain/usecase/auth/studenthub_login_usecase.dart';
 import 'package:boilerplate/domain/usecase/profile/get_profile_uc.dart';
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
+import 'package:boilerplate/presentation/input_login/forgot_pwd_screen.dart';
 import 'package:boilerplate/presentation/navigations/bottomNavigationBar.dart';
 import 'package:boilerplate/presentation/profile_input/company/profile_company_input.dart';
 import 'package:boilerplate/presentation/profile_input/student/profile_input_1.dart';
@@ -151,7 +152,7 @@ class _InputLoginState extends State<InputLogin> {
                       if (currentStudentId == null &&
                           currentCompanyId == null) {
                         if (roles![0] == 0) {
-                         Navigator.of(context, rootNavigator: true)
+                          Navigator.of(context, rootNavigator: true)
                               .pushReplacement(MaterialPageRoute(
                                   builder: (context) => ProfileInput1(),
                                   maintainState: true));
@@ -163,7 +164,7 @@ class _InputLoginState extends State<InputLogin> {
                                   maintainState: true));
                         }
                       } else {
-                       Navigator.of(context, rootNavigator: true)
+                        Navigator.of(context, rootNavigator: true)
                             .push(MaterialPageRoute(
                                 builder: (context) => AppBottomNavigationBar(
                                       selectedIndex: 1,
@@ -216,6 +217,9 @@ class _InputLoginState extends State<InputLogin> {
               const SizedBox(height: 30),
 
               buildSignupSection(context),
+
+              const SizedBox(height: 30),
+              buildForgotPassword(context),
             ],
           ),
         ),
@@ -427,8 +431,31 @@ class _InputLoginState extends State<InputLogin> {
               return const SignUpIdentity();
             }));
           },
-          child:  Text(
+          child: Text(
             AppLocalizations.of(context).translate('sign_up_text'),
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildForgotPassword(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return const ForgotPasswordScreen();
+            }));
+          },
+          child: Text(
+            AppLocalizations.of(context).translate('forgot_password_text'),
             style: TextStyle(
               color: Colors.blueAccent,
               fontWeight: FontWeight.bold,
