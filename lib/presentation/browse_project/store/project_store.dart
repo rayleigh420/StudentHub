@@ -44,6 +44,7 @@ abstract class _ProjectStore with Store {
       doneReloading = true;
     }).catchError((error) {
       errorStore.errorMessage = error.toString();
+      retryGetProjects();
     });
   }
 
@@ -61,5 +62,24 @@ abstract class _ProjectStore with Store {
     projects = null;
     success = false;
     doneReloading = false;
+  }
+
+  @action
+  Future retryGetProjects(
+      {int retries = 3, Duration delay = const Duration(seconds: 1)}) async {
+    for (int i = 0; i < retries; i++) {
+      await Future.delayed(delay);
+      try {
+        await getProjects();
+        if (success) {
+          break;
+        }
+      } catch (_) {
+        if (i == retries - 1) {
+          errorStore.errorMessage =
+              "Failed to fetch projects after $retries retries.";
+        }
+      }
+    }
   }
 }

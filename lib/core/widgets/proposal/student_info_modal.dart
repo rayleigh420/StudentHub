@@ -217,11 +217,11 @@ class _StudentInfoModalState extends State<StudentInfoModal> {
                         //         builder: (context) => PdfViewerPage(file: file),
                         //         maintainState: true));
                         PDFApi.loadNetwork(resumeUrl).then((file) =>
-                            Navigator.of(context, rootNavigator: true).push(
+                            Navigator.of(context, rootNavigator: false).push(
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         PdfViewerPage(file: file),
-                                    maintainState: true)));
+                                    maintainState: false)));
                       }
                     },
                     child: Row(

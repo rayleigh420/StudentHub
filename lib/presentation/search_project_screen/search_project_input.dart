@@ -1,6 +1,7 @@
 import 'package:boilerplate/core/widgets/project_item.dart';
 import 'package:boilerplate/core/widgets/search_project_modal.dart';
 import 'package:boilerplate/di/service_locator.dart';
+import 'package:boilerplate/domain/entity/project_2/project_list.dart';
 import 'package:boilerplate/domain/usecase/project/search_project_usecase.dart';
 
 import 'package:boilerplate/presentation/home/store/theme/theme_store.dart';
@@ -35,12 +36,12 @@ class _SearchProjectInputState extends State<SearchProjectInput> {
   void searchProject() async {
     final searchQuery = searchController.text;
     if (searchQuery.isNotEmpty) {
-      final result = await _searchProjectsUseCase.call(
-          params: SearchProjectParams(title: searchQuery));
+      // final result = await _searchProjectsUseCase.call(
+      //     params: SearchProjectParams(title: searchQuery));
       // print(result);
       Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
           builder: (context) => SearchProjectScreen(
-                projectList: result,
+                projectList: ProjectList(projects: []),
                 searchQuery: searchQuery,
               ),
           maintainState: false));

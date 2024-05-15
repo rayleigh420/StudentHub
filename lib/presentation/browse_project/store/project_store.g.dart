@@ -88,6 +88,16 @@ mixin _$ProjectStore on _ProjectStore, Store {
     return _$getProjectsAsyncAction.run(() => super.getProjects());
   }
 
+  late final _$retryGetProjectsAsyncAction =
+      AsyncAction('_ProjectStore.retryGetProjects', context: context);
+
+  @override
+  Future<dynamic> retryGetProjects(
+      {int retries = 3, Duration delay = const Duration(seconds: 1)}) {
+    return _$retryGetProjectsAsyncAction
+        .run(() => super.retryGetProjects(retries: retries, delay: delay));
+  }
+
   late final _$_ProjectStoreActionController =
       ActionController(name: '_ProjectStore', context: context);
 

@@ -8,6 +8,7 @@ import 'package:boilerplate/presentation/signup/input_signup/verify_screen.dart'
 
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/utils/strings/email_validate.dart';
 import 'package:flutter/material.dart';
 
 class InputSignUp extends StatefulWidget {
@@ -100,35 +101,21 @@ class _InputSignUpState extends State<InputSignUp> {
               const SizedBox(height: 30),
               buildLaunchButton(context, () async {
                 log('Login pressed');
-                try {
-                  final res = await signUp(
-                      _emailController.text,
-                      _passwordController.text,
-                      _fullNameController.text,
-                      widget.type);
-                  log(res.toString());
-                  Navigator.of(context)
-                      .pushReplacement(MaterialPageRoute(builder: (context) {
-                    return VerifyScreen();
-                  }));
-
-                  // Navigator.of(context).pushReplacementNamed('/login');
-                  // if (widget.type == 1) {
-                  //   Navigator.of(context)
-                  //       .pushReplacement(MaterialPageRoute(builder: (context) {
-                  //     return ProfileCompanyInput();
-                  //     // return AppBottomNavigationBar(
-                  //     //   selectedIndex: 0,
-                  //     //   isStudent: false,
-                  //     // );
-                  //   }));
-                  // } else {
-                  //   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  //       builder: (context) => ProfileInput1()));
-                  //   ;
-                  // }
-                } catch (e) {
-                  throw e;
+                if (_inputFormKey.currentState!.validate() && _agreeToApply) {
+                  try {
+                    final res = await signUp(
+                        _emailController.text,
+                        _passwordController.text,
+                        _fullNameController.text,
+                        widget.type);
+                    log(res.toString());
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return VerifyScreen();
+                    }));
+                  } catch (e) {
+                    throw e;
+                  }
                 }
               }),
               // buildSignupSection(context)
@@ -237,7 +224,22 @@ class _InputSignUpState extends State<InputSignUp> {
                 //fontFamily: "GGX88Reg_Light",
                 color: Color(0xFFc6c6c6),
               ),
+              errorStyle: TextStyle(
+                // fontFamily: "GGX88Reg_Light",
+                fontSize: 14,
+                color: Color(0xFFD74638),
+              ),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return AppLocalizations.of(context)
+                    .translate('email_validator_empy_text');
+              } else if (!EmailValidate.isEmail(value)) {
+                return AppLocalizations.of(context)
+                    .translate('email_validator_invalid_text');
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 16.0),
           Padding(
@@ -281,6 +283,11 @@ class _InputSignUpState extends State<InputSignUp> {
                 //fontFamily: "GGX88Reg_Light",
                 color: Color(0xFFc6c6c6),
               ),
+              errorStyle: TextStyle(
+                // fontFamily: "GGX88Reg_Light",
+                fontSize: 14,
+                color: Color(0xFFD74638),
+              ),
               suffixIcon: IconButton(
                 icon: Icon(
                   _showPassword ? Icons.visibility_off : Icons.visibility,
@@ -292,6 +299,16 @@ class _InputSignUpState extends State<InputSignUp> {
                 },
               ),
             ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return AppLocalizations.of(context)
+                    .translate('password_validator_empy_text');
+              } else if (value.length < 8) {
+                return AppLocalizations.of(context)
+                    .translate('password_validator_invalid_text');
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 18.0),
           GestureDetector(
@@ -354,11 +371,7 @@ class _InputSignUpState extends State<InputSignUp> {
             minimumSize: Size(MediaQuery.of(context).size.width * 1,
                 MediaQuery.of(context).size.height * 0.06),
           ),
-          onPressed: () {
-            if (_agreeToApply) {
-              onPress();
-            }
-          },
+          onPressed: () => onPress(),
           child: Text(
             AppLocalizations.of(context).translate('create_account_text'),
             style: TextStyle(

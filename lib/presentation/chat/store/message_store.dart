@@ -80,23 +80,6 @@ abstract class _MessageStore with Store {
   @observable
   ObservableList<Messages> messages2 = ObservableList<Messages>();
 
-  // @computed
-  // List<InterviewItem> get interviews {
-  //   List<InterviewItem> result = [];
-  //   for (var observableMessages in this.messages) {
-  //     for (var message in observableMessages.messages.messages) {
-  //       if (message.interview != null) {
-  //         result.add(InterviewItem(
-  //             interview: message.interview!,
-  //             projectId: observableMessages.messages.projectId,
-  //             receiverId: observableMessages.messages.receiverId,
-  //             senderId: observableMessages.messages.senderId));
-  //       }
-  //     }
-  //   }
-  //   return result;
-  // }
-
   @computed
   List<InterviewItem> get interviews2 {
     List<InterviewItem> result = [];
@@ -161,19 +144,6 @@ abstract class _MessageStore with Store {
         fetchMessageListFuture = ObservableFuture(getMessageListFuture);
         futures.add(getMessageListFuture);
         getMessageListFuture.then((value) {
-          // messages.add(ObservableMessages(
-          //     messages: Messages(
-          //         messages: ObservableList.of(value),
-          //         projectId: element.value.project.id!,
-          //         receiverId: element.value.receiver.id,
-          //         senderId: element.value.sender.id)));
-          // final ObservableList<Observable<Message>> observe_list_msg =
-          //     ObservableList();
-          // value.forEach(
-          //   (element) {
-          //     observe_list_msg.add(Observable<Message>(element));
-          //   },
-          // );
           messages2.add(Messages(
               messages: ObservableList.of(value),
               projectId: element.value.project.id!,
@@ -198,24 +168,6 @@ abstract class _MessageStore with Store {
       errorStore.errorMessage = error.toString();
     });
   }
-
-  // @action
-  // int getIndex(int projectId, int receiverId, int senderId) {
-  //   int index = -1;
-
-  //   messages.forEach((element) {
-  //     if (element.messages.projectId == projectId) {
-  //       final x = element.messages.senderId == senderId &&
-  //           element.messages.receiverId == receiverId;
-  //       final y = element.messages.senderId == receiverId &&
-  //           element.messages.receiverId == senderId;
-  //       if (x || y) {
-  //         index = messages.indexOf(element);
-  //       }
-  //     }
-  //   });
-  //   return index;
-  // }
 
   @action
   int getIndex2(int projectId, int receiverId, int senderId) {
@@ -254,40 +206,6 @@ abstract class _MessageStore with Store {
     return index;
   }
 
-  // @action
-  // int newMessageListItem(MessageUser sender, MessageUser receiver,
-  //     Project project, Message? message) {
-  //   final index = getIndex(
-  //     project.id!,
-  //     receiver.id,
-  //     sender.id,
-  //   );
-  //   log("index từ store: $index");
-  //   if (index == -1) {
-  //     final MessageListItem newMessageListItem = MessageListItem(
-  //         id: 0,
-  //         sender: sender,
-  //         receiver: receiver,
-  //         content: '',
-  //         createdAt: DateTime.now(),
-  //         project: project);
-  //     log("newMessageListItem: " + newMessageListItem.toJson().toString());
-  //     final List<Message> emptyMessage = [];
-  //     if (message != null) {
-  //       emptyMessage.add(message);
-  //     }
-  //     messages.add(ObservableMessages(
-  //         messages: Messages(
-  //             messages: ObservableList.of(emptyMessage),
-  //             projectId: project.id!,
-  //             receiverId: receiver.id,
-  //             senderId: sender.id)));
-  //     messageList.add(Observable<MessageListItem>(newMessageListItem));
-  //     return getIndex(project.id!, receiver.id, sender.id);
-  //   }
-  //   return index;
-  // }
-
   @action
   int newMessageListItem2(MessageUser sender, MessageUser receiver,
       Project project, Message? message) {
@@ -323,10 +241,6 @@ abstract class _MessageStore with Store {
     return index;
   }
 
-  // @action
-  // void addNewMessageToIndex(int index, Message message) {
-  //   this.messages[index].messages.messages.add(message);
-  // }
 
   @action
   void addNewMessageToIndex2(int index, Message message) {
@@ -345,16 +259,7 @@ abstract class _MessageStore with Store {
     }).interview!;
   }
 
-  // @action
-  // updateInterview(int index, Interview interview) {
-  //   messages[index].messages.messages.forEach((element) {
-  //     if (element.interview != null) {
-  //       if (element.interview!.value.id == interview.id) {
-  //         element.interview = Observable<Interview>(interview);
-  //       }
-  //     }
-  //   });
-  // }
+  
 
   @action
   updateInterview2(int index, dynamic interviewData) {
@@ -375,19 +280,6 @@ abstract class _MessageStore with Store {
       }
     }
   }
-
-  // @action
-  // updateInterviewCancelled(int index, int messageId) {
-  //   messages[index].messages.messages.forEach((element) {
-  //     if (element.interview != null) {
-  //       if (element.id == messageId) {
-  //         Interview interview = element.interview!.value;
-  //         interview.disableFlag = 1;
-  //         element.interview = Observable<Interview>(interview);
-  //       }
-  //     }
-  //   });
-  // }
 
   @action
   updateInterviewCancelled2(int index, int interviewId) {
